@@ -1,0 +1,113 @@
+<%= validated_form_with url: portal_routes.policy_credit_card_path(policy.full_policy_number), html: { data: { type: "html", target: "portal--make-payment.form", controller: "portal--make-payment", 'portal--make-payment-client-id': client.login_id, 'portal--make-payment-client-key': client.generate_public_client_key, 'portal--make-payment-transaction-id': billing_transaction.id, 'portal--make-payment-save-card-url-value': portal_routes.process_card_payment_policy_credit_card_path(policy.full_policy_number), 'portal--make-payment-card-present': card_present?, 'portal--make-payment-card-details': card_details } } do |form| %>
+  <kin-dialog id="makePaymentModal" scrollBackdrop size="sm" style="--kin-dialog-header-text-align: left" data-target="portal--make-payment.dialog">
+    <h2 slot="header" data-rspec= 'make-payment-header' data-target="portal--make-payment.header" class="m-0">Make Payment</h2>
+
+    <div class="container p-0 d-block" data-target="portal--make-payment.paymentInfoBody">
+      <div class="row m-b-200 fs-body-md">
+        <div class="col-xs-5 fw-bold">Payment Type:</div>
+        <div class="col-xs-7">One-Time Policy Payment</div>
+      </div>
+
+      <div class="row m-b-200 fs-body-md">
+        <div class="col-xs-5 fw-bold">Date:</div>
+        <div class="col-xs-7"><%= billing_transaction.due_date.to_s(:kin_date) %></div>
+      </div>
+
+      <div class="row m-b-200 fs-body-md">
+        <div class="col-xs-5 fw-bold">Payment Amount:</div>
+        <div class="col-xs-7"><%= number_to_currency(billing_transaction.amount) %></div>
+      </div>
+    </div>
+
+    <div class="container p-0 d-none" data-target="portal--make-payment.paymentMethodInfoBody">
+      <div class="row m-b-200 fs-body-md">
+        <div class="col-xs-5 fw-bold">Payment Method:</div>
+        <div class="col-xs-7">
+          <span data-target="portal--make-payment.paymentMethodInfoCardNumber"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container p-0 d-none" data-target="portal--make-payment.paymentSelectionBody">
+        <div class="row m-t-600">
+          <div class="col-xs-12">
+            <label class= "select" >
+              <%= form.select :paymentMethod, [[card_details, true], ['Use a different card', false]], {}, {class: 'select__control', data: { target: 'portal--make-payment.paymentMethod', action: "portal--make-payment#onChangePaymentMethod", skip_validation: "true", rspec: "save-card-select" }} %>
+              <span class="select__label">Choose a Payment Method</span>
+            </label>
+          </div>
+        </div>
+    </div>
+
+    <div class="d-block" data-target="portal--make-payment.formContainer">
+      <div class="container p-0 d-none" data-target="portal--make-payment.formBody">
+        <div class="row">
+          <div class="col-xs-12 m-t-300">
+            <%= form.label :number, class: 'input' do %>
+              <%= form.text_field :number, placeholder: "", required: true, class: 'input__control', 'data-rspec': 'number', data: { target: 'portal--make-payment.creditCardNumber', mask: '0000 0000 0000 0000', validate_credit_card: true, aria_errormessage: 'card-number--error', aria_invalid: "false", validation_message: "Please enter a valid credit card number." } %>
+              <span class="input__label">Credit Card Number</span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-6 m-t-300">
+            <%= form.label :expiration, class: 'input' do %>
+              <%= form.text_field :expiration, placeholder: 'MM/YYYY', required: true, class: 'input__control', 'data-rspec': 'expiration', data: { target: 'portal--make-payment.expiration', mask: '00/0000', validate_min_month_year: Date.today.strftime("%Y-%m-%d"), aria_errormessage: 'exp-date--error', aria_invalid: "false" } %>
+              <span class="input__label">Expiration Date</span>
+            <% end %>
+          </div>
+          <div class="col-xs-6 m-t-300">
+            <%= form.label :cvv, class: 'input' do %>
+              <%= form.text_field :cvv, class: 'input__control', required: true, minlength: 3, maxlength: 4, placeholder: "", inputmode: "numeric", pattern: "[0-9]*", autocomplete: 'cc-csc', 'data-rspec': 'cvv', data: { aria_errormessage: 'card-cvv--error', aria_invalid: "false", target: 'portal--make-payment.cvv' } %>
+              <span class="input__label">CVV</span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 m-t-300">
+            <%= form.label :zip, class: 'input' do %>
+              <%= form.text_field :zip, class: 'input__control', required: true, minlength: 5, maxlength: 10, autocomplete: 'postal-code', placeholder: "", inputmode: "numeric", pattern: "[0-9]*", 'data-rspec': 'zip', data: { target: 'portal--make-payment.zip', validation_message: "Please enter a valid zip code.", aria_errormessage: 'zip--error', aria_invalid: "false", mask: '00000-0000' } %>
+              <span class="input__label">ZIP Code</span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 m-t-300">
+            <%= form.label :save_card do %>
+              <%= form.check_box :save_card, data: { target: 'portal--make-payment.saveCardCheckbox', skip_validation: "true", rspec: "save-card-checkbox" } %>
+              <span class="fs-body-md">Save Card on file.</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="container p-0 m-t-300">
+        <p class="d-none" data-target="portal--make-payment.footerText">By clicking 'Submit Payment', you agree to our <%= link_to 'Electronic Funds Transfer Authorization', url_for(electronic_fund_transfer_link&.expiring_url), target: "_blank", class: 'text--secondary', 'data-rspec': 'electronics-transfer-link' %>. Your card will be charged immediately upon submission.</p>
+        <p class="d-none" data-target="portal--make-payment.savedCardFooterText">Your card will be charged immediately upon submission.</p>
+        <div class="row p-0 container around-xs">
+          <div class="col-xs-6">
+            <%= form.submit "Submit Payment", data: { rspec: "make-payment-submit", action: "portal--make-payment#submit", target: "portal--make-payment.formSubmitButton" }, class: 'button button–-block button--md button--primary' %>
+          </div>
+          <div class="col-xs-6">
+            <kin-button variant="secondary" onclick="this.closest('kin-dialog').hide()">Cancel</kin-button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-none" data-target="portal--make-payment.errorMessage">
+      <p>Please try again or contact us at <a href="tel:+1-855-216-7674" class="text--link secondary text--bold">(855) 216-7674</a>.</p>
+    </div>
+
+    <div class="d-none m-t-600" data-target="portal--make-payment.successOrErrorCloseButton" >
+      <button type="button" onclick="this.closest('kin-dialog').hide()" class="button button--md button--primary">Close</button>
+    </div>
+
+    <div class="m-t-300"></div>
+
+    <% content_for :head do %> <%= javascript_include_tag ENV["ACCEPT_JS_URL"] %> <% end %>
+  </kin-dialog>
+<% end %>

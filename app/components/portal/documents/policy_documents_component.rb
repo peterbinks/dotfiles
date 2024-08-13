@@ -1,0 +1,171 @@
+module Portal
+  module Documents
+    # A component that displays the documents for a given policy.
+    class PolicyDocumentsComponent < Portal::ViewComponent::Base
+      include Portal::PoliciesHelper
+      include Portal::IconHelper
+
+      # The current labels for documents.
+      LATEST_VERSION_LABELS_PRIMARY = %w[
+        notice_of_cancellation
+        notice_of_future_cancellation
+        notice_of_non_payment_cancellation
+        notice_of_non_renewal
+        cancellation_request
+        proof_for_cancellation
+        no_longer_pending_cancellation_action_required
+        no_longer_pending_cancellation_issue_resolved
+        policy_renewal_packet
+        policy_packet
+        declaration_page
+        notice_of_change_in_policy_terms
+        mortgagee_invoice
+        notice_of_hurricane_deductible
+      ].freeze
+
+      # Third comes before second because second is derivative
+      LATEST_VERSION_LABELS_TERTIARY = %w[
+        subscriber_agreement
+        surplus_lines_acknowledgement_form
+        receipt
+        statement_of_no_loss
+        responsible_repair
+      ]
+
+      LATEST_VERSION_LABELS_SECONDARY = Document.labels.keys - LATEST_VERSION_LABELS_PRIMARY - LATEST_VERSION_LABELS_TERTIARY
+
+      # @return [BrightPolicy] the policy associated with the documents.
+      attr_reader :policy
+
+      # Initializes a new instance of the PolicyDocumentsComponent class.
+      #
+      # @param policy [BrightPolicy]
+      def initialize(policy:)
+        @policy = policy
+        @all_documents = related_documents.shown_in_portal
+      end
+
+      # Retrieves the related documents for the policy.
+      #
+      # @return [ActiveRecord::Relation<Document>]
+      def related_documents
+        @related_documents ||=
+          Document.includes(saved_file_attachment: :blob).where(documentable: policy).or(
+            Document.includes(saved_file_attachment: :blob).where(person: @policy.applicants.map(&:contact), documentable: [policy, nil])
+          ).distinct
+            .order(term: :desc, updated_at: :desc)
+      end
+
+      # Checks if there are no documents associated with this policy.
+      #
+      # @return [Boolean]
+      def empty?
+        @all_documents.none?
+      end
+
+      # Retrieves documents for the current term.
+      #
+      # @return [Array<Document>]
+      def current_documents
+        @current_documents ||=
+          primary_documents |
+          secondary_documents |
+          tertiary_documents
+      end
+
+      # Retrieves documents for previous terms.
+      #
+      # @return [Array<Document>]
+      def outdated_documents
+        @outdated_documents ||= (@all_documents - current_documents)
+          .reject(&:notice_of_hurricane_deductible?)
+      end
+
+      private
+
+      # Groups all documents by their label.
+      #
+      # @return [Hash{String => Array<Document>}]
+      def all_documents_grouped
+        @all_documents_grouped ||= @all_documents.group_by(&:label)
+      end
+
+      # Retrieves the primary documents based on the latest version labels.
+      #
+      # @return [Array<Document>]
+      def primary_documents
+        @primary_documents ||= all_documents_grouped
+          .select { |k, v| LATEST_VERSION_LABELS_PRIMARY.include?(k) }
+          .values
+          .flatten
+          .reject { |doc| doc.label == "policy_packet" && policy.term > 0 }
+          .uniq(&:label)
+      end
+
+      # Retrieves the secondary documents based on the document labels.
+      #
+      # @return [Array<Document>]
+      def secondary_documents
+        @secondary_documents ||= all_documents_grouped
+          .select { |k, v| LATEST_VERSION_LABELS_SECONDARY.include?(k) }
+          .values
+          .flatten
+          .uniq(&:label)
+      end
+
+      # Retrieves the tertiary documents.
+      #
+      # @return [Array<Document>]
+      def tertiary_documents
+        subscriber_agreement +
+          surplus_lines_acknowledgement_form +
+          receipt +
+          statement_of_no_loss +
+          responsible_repair
+      end
+
+      # Retrieves the subscriber agreement documents.
+      #
+      # @return [Array<Document>]
+      def subscriber_agreement
+        @subscriber_agreement ||=
+          all_documents_grouped.fetch("subscriber_agreement", [])
+      end
+
+      # Retrieves the surplus lines acknowledgement form documents.
+      #
+      # @return [Array<Document>]
+      def surplus_lines_acknowledgement_form
+        @surplus_lines_acknowledgement_form ||=
+          all_documents_grouped.fetch("surplus_lines_acknowledgement_form", [])
+      end
+
+      # Retrieves the receipt documents for the current term.
+      #
+      # @return [Array<Document>]
+      def receipt
+        @receipt ||= all_documents_grouped
+          .fetch("receipt", [])
+          .select { |doc| doc.term >= policy.term }
+      end
+
+      # Retrieves the statement of no loss documents.
+      #
+      # @return [Array<Document>]
+      def statement_of_no_loss
+        @statement_of_no_loss ||= all_documents_grouped
+          .fetch("statement_of_no_loss", [])
+          .uniq(&:person)
+      end
+
+      # Retrieves the responsible repair documents.
+      #
+      # @return [Array<Document>]
+      def responsible_repair
+        @responsible_repair ||= all_documents_grouped
+          .fetch("responsible_repair", [])
+          .uniq(&:person)
+      end
+    end
+  end
+end

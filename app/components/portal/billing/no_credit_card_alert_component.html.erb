@@ -1,0 +1,5 @@
+<kin-alert class="m-b-300" open closable variant="danger">
+  <p class="text nomargin">There is no card on file for this policy. Please add a payment method to ensure your policy remains active.</p>
+  <%= show_dialog 'Add a Credit Card', 'newCreditCardModal', class:"button button--link button--sm"%>
+  <%= render(Portal::Policies::AddNewCreditCardComponent.new(policy: @policy)) %>
+</kin-alert>

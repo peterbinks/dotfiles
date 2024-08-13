@@ -1,0 +1,68 @@
+<%= validated_form_with(url: portal_settings_accounts_path, method: :patch) do |form| %>
+  <kin-dialog id='editMailingAddressModal' scrollBackdrop size="sm" style="--kin-dialog-header-text-align: left">
+    <h2 slot="header" class="m-0" data-rspec='edit-phone-header'>Edit Mailing Address</h2>
+
+    <div class="d-block">
+      <div class="container p-0">
+        <div class="row">
+          <div class="col-xs-12">
+            <%= form.label :address, class: 'input' do %>
+              <%= form.text_field :address, placeholder: "Address", required: true, class: 'input__control', 'data-rspec': 'address', data: { aria_errormessage: 'address--error', aria_invalid: "false", validation_message: "Please enter a valid street address." } %>
+              <span class="input__label">Address</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="container p-0">
+        <div class="row">
+          <div class="col-xs-12">
+            <%= form.label :address_optional, class: 'input' do %>
+              <%= form.text_field :address_optional, placeholder: "Unit, Apt, Suite (Optional)", class: 'input__control', 'data-rspec': 'address_optional', data: { aria_errormessage: 'address--error', aria_invalid: "false" } %>
+              <span class="input__label">Unit, Apt, Suite (Optional)</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="container p-0">
+        <div class="row">
+          <div class="col-xs-6">
+            <%= form.label :city, class: 'input' do %>
+              <%= form.text_field :city, placeholder: "City", required: true, class: 'input__control', 'data-rspec': 'city', data: { aria_errormessage: 'address--error', aria_invalid: "false", validation_message: "Please enter a valid city." } %>
+              <span class="input__label">City</span>
+            <% end %>
+          </div>
+          <div class="col-xs-6">
+            <%= form.label :state, class: 'input' do %>
+              <%= form.text_field :state, placeholder: "State", required: true, class: 'input__control', 'data-rspec': 'state', data: { aria_errormessage: 'address--error', aria_invalid: "false", validation_message: "Please enter a valid state." } %>
+              <span class="input__label">State</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="container p-0">
+        <div class="row">
+          <div class="col-xs-12">
+            <%= form.label :zip_code, class: 'input' do %>
+              <%= form.text_field :zip_code, placeholder: "ZIP code", required: true, class: 'input__control', 'data-rspec': 'zip_code', data: { aria_errormessage: 'address--error', aria_invalid: "false", validation_message: "Please enter a valid ZIP code." } %>
+              <span class="input__label">ZIP code</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="container p-0 m-t-600">
+        <div class="row p-0 container start-xs">
+          <div class="m-l-100 m-r-200">
+            <%= form.submit "Save", data: { rspec: "save-phone-submit" }, class: 'button button–-block button--md button--primary' %>
+          </div>
+          <div>
+            <kin-button variant="secondary" onclick="this.closest('kin-dialog').hide()">Cancel</kin-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </kin-dialog>
+<% end %>

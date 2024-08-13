@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-xs-12">
+    <section class="card card--medium rounded-400" id="documents">
+      <div class="container-fluid">
+        <div class="row row--collapse">
+          <h2 class="hdg hdg-2--section">Estimates</h2>
+        </div>
+        <ul class="dash--list-v">
+          <hr class="line--dash"/>
+          <% @estimates.each do |estimate| %> 
+            <li class="dash--list-v--item">
+              <div class="row row--collapse between-xs">
+                <div class="col-xs-8 col-sm-6 vr">
+                  <ul class="h-list h-list--middle">
+                    <li>
+                      <div class="col-xs-1 doc-type pdf" role="img" aria-label="pdf document icon"></div> 
+                    </li>
+                    <li>
+                      <p class="text text--md">
+                        <%= "#{estimate["filename"]}" %>
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+                  <div class="col-xs-2 col-sm-3 vr text--right">
+                    <%= link_to "View", estimate["url"], target: "_blank" %>
+                  </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </section>
+  </div>
+</div>

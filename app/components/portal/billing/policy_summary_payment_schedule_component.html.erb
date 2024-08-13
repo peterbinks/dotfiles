@@ -1,0 +1,66 @@
+<section class="card rounded-400 m-b-200" data-rspec="payment-schedule-block">
+  <div class="container-fluid p-x-0">
+    <div class="m-b-400">
+      <h3>Payment Schedule</h3>
+    </div>
+    <div class="table-wrapper" data-rspec="payment-schedule-table">
+      <table class="table table--unstriped table--open" summary="Payment Schedule Table">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Payment Date</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody class="no-wrap">
+          <% billing_transactions.each do |billing_transaction| %>
+            <tr>
+              <td class=<%= disable_text_color(billing_transaction)%>>
+                <%= payment_type_to_display(billing_transaction) %>
+              </td>
+              <td class=<%= disable_text_color(billing_transaction)%>>
+                <%= number_to_currency(billing_transaction.amount) %>
+              </td>
+              <td class=<%= disable_text_color(billing_transaction)%>>
+                <%= billing_transaction.due_date %>
+                <% if payment_due_date_extended?(billing_transaction, policy) %>
+                  <kin-tooltip size="md">
+                    <%= "Payment due date extended due to Protection Period" %>
+                  </kin-tooltip>
+                <% end %>
+              </td>
+              <td class="is--<%= billing_transaction.status %>">
+                <% if billing_transaction.status == "approved" %>
+                  <%= "Paid" %>
+                <% else %>
+                  <%= billing_transaction.status.titleize %>
+                <% end %>
+                <% if billing_transaction.status_approved? && billing_transaction.approved_by || billing_transaction.write_off?%>
+                  <kin-tooltip size="md">
+                    <% if billing_transaction.write_off? && billing_transaction.description.present? %>
+                      <%= billing_transaction.description %>
+                    <% else %>
+                      <%= "Payment made on #{billing_transaction.approved_at&.to_s(:kin_datetime)}." %>
+                    <% end %>
+                  </kin-tooltip>
+                <% end %>
+              </td>
+              <td>
+                <% if billing_transaction.status_approved? %>
+                  <% if billing_transaction&.document&.saved_file.present? %>
+                    <%= link_to 'Download Receipt', portal_routes.download_receipt_policy_billing_transaction_path(policy_id: @policy.full_policy_number, id: billing_transaction.id), class: "button button--link p-0" %>
+                  <% end %>
+                <% elsif show_payment_button?(billing_transaction) %>
+                  <%= show_dialog 'Make Payment', 'makePaymentModal', class:"button button--link button--sm text p-0" %>
+                  <%= render(Portal::Policies::MakePaymentComponent.new(policy: @policy, billing_transaction: billing_transaction)) %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

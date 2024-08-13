@@ -239,7 +239,11 @@ DEPENDENCIES
   portal!
   pretender (~> 0.2.gem)
   puma
+<<<<<<< HEAD
 >>>>>>> 64ba67c ([CS-315] Migrate portal code into engine)
+=======
+  view_component
+>>>>>>> 6c4b4f2 ([CS-315] Migrate index and show pages for policies in the portal)
 
 BUNDLED WITH
    2.5.15

@@ -1,0 +1,16 @@
+<kin-alert class="m-b-300" open closable variant="danger" data-rspec="failed-transaction-alert">
+	<div class="h-list h-list--spaced h-list--middle">
+		<div class="col-xs-9">
+			<p class="text--bold nomargin">A payment on your credit card ending in <%= last_4 %> was rejected.</p>
+			<p class="text nomargin">We were unable to charge <%= amount %> for your <%= payment_type %> payment at <%= address %>.</p>
+			<% if @policy.in_quote_post_effective_date? %>
+				<p class="text nomargin">Please call customer service at <a href="tel:+1-855-216-7674" class="text--link secondary text--bold">(855) 216-7674</a>.</p>
+			<% else %>
+				<p class="text nomargin">Please update your payment method as soon as possible to keep your policy active.</p>
+			<% end %>
+		</div>
+		<% if show_update_link? %>
+			<%= link_to "Update Credit Card", portal_routes.edit_policy_credit_card_path(policy_number), id: "edit-card-link", class: "text--link" %>
+		<% end %>
+	</div>
+</kin-alert>

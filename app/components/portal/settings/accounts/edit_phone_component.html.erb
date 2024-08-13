@@ -1,0 +1,31 @@
+<%= validated_form_with(model: @user.person, url: portal_settings_people_path, method: :patch) do |person_form| %>
+  <kin-dialog id='editPhoneModal' scrollBackdrop size="sm" style="--kin-dialog-header-text-align: left">
+    <h2 slot="header" class="m-0" data-rspec='edit-phone-header'>Edit Phone Number</h2>
+
+    <div class="d-block">
+      <div class="container p-0">
+        <div class="row">
+          <div class="col-xs-12">
+            <%= person_form.fields_for :phones, person_form.object.phones.primary.first do |phones_form| %>
+              <%= phones_form.label :number, class: 'input' do %>
+                <%= phones_form.text_field :number, placeholder: "(XXX)-XXX-XXX", required: true, class: 'input__control', type: 'tel', 'data-rspec': 'phone', value: phones_form.object.number[2..-1], data: { aria_errormessage: 'phone--error', aria_invalid: "false", mask: '(000) 000-0000', validate_phone: true, validation_message: "Please enter a valid phone number." } %>
+                <span class="input__label">Phone Number</span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="container p-0 m-t-600">
+        <div class="row p-0 container start-xs">
+          <div class="m-l-100 m-r-200">
+            <%= person_form.submit "Save", data: { rspec: "save-phone-submit" }, class: 'button button–-block button--md button--primary' %>
+          </div>
+          <div>
+            <kin-button variant="secondary" onclick="this.closest('kin-dialog').hide()">Cancel</kin-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </kin-dialog>
+<% end %>

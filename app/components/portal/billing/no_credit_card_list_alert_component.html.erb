@@ -1,0 +1,12 @@
+<kin-alert class="m-b-300" open closable variant="danger">
+  <p class="text nomargin">There is no card on file for the following <%= policy_or_policies_word %>:</p>
+    <ul class="m-l-500" style="list-style: disc">
+      <% policies_missing_credit_cards.each do |policy| %>
+        <li>
+          <a href="<%= portal_routes.policy_path(policy.full_policy_number) %>">
+            <%= policy.property&.address %></a>
+        </li>
+      <% end %>
+    </ul>
+    <p class="text nomargin">Please add a payment method <%= to_policy_or_policies_phrase %>.</p>
+</kin-alert>
