@@ -1,5 +1,4 @@
 module Portal
-  # The HomeController handles the logic for the home page of the portal.
   class HomeController < PortalController
     helper Portal::PolicyAccordionHelper
 
