@@ -227,15 +227,6 @@ DEPENDENCIES
   rspec-rails
   text_helpers
   view_component
-  factory_bot_rails
-  pg
-  portal!
-  pretender (~> 0.2.gem)
-  pry-rails
-  puma
-  rspec-rails
-  text_helpers
-  view_component
 
 BUNDLED WITH
    2.5.15
