@@ -15,6 +15,9 @@ Gem::Specification.new do |spec|
   spec.metadata["changelog_uri"] = spec.homepage + "/CHANGELOG.md"
 
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  spec.test_files = Dir["spec/**/*"]
 
   spec.add_dependency "rails", "~> 6.1.7", ">= 6.1.7.8"
+  spec.add_development_dependency "rspec-rails"
+  spec.add_development_dependency "factory_bot_rails"
 end
