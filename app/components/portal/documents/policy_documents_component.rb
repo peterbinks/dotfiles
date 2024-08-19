@@ -32,7 +32,7 @@ module Portal
         responsible_repair
       ]
 
-      LATEST_VERSION_LABELS_SECONDARY = ::Document.labels.keys - LATEST_VERSION_LABELS_PRIMARY - LATEST_VERSION_LABELS_TERTIARY
+      LATEST_VERSION_LABELS_SECONDARY = Document.labels.keys - LATEST_VERSION_LABELS_PRIMARY - LATEST_VERSION_LABELS_TERTIARY
 
       # @return [BrightPolicy] the policy associated with the documents.
       attr_reader :policy
@@ -50,8 +50,8 @@ module Portal
       # @return [ActiveRecord::Relation<Document>]
       def related_documents
         @related_documents ||=
-          ::Document.includes(saved_file_attachment: :blob).where(documentable: policy).or(
-            ::Document.includes(saved_file_attachment: :blob).where(person: @policy.applicants.map(&:contact), documentable: [policy, nil])
+          Document.includes(saved_file_attachment: :blob).where(documentable: policy).or(
+            Document.includes(saved_file_attachment: :blob).where(person: @policy.applicants.map(&:contact), documentable: [policy, nil])
           ).distinct
             .order(term: :desc, updated_at: :desc)
       end

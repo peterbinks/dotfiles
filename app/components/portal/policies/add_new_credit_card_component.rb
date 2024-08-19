@@ -5,7 +5,7 @@ module Portal
 
       def initialize(policy:)
         @policy = policy
-        @client = AuthNet::Client.new(account: policy.product.merchant_account)
+        @client = Portal::AuthNet::Client.new(account: policy.product.merchant_account)
         @electronic_fund_transfer_link = policy.recurring_payment_notice_doc.last
       end
     end

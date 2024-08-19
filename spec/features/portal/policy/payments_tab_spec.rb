@@ -54,7 +54,7 @@ describe "Policy Payment tab", :js, domain: :policy_administration do
 
     context "When there are transactions on the policy and billing is correct" do
       it "displays the payment schedule card" do
-        allow(AuthNet::Client).to receive(:new) { double("AuthClient", generate_public_client_key: "waka", login_id: "dori") }
+        allow(Portal::AuthNet::Client).to receive(:new) { double("AuthClient", generate_public_client_key: "waka", login_id: "dori") }
 
         person = build(:person)
         primary_insured = build(:primary_insured, contact: person)

@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Portal::Policies::MakePaymentComponent, type: :component do
   before do
-    allow(AuthNet::Client).to receive(:new) { double("AuthClient", generate_public_client_key: "waka", login_id: "dori") }
+    allow(Portal::AuthNet::Client).to receive(:new) { double("AuthClient", generate_public_client_key: "waka", login_id: "dori") }
   end
 
   context "when initialized" do

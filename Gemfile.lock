@@ -78,6 +78,8 @@ GEM
     factory_bot_rails (6.4.3)
       factory_bot (~> 6.4)
       railties (>= 5.0.0)
+    faker (3.4.2)
+      i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.5)
@@ -177,6 +179,9 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.1)
+    spring (4.2.1)
+    spring-commands-rspec (1.0.4)
+      spring (>= 0.9.1)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -219,12 +224,15 @@ PLATFORMS
 
 DEPENDENCIES
   factory_bot_rails
+  faker
   pg
   portal!
   pretender (~> 0.2.gem)
   pry-rails
   puma
   rspec-rails
+  spring
+  spring-commands-rspec
   text_helpers
   view_component
 

@@ -11,4 +11,10 @@ group :development, :test do
   gem 'pg'
   gem 'puma'
   gem 'pry-rails'
+  gem "spring"
+end
+
+group :test do
+  gem "spring-commands-rspec"
+  gem "faker"
 end
