@@ -23,10 +23,10 @@ module Portal
     #
     # @param policy [Policy] The policy.
     # @return [Boolean] `true` if any required documents are missing, `false` otherwise.
-    def missing_required_documents?(policy)
-      Document.required_for(policy, exclude_customer_facing: true).present? &&
-        (policy.uploaded_required_documents.where.not(review_status: "accepted").present? ||
-          policy.uploaded_required_documents.empty?)
+    def missing_required_documents?(document)
+      document.required_documents_labels.present? &&
+        (document.uploaded_but_not_accepted_required_documents.present? ||
+          document.uploaded_required_documents.empty?)
     end
 
     # Returns the CSS class for the given document type label.

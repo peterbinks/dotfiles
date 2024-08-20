@@ -5,9 +5,10 @@ module Portal
       include Portal::DocumentsHelper
       include Portal::IconHelper
 
-      def initialize(policy:, user:)
-        @policy = policy
-        @user = user
+      def initialize(data:)
+        @policy = data.policy
+        @user = data.user
+        @document = data.document
       end
     end
   end

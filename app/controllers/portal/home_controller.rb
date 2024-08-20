@@ -1,19 +1,18 @@
 module Portal
   class HomeController < PortalController
+    before_action :load_data
+
     helper Portal::PolicyAccordionHelper
 
-    # The index action for the home page.
-    #
-    # @return [void]
+    # GET /portal
     def index
       @page_title = text("views.my_policies.index.heading")
-      load_policies
       load_slide_carousel
       load_policy_accordion
       load_resumable_policy
-      load_failed_card_transactions
     end
 
+    # POST /portal/close_policy_prep_component
     def close_policy_prep_component
       policy = BrightPolicy.find(params[:bright_policy_id])
       policy.record_activity(:policy_prep_component_closed, whodunnit: current_person.id)
@@ -23,10 +22,17 @@ module Portal
 
     private
 
+    def load_data
+      @__data = OpenStruct.new(
+        policies: policies,
+        failed_card_transactions: failed_card_transactions
+      )
+    end
+
     # Loads the policies for the current person.
     #
     # @return [Array<BrightPolicy>] Signed and bound or in-force policies, sorted by effective date + cancelled policies sorted by effective date.
-    def load_policies
+    def policies
       @policies ||= (signed_policies | bound_or_in_force_policies).sort_by(&:effective_date) +
         cancelled_policies.sort_by(&:effective_date)
     end
@@ -92,7 +98,7 @@ module Portal
     # Loads and sets the failed card transactions for the policies.
     #
     # @return [void]
-    def load_failed_card_transactions
+    def failed_card_transactions
       @failed_card_transactions = @policies
         .select(&:payment_type_card?)
         .each_with_object([]) do |policy, failures|

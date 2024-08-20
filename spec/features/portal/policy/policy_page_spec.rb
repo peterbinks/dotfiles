@@ -15,8 +15,8 @@ describe "Policy Page", :js, domain: :policy_administration do
 
     context "when the payment type is card and there is a failed transaction scheduled after the effective date" do
       it "displays the failed transaction alerts" do
-        allow(Portal::AuthNet::Client).to receive(:new) { double("AuthClient", generate_public_client_key: "waka", login_id: "dori") }
-        person = Portal::Person.new
+        allow(AuthNet::Client).to receive(:new) { double("AuthClient", generate_public_client_key: "waka", login_id: "dori") }
+        person = build(:person)
         credit_card = create(:credit_card, :with_auth_net_data)
         primary_insured = build(:primary_insured, contact: person, payment_method: credit_card)
         sign_in person.user

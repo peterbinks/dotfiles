@@ -32,7 +32,7 @@ module Portal
         responsible_repair
       ]
 
-      LATEST_VERSION_LABELS_SECONDARY = Document.labels.keys - LATEST_VERSION_LABELS_PRIMARY - LATEST_VERSION_LABELS_TERTIARY
+      LATEST_VERSION_LABELS_SECONDARY = Portal::Document.labels.keys - LATEST_VERSION_LABELS_PRIMARY - LATEST_VERSION_LABELS_TERTIARY
 
       # @return [BrightPolicy] the policy associated with the documents.
       attr_reader :policy
@@ -40,20 +40,9 @@ module Portal
       # Initializes a new instance of the PolicyDocumentsComponent class.
       #
       # @param policy [BrightPolicy]
-      def initialize(policy:)
-        @policy = policy
-        @all_documents = related_documents.shown_in_portal
-      end
-
-      # Retrieves the related documents for the policy.
-      #
-      # @return [ActiveRecord::Relation<Document>]
-      def related_documents
-        @related_documents ||=
-          Document.includes(saved_file_attachment: :blob).where(documentable: policy).or(
-            Document.includes(saved_file_attachment: :blob).where(person: @policy.applicants.map(&:contact), documentable: [policy, nil])
-          ).distinct
-            .order(term: :desc, updated_at: :desc)
+      def initialize(data:)
+        @policy = data.policy
+        @all_documents = data.document.documents_for_policy_show_page
       end
 
       # Checks if there are no documents associated with this policy.

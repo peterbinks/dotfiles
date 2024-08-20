@@ -6,9 +6,9 @@ module Portal
       include Portal::ProductsHelper
       include Portal::IconHelper
 
-      def initialize(policy:)
-        @policy = policy
-        @all_documents = @policy.related_documents.shown_in_portal
+      def initialize(data:)
+        @policy = data.policy
+        @all_documents = data.policy.related_documents.shown_in_portal
       end
 
       def renewal_declaration_page

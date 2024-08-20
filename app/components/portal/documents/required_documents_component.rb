@@ -10,23 +10,17 @@ module Portal
       #
       # @param policy [Policy] The policy for which to display the required documents.
       # @param user [User] The user associated with the policy.
-      def initialize(policy:, user:)
-        @policy = policy
-        @user = user
+      def initialize(data:)
+        @policy = data.policy
+        @user = data.user
+        @document = data.document
       end
 
       # Determines whether to render the component.
       #
       # @return [Boolean] `true` if there are missing required documents, `false` otherwise.
       def render?
-        missing_required_documents?(@policy)
-      end
-
-      # Retrieves the unique required documents for the policy.
-      #
-      # @return [Array<String>] An array of unique required document labels.
-      def unique_required_documents
-        @policy.uploaded_required_documents.pluck(:label).concat(Document.required_for(@policy, exclude_customer_facing: true)).uniq
+        missing_required_documents?(@document)
       end
     end
   end

@@ -5,11 +5,11 @@ RSpec.describe Portal::Policies::AddNewCreditCardComponent, :js, type: :componen
   let(:product) { double("Product", merchant_account: merchant_account) }
   let(:recurring_payment_notice_doc) { [double("Document", expiring_url: "http://example.com/eft_authorization")] }
   let(:policy) { double("Policy", recurring_payment_notice_doc: recurring_payment_notice_doc, product: product, full_policy_number: "KIN-HO-FL-248835486") }
-  let(:auth_net_client) { instance_double(Portal::AuthNet::Client, login_id: "login_id_value", generate_public_client_key: "client_key") }
+  let(:auth_net_client) { instance_double(AuthNet::Client, login_id: "login_id_value", generate_public_client_key: "client_key") }
   let(:component) { described_class.new(policy: policy) }
 
   before do
-    allow(Portal::AuthNet::Client).to receive(:new).with(account: merchant_account).and_return(auth_net_client)
+    allow(AuthNet::Client).to receive(:new).with(account: merchant_account).and_return(auth_net_client)
     render_inline(component)
   end
 
