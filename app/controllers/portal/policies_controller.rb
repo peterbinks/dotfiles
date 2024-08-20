@@ -1,6 +1,6 @@
 module Portal
   class PoliciesController < PortalController
-    before_action :load_data
+    before_action :load_show_data
     before_action :authorize_user
 
     helper Portal::PoliciesHelper
@@ -12,7 +12,7 @@ module Portal
 
     private
 
-    def load_data
+    def load_show_data
       @__data = OpenStruct.new(
         policy: policy,
         document: Portal::Document.new(policy).policy_show_page,
@@ -21,16 +21,16 @@ module Portal
       )
     end
 
+    def policy
+      @policy ||= Portal::BrightPolicy.from_policy_number(params[:id])
+    end
+
     def failed_card_transactions
       return if policy.payment_type != "card"
 
       @failed_card_transactions = policy.billing_transactions.status_rejected.select do |transaction|
         transaction.updated_at > (policy.credit_card&.updated_at || policy.effective_date)
       end
-    end
-
-    def policy
-      @policy ||= BrightPolicy.from_policy_number(params[:id])
     end
 
     def authorize_user

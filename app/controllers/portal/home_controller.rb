@@ -1,61 +1,30 @@
 module Portal
   class HomeController < PortalController
-    before_action :load_data
+    before_action :load_index_data
 
     helper Portal::PolicyAccordionHelper
 
     # GET /portal
     def index
+      load_index_data
+
       @page_title = text("views.my_policies.index.heading")
       load_slide_carousel
       load_policy_accordion
       load_resumable_policy
     end
 
-    # POST /portal/close_policy_prep_component
-    def close_policy_prep_component
-      policy = BrightPolicy.find(params[:bright_policy_id])
-      policy.record_activity(:policy_prep_component_closed, whodunnit: current_person.id)
-
-      redirect_to "/portal"
-    end
-
     private
 
-    def load_data
+    def load_index_data
       @__data = OpenStruct.new(
         policies: policies,
         failed_card_transactions: failed_card_transactions
       )
     end
 
-    # Loads the policies for the current person.
-    #
-    # @return [Array<BrightPolicy>] Signed and bound or in-force policies, sorted by effective date + cancelled policies sorted by effective date.
     def policies
-      @policies ||= (signed_policies | bound_or_in_force_policies).sort_by(&:effective_date) +
-        cancelled_policies.sort_by(&:effective_date)
-    end
-
-    # Retrieves the signed policies for the current person.
-    #
-    # @return [ActiveRecord::Relation<BrightPolicy>] The signed policies.
-    def signed_policies
-      current_person.bright_policies.quote.applied_for(current_person).with_signed_application
-    end
-
-    # Retrieves the bound or in-force policies for the current person.
-    #
-    # @return [ActiveRecord::Relation<BrightPolicy>] The bound or in-force policies.
-    def bound_or_in_force_policies
-      current_person.bright_policies.bound_or_in_force
-    end
-
-    # Retrieves the cancelled policies for the current person.
-    #
-    # @return [ActiveRecord::Relation<BrightPolicy>] The cancelled policies.
-    def cancelled_policies
-      current_person.bright_policies.cancelled
+      @policies ||= Portal::BrightPolicy.new(current_person).portal_index_page.policies
     end
 
     # Loads and sets the slide carousel if it should be shown.
@@ -74,9 +43,9 @@ module Portal
     #
     # @return [void]
     def load_policy_accordion
-      return if @policies.blank?
+      return if policies.blank?
 
-      @steps = PolicyAccordion::StepSerializer.new(@policies).to_a
+      @steps = PolicyAccordion::StepSerializer.new(policies).to_a
     end
 
     # Checks if the slide carousel should be shown.
@@ -99,12 +68,12 @@ module Portal
     #
     # @return [void]
     def failed_card_transactions
-      @failed_card_transactions = @policies
-        .select(&:payment_type_card?)
-        .each_with_object([]) do |policy, failures|
-        policy.billing_transactions.status_rejected.each do |transaction|
-          failures << transaction if transaction.updated_at > (policy.credit_card&.updated_at || policy.effective_date)
-        end
+      @failed_card_transactions = policies
+          .select(&:payment_type_card?)
+          .each_with_object([]) do |policy, failures|
+          policy.billing_transactions.status_rejected.each do |transaction|
+            failures << transaction if transaction.updated_at > (policy.credit_card&.updated_at || policy.effective_date)
+          end
       end
     end
 
@@ -119,9 +88,9 @@ module Portal
     #
     # @return [BrightPolicy, nil] The most recent policy, or `nil` if no policies are loaded.
     def most_recent_policy
-      return if @policies.empty?
+      return if policies.empty?
 
-      @policies.sort_by(&:created_at).reverse[0]
+      policies.sort_by(&:created_at).reverse[0]
     end
 
     # Retrieves the customer portal slides for the most recent policy.
