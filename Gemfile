@@ -15,6 +15,7 @@ group :development, :test do
 end
 
 group :test do
+  gem "capybara"
   gem "spring-commands-rspec"
   gem "faker"
 end

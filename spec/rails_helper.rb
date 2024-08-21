@@ -1,8 +1,9 @@
-# This file is copied to spec/ when you run 'rails generate rspec:install'
-require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
-
 require File.expand_path("../../test/dummy/config/environment.rb", __FILE__)
+require 'spec_helper'
+require "view_component/test_helpers"
+require "view_component/system_test_helpers"
+require "capybara/rspec"
 
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
@@ -40,8 +41,9 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = Rails.root.join('spec/fixtures')
 
-  # Allows us to use FactoryBot like create(:user) and build(:user) in our tests
-  config.include FactoryBot::Syntax::Methods
+  config.include ViewComponent::TestHelpers, type: :component
+  config.include ViewComponent::SystemTestHelpers, type: :component
+  config.include Capybara::RSpecMatchers, type: :component
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

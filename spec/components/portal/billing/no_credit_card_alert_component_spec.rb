@@ -32,11 +32,10 @@ RSpec.describe Portal::Billing::NoCreditCardAlertComponent, domain: :policy_admi
   context "The policy does have a card" do
     context "Payment type is card" do
       it "Should not render the component" do
-        credit_card = build_stubbed(:credit_card, :with_auth_net_data)
         policy = double(
           "BrightPolicy",
           payment_type: "card",
-          credit_card: credit_card,
+          credit_card: double("credit_card"),
           recurring_payment_notice_doc: "link_to_document",
         )
 
@@ -46,11 +45,10 @@ RSpec.describe Portal::Billing::NoCreditCardAlertComponent, domain: :policy_admi
 
     context "Payment type is escrow" do
       it "Should not render the component" do
-        credit_card = build_stubbed(:credit_card, :with_auth_net_data)
         policy = double(
           "BrightPolicy",
           payment_type: "escrow",
-          credit_card: credit_card,
+          credit_card: double("credit_card"),
           recurring_payment_notice_doc: "link_to_document",
         )
 

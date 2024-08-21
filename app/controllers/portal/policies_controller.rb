@@ -17,20 +17,12 @@ module Portal
         policy: policy,
         document: Portal::Document.new(policy).policy_show_page,
         user: current_user,
-        failed_transactions: failed_card_transactions
+        transactions: Portal::BillingTransactions.new(policy).policy_show_page
       )
     end
 
     def policy
       @policy ||= Portal::BrightPolicy.from_policy_number(params[:id])
-    end
-
-    def failed_card_transactions
-      return if policy.payment_type != "card"
-
-      @failed_card_transactions = policy.billing_transactions.status_rejected.select do |transaction|
-        transaction.updated_at > (policy.credit_card&.updated_at || policy.effective_date)
-      end
     end
 
     def authorize_user
