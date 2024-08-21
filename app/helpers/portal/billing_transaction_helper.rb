@@ -26,69 +26,8 @@ module Portal
         reinstatement_number: reinstatement_number)
     end
 
-    def payment_form_type(billing_transaction, policy)
-      if billing_transaction_refund_by_check?(billing_transaction)
-        "escrow"
-      else
-        policy.payment_type
-      end
-    end
-
     def payment_due_date_extended?(billing_transaction, policy)
       ProtectionPeriod.rescheduled_transactions_for_policy(policy.id).include?(billing_transaction.id)
-    end
-
-    def billing_transaction_refund_by_check?(billing_transaction)
-      user = User.find_by(email: "checks@kin.com")
-
-      return false unless user
-
-      (billing_transaction&.refund? &&
-        billing_transaction&.status_approved? &&
-        billing_transaction&.approved_by == user)
-    end
-
-    # Returns true or false if the policy must be refunded by check or not
-    # Authorize.net has a 180 days restriction to be a valid refund via CC
-    # so in this case could be refunded by CC only for Check
-    #
-    # @note We need to filter out transactions that do not have an approved_at date.
-    # @param policy [BrightPolicy] the policy which is being refunded
-    # @return [Boolean]
-    def must_refund_by_check?(policy)
-      last_approved_transaction = policy.billing_transactions
-        .status_approved
-        .where.not(approved_at: nil)
-        .order(approved_at: :desc)
-        .first
-
-      return true unless last_approved_transaction.presence&.deposited_on
-
-      last_approved_transaction.presence.deposited_on < 180.days.ago
-    end
-
-    def disabled_refund_method(policy)
-      if must_refund_by_check?(policy)
-        %w[credit_card]
-      else
-        []
-      end
-    end
-
-    # @param billing_transaction [Billing::ScheduledTransaction] The relevant transaction
-    # @param quote [Boolean] whether or not the policy is in quote stage
-    # @return [Array<String>] A list of Billing::ScheduledTransaction payment types
-    #
-    # Exists solely to make sure no waived refunds are applied to quotes
-    def available_payment_types_for_policy(billing_transaction, quote)
-      types = %w[scheduled write_off refund duplicate shortpayment]
-      types << "waived_refund" unless quote
-      types << billing_transaction.payment_type unless types.include?(billing_transaction.payment_type)
-      types
-    end
-
-    def transaction_display(transaction)
-      "#{number_to_currency(transaction.amount)} - #{payment_type_to_display(transaction)}"
     end
 
     private
