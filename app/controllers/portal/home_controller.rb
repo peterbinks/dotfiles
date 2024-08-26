@@ -24,14 +24,18 @@ module Portal
     end
 
     def policies
-      @policies ||= Portal::BrightPolicy.new(current_person).portal_index_page.policies
+      @policies ||= Portal::Policy.active_policies(person_id: current_person.id)
+    end
+
+    def failed_card_transactions
+      @failed_card_transactions ||= Portal::BillingTransaction.failed_card_transactions_for_person(person_id: current_person.id)
     end
 
     # Loads and sets the slide carousel if it should be shown.
     #
     # @return [void]
     def load_slide_carousel
-      return if !should_show_slides?
+      return if true #!should_show_slides?
 
       create_user_interaction
 
@@ -43,7 +47,9 @@ module Portal
     #
     # @return [void]
     def load_policy_accordion
-      return if policies.blank?
+      # TODO
+
+      return if true#policies.blank?
 
       @steps = PolicyAccordion::StepSerializer.new(policies).to_a
     end
@@ -61,19 +67,6 @@ module Portal
     def load_resumable_policy
       @resumable_policy = current_person.bright_policies.find do |policy|
         policy.quote? && policy.customer_input_response.present? && policy.created_at >= 2.weeks.ago && !policy&.active_application&.signed_at
-      end
-    end
-
-    # Loads and sets the failed card transactions for the policies.
-    #
-    # @return [void]
-    def failed_card_transactions
-      @failed_card_transactions = policies
-          .select(&:payment_type_card?)
-          .each_with_object([]) do |policy, failures|
-          policy.billing_transactions.status_rejected.each do |transaction|
-            failures << transaction if transaction.updated_at > (policy.credit_card&.updated_at || policy.effective_date)
-          end
       end
     end
 

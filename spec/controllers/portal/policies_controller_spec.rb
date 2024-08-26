@@ -11,14 +11,14 @@ describe Portal::PoliciesController, domain: :policy_administration, type: :cont
 
     describe "#show" do
       it "renders the show template when only one applicant" do
-        get :show, params: {id: policy.full_policy_number}
+        get :show, params: {id: policy.policy_number}
 
         expect(response).to render_template(:show)
       end
 
       it "renders the show template when there's a co-applicant" do
         policy.policy_contacts << create(:co_applicant)
-        get :show, params: {id: policy.full_policy_number}
+        get :show, params: {id: policy.policy_number}
 
         expect(response).to render_template(:show)
       end
@@ -35,7 +35,7 @@ describe Portal::PoliciesController, domain: :policy_administration, type: :cont
         ]
         create(:document, label: "privacy_notice", show_in_portal: false, documentable: policy, person: policy.co_applicant)
         create(:document, label: "electronic_delivery_consent", show_in_portal: false, documentable: policy, person: policy.co_applicant)
-        get :show, params: {id: policy.full_policy_number}
+        get :show, params: {id: policy.policy_number}
 
         policy_documents_component = Portal::Documents::PolicyDocumentsComponent.new(policy:)
         expect(policy_documents_component.current_documents.count).to eq(documents.count)
@@ -58,7 +58,7 @@ describe Portal::PoliciesController, domain: :policy_administration, type: :cont
 
     describe "#show" do
       it "renders the show template" do
-        get :show, params: {id: policy.full_policy_number}
+        get :show, params: {id: policy.policy_number}
 
         expect(response).to render_template(:show)
       end
@@ -73,7 +73,7 @@ describe Portal::PoliciesController, domain: :policy_administration, type: :cont
         ]
         create(:document, label: "privacy_notice", show_in_portal: false, documentable: policy, person: policy.primary_insured)
         create(:document, label: "electronic_delivery_consent", show_in_portal: false, documentable: policy, person: policy.primary_insured)
-        get :show, params: {id: policy.full_policy_number}
+        get :show, params: {id: policy.policy_number}
         policy_documents_component = Portal::Documents::PolicyDocumentsComponent.new(policy:)
         expect(policy_documents_component.current_documents.count).to eq(documents.count)
       end

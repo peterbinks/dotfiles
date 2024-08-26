@@ -1,4 +1,5 @@
-<% if @slides.present? %>
+<%# # TODO %>
+<% if false#@slides.present? %>
   <kin-slide-carousel
     slides="<%= @slides %>"
     requiredDocuments="<%= @required_documents_for_slide %>"
@@ -56,16 +57,16 @@
               <h3 class="hdg hdg-1--title hdg-1--title--margin-normal">Homeowners Policy Prep</h3>
 
               <kin-policy-preparation-completion-summary
-                completedPercent="<%= get_complete_percent(_data.policy.policy_accordion_steps) %>"
-                daysRemaining="<%= days_remaining(_data.policy) %>"
-                stepData="<%= @steps[_data.policy.id] %>">
+                completedPercent="<%= get_complete_percent(policy.policy_accordion_steps) %>"
+                daysRemaining="<%= days_remaining(policy) %>"
+                stepData="<%= @steps[policy.id] %>">
               </kin-policy-preparation-completion-summary>
               
               <kin-policy-preparation-accordion
                 newPurchase="<%= policy.new_purchase? %>"
                 effectiveDate="<%= policy.effective_date %>"
                 policyId="<%= policy.id %>"
-                stepData="<%= @steps[_data.policy.id] %>">
+                stepData="<%= @steps[policy.id] %>">
               </kin-policy-preparation-accordion>
 
             </div>
@@ -75,7 +76,8 @@
             </div>
           </div>
         <% end %>
-        <% if has_completed_all_steps?(_data.policy.policy_accordion_steps) %>
+
+        <% if has_completed_all_steps?(policy.policy_accordion_steps) %>
           <div class="policy-preparation--mobile row vr--2x bg-neutral-white">
             <div class="col-xs-12" id="policy-preparation-side--mobile">
               <h3 class="hdg hdg-1--title hdg-1--title--margin-normal" style="text-align: center">
@@ -100,14 +102,14 @@
               <h3 class="hdg hdg-1--title hdg-1--title--margin-normal">Homeowners Policy Prep</h3>
 
               <kin-policy-preparation-completion-summary
-                completedPercent="<%= get_complete_percent(_data.policy.policy_accordion_steps) %>"
+                completedPercent="<%= get_complete_percent(policy.policy_accordion_steps) %>"
                 daysRemaining="<%= days_remaining(policy) %>"
-                stepData="<%= @steps[_data.policy.id] %>">
+                stepData="<%= @steps[policy.id] %>">
               </kin-policy-preparation-completion-summary>
 
               <kin-policy-preparation-accordion
                 policyId="<%= policy.id %>"
-                stepData="<%= @steps[_data.policy.id] %>">
+                stepData="<%= @steps[policy.id] %>">
               </kin-policy-preparation-accordion>
             </div>
             <%= render(Portal::Policies::PolicySummaryComponent.new(policy: policy)) %>

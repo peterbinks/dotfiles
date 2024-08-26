@@ -9,7 +9,7 @@ module Portal
       # @param policies [Array<BrightPolicy>] all of a person's policies.
       def initialize(policies:)
         @policies_missing_credit_cards = policies.select do |policy|
-          !policy.credit_card && policy.payment_type == "card"
+          policy.credit_card.blank? && policy.payment_type == "card"
         end
       end
 

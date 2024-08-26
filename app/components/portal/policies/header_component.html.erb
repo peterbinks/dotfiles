@@ -10,7 +10,7 @@
     </ul>
   </div>
 </div>
-<% if documents_all_pending_review?(@document.uploaded_required_documents) %>
+<% if documents_all_pending_review?(@policy.uploaded_required_documents) %>
   <div class="row">
     <div class="col-xs-12">
       <div class="panel panel__primary panel__rounded">
@@ -21,7 +21,7 @@
       </div>
     </div>
   </div>
-<% elsif missing_required_documents?(@document) %>
+<% elsif missing_required_documents?(@policy) %>
   <div class="row">
     <div class="col-xs-12">
       <div class="container-fluid panel panel__alert panel__rounded">
@@ -35,9 +35,9 @@
                     You must add the following documents before your policy effective date (<%= @policy.effective_date.to_date.to_s(:kin_date) %>):
                   </p>
                 </div>
-                <% if @document.required_documents_labels.present? %>
+                <% if @policy.required_documents_labels.present? %>
                   <ul class="list--bullet">
-                    <% @document.required_documents_labels.each do |label| %>
+                    <% @policy.required_documents_labels.each do |label| %>
                       <li class="text text--md text--warning nomargin">
                         <%= label.titleize %>
                       </li>
@@ -45,7 +45,7 @@
                   </ul>
                 <% else %>
                   <ul class="list--bullet">
-                    <% @document.uploaded_required_documents.each do |document| %>
+                    <% @policy.uploaded_required_documents.each do |document| %>
                       <li class="dash--list-v--item panel--detail">
                         <p class="text text--md text--warning">
                           <%= text("views.nok.funnel.upload_document.#{document.label}.name") %>

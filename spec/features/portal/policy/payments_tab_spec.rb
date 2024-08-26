@@ -9,7 +9,7 @@ describe "Policy Payment tab", :js, domain: :policy_administration do
         sign_in person.user
         policy = create(:bright_policy, :bound, policy_contacts: [primary_insured], payment_type: "escrow")
 
-        visit portal_policy_path(id: policy.full_policy_number)
+        visit portal_policy_path(id: policy.policy_number)
         find("kin-tab", text: "Payments").click
 
         expect(page).to_not have_css('[data-rspec="card-payment-block"]')
@@ -25,7 +25,7 @@ describe "Policy Payment tab", :js, domain: :policy_administration do
         sign_in person.user
         policy = create(:bright_policy, :bound, policy_contacts: [primary_insured], payment_type: "card")
 
-        visit portal_policy_path(id: policy.full_policy_number)
+        visit portal_policy_path(id: policy.policy_number)
         find("kin-tab", text: "Payments").click
 
         expect(page).to have_css('[data-rspec="card-payment-block"]')
@@ -44,7 +44,7 @@ describe "Policy Payment tab", :js, domain: :policy_administration do
         policy = create(:bright_policy, :bound, policy_contacts: [primary_insured], frozen_rating: create(:rating, :output_override, total_premium: 400, total_fees: 0, premium_total: 400))
         create(:billing_transaction, due_date: Date.tomorrow, bright_policy: policy, amount: 1102, empa_fee: 2, accounting_premium: 1000, surplus: 100)
 
-        visit portal_policy_path(id: policy.full_policy_number)
+        visit portal_policy_path(id: policy.policy_number)
         find("kin-tab", text: "Payments").click
 
         expect(page).to_not have_css('[data-rspec="payment-schedule-block"]')
@@ -64,7 +64,7 @@ describe "Policy Payment tab", :js, domain: :policy_administration do
         policy = create(:bright_policy, :bound, policy_contacts: [primary_insured], frozen_rating: create(:rating, :output_override, total_premium: 1000, total_fees: 0, premium_total: 1000))
         create(:billing_transaction, due_date: Date.tomorrow, bright_policy: policy, amount: 1102, empa_fee: 2, accounting_premium: 1000, surplus: 100)
 
-        visit portal_policy_path(id: policy.full_policy_number)
+        visit portal_policy_path(id: policy.policy_number)
         find("kin-tab", text: "Payments").click
 
         expect(page).to have_css('[data-rspec="payment-schedule-block"]')

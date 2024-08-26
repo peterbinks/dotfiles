@@ -40,9 +40,9 @@ module Portal
       # Initializes a new instance of the PolicyDocumentsComponent class.
       #
       # @param policy [BrightPolicy]
-      def initialize(data:)
-        @policy = data.policy
-        @all_documents = data.document.documents_for_policy_show_page
+      def initialize(policy:)
+        @policy = policy
+        @all_documents = policy.portal_documents
       end
 
       # Checks if there are no documents associated with this policy.

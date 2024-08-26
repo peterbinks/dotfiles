@@ -12,7 +12,9 @@ module Portal
       end
 
       def policy_number
-        @policy.full_policy_number
+        # TODO: Check if policy_number == full_policy_number
+        @policy.policy_number
+        # @policy.policy_number
       end
 
       def amount

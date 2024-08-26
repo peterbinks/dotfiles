@@ -12,8 +12,8 @@
         </div>
         <hr class="line--dash"/>
         <ul class="dash--list-v">
-          <% if @document.uploaded_required_documents.blank? %>
-            <% @document.required_documents_labels.each do |label| %>
+          <% if @policy.uploaded_required_documents.blank? %>
+            <% @policy.required_documents_labels.each do |label| %>
               <li class="dash--list-v--item">
                 <div class="row row--collapse between-xs">
                   <div class="col-xs-12 col-sm-10 vr">
@@ -35,7 +35,7 @@
               </li>
             <% end %>
           <% else %>
-            <% @document.unique_required_documents.each do |document| %>
+            <% @policy.unique_required_documents.each do |document| %>
               <% if document %>
                 <li class="dash--list-v--item">
                   <div class="row between-xs">

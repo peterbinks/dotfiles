@@ -10,6 +10,7 @@ module Portal
     def render_policy_accordion_component?(policy)
       steps = policy&.policy_accordion_steps
 
+      return false if policy.was_in_force
       return false if steps.blank?
       return false if past_goal_date?(policy) && all_remaining_steps_are_optional?(steps)
       return false if has_completed_all_steps?(steps) && all_relevant_documents_reviewed?(policy) && past_goal_date?(policy)
@@ -54,9 +55,21 @@ module Portal
     end
 
     # @param policy [BrightPolicy]
+    # @return [Boolean] whether any required steps are remaining
+    def any_required_steps_remaining?(policy)
+      policy.policy_accordion_steps.where(step_complete: false, optional: false).any?
+    end
+
+    # @param policy [BrightPolicy]
     # @return [Integer] the number of days remaining to complete steps
     def days_remaining(policy)
       PolicyAccordion::Utils.days_remaining(policy)
+    end
+
+    # @param policy [BrightPolicy]
+    # @return [Boolean] if there are no days remaining to complete steps
+    def no_days_remaining?(policy)
+      days_remaining(policy) <= 0
     end
 
     # @param policy [BrightPolicy]

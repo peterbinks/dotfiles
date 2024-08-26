@@ -7,11 +7,11 @@ module Portal
         def initialize(policy:)
           @policy = policy
           @credit_card = policy.credit_card
-          @full_policy_number = policy.full_policy_number
+          @full_policy_number = policy.policy_number
         end
 
         def render?
-          policy.payment_type_card? && credit_card.present?
+          policy.credit_card.present? && policy.payment_type == "card"
         end
 
         def expiration_month

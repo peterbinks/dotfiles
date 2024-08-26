@@ -8,7 +8,7 @@ describe "Policy Page", :js, domain: :policy_administration do
       sign_in person.user
       policy = create(:bright_policy, :bound, policy_contacts: [primary_insured])
 
-      visit portal_policy_path(id: policy.full_policy_number)
+      visit portal_policy_path(id: policy.policy_number)
 
       expect(page).to have_css(".breadcrumbs")
     end
@@ -23,7 +23,7 @@ describe "Policy Page", :js, domain: :policy_administration do
         policy = create(:bright_policy, :bound, policy_contacts: [primary_insured], payment_type: :card)
         create(:billing_transaction, :with_payment_rejected, bright_policy: policy, amount: 999, accounting_premium: 999, updated_at: (policy.effective_date + 1.day))
 
-        visit portal_policy_path(id: policy.full_policy_number)
+        visit portal_policy_path(id: policy.policy_number)
 
         expect(page).to have_css('[data-rspec="failed-transaction-alert"]')
       end
@@ -35,7 +35,7 @@ describe "Policy Page", :js, domain: :policy_administration do
       sign_in person.user
       policy = create(:bright_policy, :bound, policy_contacts: [primary_insured])
 
-      visit portal_policy_path(id: policy.full_policy_number)
+      visit portal_policy_path(id: policy.policy_number)
 
       expect(page).to have_css('[data-rspec="policy-summary-detail"]')
     end
@@ -46,7 +46,7 @@ describe "Policy Page", :js, domain: :policy_administration do
       sign_in person.user
       policy = create(:bright_policy, :bound, policy_contacts: [primary_insured])
 
-      visit portal_policy_path(id: policy.full_policy_number)
+      visit portal_policy_path(id: policy.policy_number)
 
       expect(page).to have_css("kin-tabs")
 

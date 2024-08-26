@@ -15,18 +15,26 @@ module Portal
     def load_show_data
       @__data = OpenStruct.new(
         policy: policy,
-        document: Portal::Document.new(policy).policy_show_page,
         user: current_user,
-        transactions: Portal::BillingTransactions.new(policy).policy_show_page
+        failed_card_transactions: Portal::BillingTransaction.failed_card_transactions_for_policy(policy_id: policy.id)
       )
     end
 
     def policy
-      @policy ||= Portal::BrightPolicy.from_policy_number(params[:id])
+      @policy ||= Portal::Policy.get_policy(policy_number: params[:id])
     end
 
     def authorize_user
-      authorize policy, policy_class: PolicyAuthPolicy
+      current_user.has_role?(:admin) ||
+      current_user.has_role?(:impersonation) ||
+        expected_users.include?(current_user)
+    end
+
+    def expected_users
+      @expected_users ||= [
+        policy.primary_insured.user,
+        policy.co_applicant&.user
+      ].compact
     end
   end
 end

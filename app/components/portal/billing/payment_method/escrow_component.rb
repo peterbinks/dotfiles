@@ -9,7 +9,7 @@ module Portal
         end
 
         def render?
-          policy.payment_type_escrow?
+          policy.payment_type == "escrow"
         end
       end
     end

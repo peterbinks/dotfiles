@@ -8,10 +8,13 @@ module Portal
 
       def initialize(policy:)
         @policy = policy
-        @all_documents = @policy.related_documents.shown_in_portal
+        @all_documents = @policy.related_documents
       end
 
       def renewal_declaration_page
+        # TODO
+        return []
+
         @renewal_declaration_page ||= @all_documents
           .where(label: "declaration_page", term: @policy.upcoming_term)
           .order(updated_at: :desc)

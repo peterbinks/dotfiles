@@ -12,7 +12,7 @@
             <kin-pill size="lg" variant="<%= portal_policy_status_style(@policy) %>" data-rspec="quote_status"> <%= portal_policy_status_text(@policy) %></kin-pill>
           </div>
         </div>
-        <p class="nowrap">POLICY NUMBER: <span class="text--tone"><%= @policy.full_policy_number %></span>
+        <p class="nowrap">POLICY NUMBER: <span class="text--tone"><%= @policy.policy_number %></span>
           <% if @policy.coverage.flood_and_water_backup? %>
             <%= icon "shield", class: "n-icon" %> Plus Flood Coverage
           <% end %>
@@ -33,9 +33,9 @@
         <dd class="summary--value"><%= @policy.primary_insured.name %></dd>
       </div>
       <div class="summary--item">
-        <% if @policy.co_applicant.present? %>
+        <% if @policy.co_applicant&.name.present? %>
           <dt class="summary--label">Co-Applicant</dt>
-          <dd class="summary--value"><%= @policy.co_applicant.name %></dd>
+          <dd class="summary--value"><%= @policy.co_applicant&.name %></dd>
         <% end %>
       </div>
       <div class="summary--item summary--item__full">
@@ -68,8 +68,8 @@
 
   <div class="container">
     <div class="row end-xs m-t-300">
-      <%= link_to 'Submit a Claim', claims_url(@policy.full_policy_number), target: '_blank', rel: 'noopener noreferrer', id: 'report-your-claim-button', class: 'button button--secondary button--md m-b-300' %>
-      <%= link_to 'View Details and Payments', policy_path(@policy.full_policy_number), data: {rspec: 'view-details-and-payments-button'}, class: 'button button--primary button--md m-l-300 m-b-300' %>
+      <%= link_to 'Submit a Claim', claims_url(@policy.policy_number), target: '_blank', rel: 'noopener noreferrer', id: 'report-your-claim-button', class: 'button button--secondary button--md m-b-300' %>
+      <%= link_to 'View Details and Payments', policy_path(@policy.policy_number), data: {rspec: 'view-details-and-payments-button'}, class: 'button button--primary button--md m-l-300 m-b-300' %>
     </div>
   </div>
 </div>

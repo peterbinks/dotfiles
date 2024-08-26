@@ -16,7 +16,7 @@ module Portal
 
       # @return [Boolean]
       def billing_corrections_needed?
-        ::Billing::Corrector.new(policy).corrections_needed?
+        policy.billing_corrections_needed?
       end
     end
   end
