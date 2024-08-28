@@ -35,31 +35,36 @@ module Portal
     has_many :rejected_transactions_for_term
     has_many :documents
     has_many :applicants
+    has_many :terms
 
     # These need to be the EXACT name of the attribute fetched from dot-com
     attribute :id
     attribute :policy_number
     attribute :status
+
     attribute :current_term
     attribute :upcoming_term
-    attribute :effective_date
+
     attribute :active_application
     attribute :has_signed_application
+
     attribute :credit_card
     attribute :payment_type
+
     attribute :state
     attribute :timezone
+
     attribute :pending_cancellation
-    attribute :term_effective_date
-    attribute :term_end_date
     attribute :premium
     attribute :policy_accordion_steps
     attribute :was_in_force
+
     attribute :uploaded_required_documents
     attribute :uploaded_but_not_accepted_required_documents
     attribute :required_documents_labels
     attribute :unique_required_documents
     attribute :recurring_payment_notice_doc
+
     attribute :billing_corrections_needed
     attribute :auth_net_client
 
@@ -87,6 +92,18 @@ module Portal
 
     def billing_corrections_needed?
       billing_corrections_needed
+    end
+
+    def effective_date
+      terms.find { |t| t.number == 0 }&.effective_date
+    end
+
+    def term_effective_date(term = current_term)
+      terms.find { |t| t.number == term }&.effective_date
+    end
+
+    def term_end_date(term = current_term)
+      terms.find { |t| t.number == term }&.end_date
     end
   end
 end
