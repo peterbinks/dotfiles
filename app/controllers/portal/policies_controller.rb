@@ -13,27 +13,33 @@ module Portal
     private
 
     def load_show_data
-      @__data = OpenStruct.new(
-        policy: policy,
-        user: current_user,
-        failed_card_transactions: Portal::BillingTransaction.failed_card_transactions_for_policy(policy_id: policy.id)
-      )
+      load_policy
+      load_user
+      load_failed_card_transactions
     end
 
-    def policy
+    def load_policy
       @policy ||= Portal::Policy.get_policy(policy_number: params[:id])
     end
 
+    def load_user
+      @user ||= current_user
+    end
+
+    def load_failed_card_transactions
+      @failed_card_transactions ||= Portal::BillingTransaction.failed_card_transactions_for_policy(policy_id: @policy.id)
+    end
+
     def authorize_user
-      current_user.has_role?(:admin) ||
-        current_user.has_role?(:impersonation) ||
-        expected_users.include?(current_user)
+      @user.has_role?(:admin) ||
+        @user.has_role?(:impersonation) ||
+        expected_users.include?(@user)
     end
 
     def expected_users
       @expected_users ||= [
-        policy.primary_insured.user,
-        policy.co_applicant&.user
+        @policy.primary_insured.user,
+        @policy.co_applicant&.user
       ].compact
     end
   end

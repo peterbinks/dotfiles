@@ -1,13 +1,13 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-12 col-md-10">
-      <%= render(Portal::Policies::HeaderComponent.new(data: @__data)) %>
+      <%= render(Portal::Policies::HeaderComponent.new(policy: @policy)) %>
 
-      <% @__data.failed_card_transactions&.each do |transaction| %>
+      <% @failed_card_transactions&.each do |transaction| %>
         <%= render(Portal::Billing::FailedTransactionAlertComponent.new(transaction:)) %>
       <% end %>
-      <%= render(Portal::Billing::NoCreditCardAlertComponent.new(policy: @__data.policy)) %>
-      <%= render(Portal::Policies::PolicySummaryDetailComponent.new(policy: @__data.policy)) %>
+      <%= render(Portal::Billing::NoCreditCardAlertComponent.new(policy: @policy)) %>
+      <%= render(Portal::Policies::PolicySummaryDetailComponent.new(policy: @policy)) %>
     </div>
   </div>
 </div>
@@ -19,8 +19,8 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-xs-12 col-md-10">
-          <%= render(Portal::Documents::RequiredDocumentsComponent.new(policy: @__data.policy, user: @__data.user)) %>
-          <%= render(Portal::Documents::PolicyDocumentsComponent.new(policy: @__data.policy)) %>
+          <%= render(Portal::Documents::RequiredDocumentsComponent.new(policy: @policy, user: @user)) %>
+          <%= render(Portal::Documents::PolicyDocumentsComponent.new(policy: @policy)) %>
         </div>
       </div>
     </div>
@@ -29,10 +29,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-xs-12 col-md-10">
-          <%= render(Portal::Billing::BillingCorrectionsAlertComponent.new(policy: @__data.policy)) %>
-          <%= render(Portal::Billing::PaymentMethod::CardComponent.new(policy: @__data.policy)) %>
-          <%= render(Portal::Billing::PaymentMethod::EscrowComponent.new(policy: @__data.policy)) %>
-          <%= render(Portal::Billing::PolicySummaryPaymentScheduleComponent.new(policy: @__data.policy)) %>
+          <%= render(Portal::Billing::BillingCorrectionsAlertComponent.new(policy: @policy)) %>
+          <%= render(Portal::Billing::PaymentMethod::CardComponent.new(policy: @policy)) %>
+          <%= render(Portal::Billing::PaymentMethod::EscrowComponent.new(policy: @policy)) %>
+          <%= render(Portal::Billing::PolicySummaryPaymentScheduleComponent.new(policy: @policy)) %>
         </div>
       </div>
     </div>

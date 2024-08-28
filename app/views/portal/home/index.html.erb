@@ -13,13 +13,13 @@
       <p>You can <button class="text--link" data-kustomer-open="true">chat with us</button> for help, see your claims progress, view upcoming payments, review/download policy documents, and upload any required documentation.</p>
     </div>
   </div>
-  <% @__data.failed_card_transactions.each do |transaction| %>
+  <% @failed_card_transactions.each do |transaction| %>
     <%= render(Portal::Billing::FailedTransactionAlertComponent.new(transaction:)) %>
   <% end %>
 
-  <%= render(Portal::Billing::NoCreditCardListAlertComponent.new(policies: @__data.policies)) %>
+  <%= render(Portal::Billing::NoCreditCardListAlertComponent.new(policies: @policies)) %>
 
-  <% if @__data.policies.length == 0  %>
+  <% if @policies.length == 0  %>
     <div class="row vr">
       <div class="col-xs-12">
         <div class="vr">
@@ -30,7 +30,7 @@
       </div>
     </div>
   <% else %>
-    <% @__data.policies.each do |policy| %>
+    <% @policies.each do |policy| %>
       <% if render_policy_accordion_component?(policy) %>
         <% if has_completed_all_steps?(policy.policy_accordion_steps) %>
           <div class="policy-preparation--desktop row vr--2x">

@@ -6,8 +6,6 @@ module Portal
 
     # GET /portal
     def index
-      load_index_data
-
       @page_title = text("views.my_policies.index.heading")
       load_slide_carousel
       load_policy_accordion
@@ -17,17 +15,15 @@ module Portal
     private
 
     def load_index_data
-      @__data = OpenStruct.new(
-        policies: policies,
-        failed_card_transactions: failed_card_transactions
-      )
+      load_policies
+      load_failed_card_transactions
     end
 
-    def policies
+    def load_policies
       @policies ||= Portal::Policy.active_policies(person_id: current_person.id)
     end
 
-    def failed_card_transactions
+    def load_failed_card_transactions
       @failed_card_transactions ||= Portal::BillingTransaction.failed_card_transactions_for_person(person_id: current_person.id)
     end
 
