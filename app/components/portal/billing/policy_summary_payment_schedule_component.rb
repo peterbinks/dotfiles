@@ -25,15 +25,12 @@ module Portal
       #
       # @return [ActiveRecord::Relation<Billing::ScheduledTransaction>]
       def billing_transactions
-        @policy
-          .billing_transactions
-          .includes(:payment, :endorsement_request, :renewal_endorsement_request, :checkbook_io_response, :approved_by)
-          .order(term: :asc, due_date: :asc)
+        @policy.billing_transactions
       end
 
       # @return [Boolean]
       def billing_corrections_needed?
-        ::Billing::Corrector.new(@policy).corrections_needed?
+        @policy.billing_corrections_needed?
       end
 
       # Determines the text color for a transaction based on its approval status.
@@ -101,9 +98,8 @@ module Portal
       # @return [Billing::ScheduledTransaction, nil] The next upcoming transaction, or nil if none exists.
       def upcoming_transaction
         @upcoming_transaction ||=
-          @policy.billing_transactions.upcoming_for_term(@policy.term).or(
-            @policy.billing_transactions.rejected_for_term(@policy.term)
-          ).where(endorsement_request: nil).sequential.first
+          (@policy.upcoming_transactions_for_term | @policy.rejected_transactions_for_term)
+            .reject(&:endorsement_request_id).min_by(&:due_date)
       end
 
       # Returns all upcoming endorsement transactions for the policy.
@@ -111,7 +107,7 @@ module Portal
       # @return [Array<Billing::ScheduledTransaction>] The array of next upcoming endorsement transactions, or `nil` if none is found.
       def upcoming_endorsement_transactions
         @upcoming_endorsement_transactions ||=
-          @policy.billing_transactions.upcoming_for_term(@policy.term).where.not(endorsement_request: nil).to_a
+          @policy.upcoming_transactions_for_term.select(&:endorsement_request_id)
       end
     end
   end

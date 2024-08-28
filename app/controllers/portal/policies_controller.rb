@@ -26,7 +26,7 @@ module Portal
 
     def authorize_user
       current_user.has_role?(:admin) ||
-      current_user.has_role?(:impersonation) ||
+        current_user.has_role?(:impersonation) ||
         expected_users.include?(current_user)
     end
 

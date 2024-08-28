@@ -32,11 +32,11 @@ module Portal
     end
 
     def product_type_display(product)
-      if product.line_ho6?
+      if product.ho6?
         "Condo"
-      elsif product.line_dp3?
+      elsif product.dp3?
         "Dwelling"
-      elsif product.line_mh3?
+      elsif product.mh3?
         "Mobile Home"
       else
         product.product_type.titleize

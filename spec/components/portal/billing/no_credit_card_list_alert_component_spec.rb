@@ -7,7 +7,7 @@ RSpec.describe Portal::Billing::NoCreditCardListAlertComponent, domain: :policy_
         policy = double(
           "BrightPolicy",
           payment_type: "escrow",
-          credit_card: nil,
+          credit_card: nil
         )
 
         component = described_class.new(policies: [policy])
@@ -21,12 +21,12 @@ RSpec.describe Portal::Billing::NoCreditCardListAlertComponent, domain: :policy_
         policy_card = double(
           "BrightPolicy",
           payment_type: "card",
-          credit_card: nil,
+          credit_card: nil
         )
         policy_escrow = double(
           "BrightPolicy",
           payment_type: "escrow",
-          credit_card: nil,
+          credit_card: nil
         )
 
         component = described_class.new(policies: [policy_card, policy_escrow])
@@ -41,7 +41,7 @@ RSpec.describe Portal::Billing::NoCreditCardListAlertComponent, domain: :policy_
       policy = double(
         "BrightPolicy",
         payment_type: "card",
-        credit_card: true,
+        credit_card: true
       )
 
       component = described_class.new(policies: [policy])

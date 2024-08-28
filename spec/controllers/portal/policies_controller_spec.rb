@@ -69,7 +69,7 @@ describe Portal::PoliciesController, domain: :policy_administration, type: :cont
           create(:document, label: "electronic_delivery_consent", show_in_portal: true, documentable: policy, person: policy.co_applicant),
           create(:document, label: "other", show_in_portal: true, documentable: nil, person: policy.co_applicant),
           create(:document, label: "subscriber_agreement", show_in_portal: true, documentable: nil, person: policy.primary_insured),
-          create(:document, label: "subscriber_agreement", show_in_portal: true, documentable: nil, person: policy.co_applicant),
+          create(:document, label: "subscriber_agreement", show_in_portal: true, documentable: nil, person: policy.co_applicant)
         ]
         create(:document, label: "privacy_notice", show_in_portal: false, documentable: policy, person: policy.primary_insured)
         create(:document, label: "electronic_delivery_consent", show_in_portal: false, documentable: policy, person: policy.primary_insured)

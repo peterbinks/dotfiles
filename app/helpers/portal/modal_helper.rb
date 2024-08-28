@@ -67,5 +67,4 @@ module Portal
       }.merge(kwargs))
     end
   end
-
 end

@@ -37,7 +37,7 @@
                 <% else %>
                   <%= billing_transaction.status.titleize %>
                 <% end %>
-                <% if billing_transaction.status_approved? && billing_transaction.approved_by || billing_transaction.write_off?%>
+                <% if billing_transaction.status_approved? || billing_transaction.write_off?%>
                   <kin-tooltip size="md">
                     <% if billing_transaction.write_off? && billing_transaction.description.present? %>
                       <%= billing_transaction.description %>
@@ -50,7 +50,7 @@
               <td>
                 <% if billing_transaction.status_approved? %>
                   <% if billing_transaction&.document&.saved_file.present? %>
-                    <%= link_to 'Download Receipt', portal_routes.download_receipt_policy_billing_transaction_path(policy_id: @policy.policy_number, id: billing_transaction.id), class: "button button--link p-0" %>
+                    <%= link_to 'Download Receipt', portal_routes.download_receipt_policy_billing_transaction_path(policy_id: @policy.full_policy_number, id: billing_transaction.id), class: "button button--link p-0" %>
                   <% end %>
                 <% elsif show_payment_button?(billing_transaction) %>
                   <%= show_dialog 'Make Payment', 'makePaymentModal', class:"button button--link button--sm text p-0" %>

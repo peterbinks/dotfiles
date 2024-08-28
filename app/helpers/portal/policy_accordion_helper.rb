@@ -32,7 +32,9 @@ module Portal
     def all_remaining_steps_are_optional?(steps)
       return false if steps.blank?
 
-      steps.where(step_complete: false).all?(&:optional)
+      steps
+        .select { |step| step.step_complete == false }
+        .all?(&:optional)
     end
 
     # @param policy [BrightPolicy]
@@ -40,9 +42,9 @@ module Portal
     def all_relevant_documents_reviewed?(policy)
       policy
         .documents
-        .where(term: policy.term, label: POLICY_ACCORDION_STEP_DOCUMENTS)
-        .where.not(review_status: "accepted")
-        .blank?
+        .select { |doc| doc.term == policy.current_term && doc.label == POLICY_ACCORDION_STEP_DOCUMENTS }
+        .reject { |doc| doc.review_status == "accepted" }
+        .empty?
     end
 
     # @param step [PolicyAccordion::Step]

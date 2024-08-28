@@ -35,7 +35,7 @@ module Portal
     #
     # @return [void]
     def load_slide_carousel
-      return if true #!should_show_slides?
+      return if true # !should_show_slides?
 
       create_user_interaction
 
@@ -49,7 +49,7 @@ module Portal
     def load_policy_accordion
       # TODO
 
-      return if true#policies.blank?
+      return if true # policies.blank?
 
       @steps = PolicyAccordion::StepSerializer.new(policies).to_a
     end
@@ -83,7 +83,7 @@ module Portal
     def most_recent_policy
       return if policies.empty?
 
-      policies.sort_by(&:created_at).reverse[0]
+      policies.max_by(&:created_at)
     end
 
     # Retrieves the customer portal slides for the most recent policy.

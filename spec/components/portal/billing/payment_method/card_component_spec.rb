@@ -7,7 +7,7 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
         "BrightPolicy",
         full_policy_number: "fake_policy_number",
         payment_type_card?: true,
-        credit_card: build_stubbed(:credit_card, :with_auth_net_data),
+        credit_card: build_stubbed(:credit_card, :with_auth_net_data)
       )
 
       render_inline(described_class.new(policy:))
@@ -21,7 +21,7 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
         "BrightPolicy",
         full_policy_number: "fake_policy_number",
         payment_type_card?: true,
-        credit_card: credit_card,
+        credit_card: credit_card
       )
 
       render_inline(described_class.new(policy:))
@@ -36,7 +36,7 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
         "BrightPolicy",
         full_policy_number: "fake_policy_number",
         payment_type_card?: true,
-        credit_card: credit_card,
+        credit_card: credit_card
       )
 
       render_inline(described_class.new(policy:))
@@ -55,7 +55,7 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
         "BrightPolicy",
         full_policy_number: "fake_policy_number",
         payment_type_card?: false,
-        credit_card: nil,
+        credit_card: nil
       )
 
       expect(described_class.new(policy:).render?).to be false

@@ -37,7 +37,7 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
         it "does render" do
           policy = create(:bright_policy, :with_primary_insured)
 
-          create(:document, label: "windstorm_mitigation_form", term: policy.term, documentable: policy, review_status: "accepted")
+          create(:document, label: "windstorm_mitigation_form", term: policy.current_term, documentable: policy, review_status: "accepted")
           create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: true)
 
           expect(helper.render_policy_accordion_component?(policy)).to eq(true)
@@ -48,7 +48,7 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
         it "renders" do
           policy = create(:bright_policy, :with_primary_insured)
 
-          create(:document, label: "windstorm_mitigation_form", term: policy.term, documentable: policy, review_status: "not_reviewed")
+          create(:document, label: "windstorm_mitigation_form", term: policy.current_term, documentable: policy, review_status: "not_reviewed")
           create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: true)
 
           expect(helper.render_policy_accordion_component?(policy)).to eq(true)
@@ -78,7 +78,7 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
     context "all relevant documents are reviewed" do
       it "does not render" do
         policy = create(:bright_policy, :with_primary_insured)
-        create(:document, label: "windstorm_mitigation_form", term: policy.term, documentable: policy, review_status: "accepted")
+        create(:document, label: "windstorm_mitigation_form", term: policy.current_term, documentable: policy, review_status: "accepted")
 
         expect(helper.all_relevant_documents_reviewed?(policy)).to eq(true)
       end
@@ -87,7 +87,7 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
     context "some relevant documents are not reviewed" do
       it "renders" do
         policy = create(:bright_policy, :with_primary_insured)
-        create(:document, label: "windstorm_mitigation_form", term: policy.term, documentable: policy, review_status: "not_reviewed")
+        create(:document, label: "windstorm_mitigation_form", term: policy.current_term, documentable: policy, review_status: "not_reviewed")
 
         expect(helper.all_relevant_documents_reviewed?(policy)).to eq(false)
       end

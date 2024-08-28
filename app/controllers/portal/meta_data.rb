@@ -25,7 +25,9 @@ module Portal
     private
 
     def url_for_app(options = {})
-      main_app.url_for(options) rescue url_for(options)
+      main_app.url_for(options)
+    rescue
+      url_for(options)
     end
   end
 end

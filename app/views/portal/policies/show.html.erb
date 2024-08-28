@@ -7,7 +7,7 @@
         <%= render(Portal::Billing::FailedTransactionAlertComponent.new(transaction:)) %>
       <% end %>
       <%= render(Portal::Billing::NoCreditCardAlertComponent.new(policy: @__data.policy)) %>
-      <%= render(Portal::Policies::PolicySummaryDetailComponent.new(data: @__data)) %>
+      <%= render(Portal::Policies::PolicySummaryDetailComponent.new(policy: @__data.policy)) %>
     </div>
   </div>
 </div>

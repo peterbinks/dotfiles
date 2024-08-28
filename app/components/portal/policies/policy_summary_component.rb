@@ -6,19 +6,10 @@ module Portal
       include Portal::ProductsHelper
       include Portal::IconHelper
 
+      attr_reader :policy
+
       def initialize(policy:)
         @policy = policy
-        @all_documents = @policy.related_documents
-      end
-
-      def renewal_declaration_page
-        # TODO
-        return []
-
-        @renewal_declaration_page ||= @all_documents
-          .where(label: "declaration_page", term: @policy.upcoming_term)
-          .order(updated_at: :desc)
-          .first
       end
 
       def claims_url(policy_number)
@@ -30,12 +21,17 @@ module Portal
       end
 
       def declaration_page_document
-        return @declaration_page_document if defined? @declaration_page_document
+        @declaration_page_document ||= declaration_page_document_for(@policy.current_term)
+      end
 
-        @declaration_page_document = @all_documents
-          .where(label: "declaration_page")
-          .order(updated_at: :desc)
-          .first
+      def renewal_declaration_page
+        @renewal_declaration_page ||= declaration_page_document_for(@policy.upcoming_term)
+      end
+
+      def declaration_page_document_for(term)
+        policy.documents
+          .select { |document| document.label == "declaration_page" && document.term == term }
+          .max_by(&:updated_at)
       end
 
       def download_path(document_id)

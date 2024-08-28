@@ -6,19 +6,20 @@ module Portal
       include Portal::ProductsHelper
       include Portal::IconHelper
 
-      def initialize(data:)
-        @policy = data.policy
-        @all_documents = data.policy.related_documents
+      attr_reader :policy
+
+      def initialize(policy:)
+        @policy = policy
       end
 
       def renewal_declaration_page
-        # TODO
-        return []
+        @renewal_declaration_page ||= declaration_page_document_for(@policy.upcoming_term)
+      end
 
-        @renewal_declaration_page ||= @all_documents
-          .where(label: "declaration_page", term: @policy.upcoming_term)
-          .order(updated_at: :desc)
-          .first
+      def declaration_page_document_for(term)
+        policy.documents
+          .select { |document| document.label == "declaration_page" && document.term == term }
+          .max_by(&:updated_at)
       end
     end
   end

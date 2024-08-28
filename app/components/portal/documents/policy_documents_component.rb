@@ -42,14 +42,13 @@ module Portal
       # @param policy [BrightPolicy]
       def initialize(policy:)
         @policy = policy
-        @all_documents = policy.portal_documents
       end
 
       # Checks if there are no documents associated with this policy.
       #
       # @return [Boolean]
       def empty?
-        @all_documents.none?
+        policy.documents.none?
       end
 
       # Retrieves documents for the current term.
@@ -66,7 +65,7 @@ module Portal
       #
       # @return [Array<Document>]
       def outdated_documents
-        @outdated_documents ||= (@all_documents - current_documents)
+        @outdated_documents ||= (policy.documents - current_documents)
           .reject(&:notice_of_hurricane_deductible?)
       end
 
@@ -76,7 +75,7 @@ module Portal
       #
       # @return [Hash{String => Array<Document>}]
       def all_documents_grouped
-        @all_documents_grouped ||= @all_documents.group_by(&:label)
+        @all_documents_grouped ||= policy.documents.group_by(&:label)
       end
 
       # Retrieves the primary documents based on the latest version labels.
@@ -87,7 +86,7 @@ module Portal
           .select { |k, v| LATEST_VERSION_LABELS_PRIMARY.include?(k) }
           .values
           .flatten
-          .reject { |doc| doc.label == "policy_packet" && policy.term > 0 }
+          .reject { |doc| doc.label == "policy_packet" && policy.current_term > 0 }
           .uniq(&:label)
       end
 
@@ -135,7 +134,7 @@ module Portal
       def receipt
         @receipt ||= all_documents_grouped
           .fetch("receipt", [])
-          .select { |doc| doc.term >= policy.term }
+          .select { |doc| doc.term >= policy.current_term }
       end
 
       # Retrieves the statement of no loss documents.

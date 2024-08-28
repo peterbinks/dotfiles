@@ -32,6 +32,10 @@ module Portal
         end
       end
 
+      def full_address(policy)
+        "#{policy.address.full_street_address} #{policy.address.full_city_state}"
+      end
+
       private
 
       # @return [Boolean]
