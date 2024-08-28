@@ -1,19 +1,11 @@
 module Portal
   class Base
-    def self.BELONGS_TO_ASSOCIATIONS
-      @belongs_to_associations ||= []
-    end
-
     def self.HAS_ONE_ASSOCIATIONS
       @has_one_associations ||= []
     end
 
     def self.HAS_MANY_ASSOCIATIONS
       @has_many_associations ||= []
-    end
-
-    def self.belongs_to(association_name)
-      self.BELONGS_TO_ASSOCIATIONS << association_name
     end
 
     def self.has_one(association_name)
@@ -24,15 +16,7 @@ module Portal
       self.HAS_MANY_ASSOCIATIONS << association_name
     end
 
-    def configure_belongs_to
-      self.class.BELONGS_TO_ASSOCIATIONS.each do |association_name|
-        define_singleton_method(association_name) do
-          Portal.const_get(association_name.to_s.classify).new(data[association_name])
-        end
-      end
-    end
-
-    def configure_has_one
+    def configure_has_one(data)
       self.class.HAS_ONE_ASSOCIATIONS.each do |association_name|
         define_singleton_method(association_name) do
           Portal.const_get(association_name.to_s.classify).new(data[association_name])
@@ -40,7 +24,7 @@ module Portal
       end
     end
 
-    def configure_has_many
+    def configure_has_many(data)
       self.class.HAS_MANY_ASSOCIATIONS.each do |association_name|
         define_singleton_method(association_name) do
           data[association_name].map { |record| Portal.const_get(association_name.to_s.classify).new(record) }
@@ -56,7 +40,7 @@ module Portal
       self.ATTRIBUTES << attribute_name
     end
 
-    def configure_attributes
+    def configure_attributes(data)
       self.class.ATTRIBUTES.each do |attribute|
         # Set on initialization
         instance_variable_set("@#{attribute}", data[attribute])
@@ -73,19 +57,25 @@ module Portal
       end
     end
 
-    def define_associations
-      configure_belongs_to
-      configure_has_one
-      configure_has_many
+    def associations
+      {
+        has_one: self.class.HAS_ONE_ASSOCIATIONS,
+        has_many: self.class.HAS_MANY_ASSOCIATIONS
+      }
+    end
+
+    def attributes
+      self.class.ATTRIBUTES
+    end
+
+    def define_associations(data)
+      configure_has_one(data)
+      configure_has_many(data)
     end
 
     def initialize(data)
-      @data = data
-
-      configure_attributes
-      define_associations
+      configure_attributes(data)
+      define_associations(data)
     end
-
-    attr_reader :data
   end
 end

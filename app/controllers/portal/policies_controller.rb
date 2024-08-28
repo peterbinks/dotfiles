@@ -1,7 +1,7 @@
 module Portal
   class PoliciesController < PortalController
-    before_action :load_show_data
     before_action :authorize_user
+    before_action :load_show_data
 
     helper Portal::PoliciesHelper
 
@@ -31,16 +31,15 @@ module Portal
     end
 
     def authorize_user
-      @user.has_role?(:admin) ||
-        @user.has_role?(:impersonation) ||
-        expected_users.include?(@user)
+      current_user.has_role?(:admin) ||
+        current_user.has_role?(:impersonation) ||
+        applicants_for_auth.map(&:user_id).include?(current_user&.id)
     end
 
-    def expected_users
-      @expected_users ||= [
-        @policy.primary_insured.user,
-        @policy.co_applicant&.user
-      ].compact
+    # Fetching applicants directly rather than through the policy so we authorize the user
+    # before we load their policy info
+    def applicants_for_auth
+      @applicants_for_auth ||= Portal::Applicant.get_applicants(policy_number: params[:id])
     end
   end
 end

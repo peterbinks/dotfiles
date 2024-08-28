@@ -14,7 +14,7 @@ module Portal
       Portal::Api::BillingTransactionSerializer.get_failed_card_transactions_for_policy(policy_id:).map { |transaction| new(transaction.data) }
     end
 
-    belongs_to :policy
+    has_one :policy
 
     attribute :id
     attribute :status_approved

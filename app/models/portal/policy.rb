@@ -1,5 +1,7 @@
 module Portal
   class Policy < Base
+    # API Requests
+
     def self.get_policies(person_id:)
       # TODO get the API class working
 
@@ -22,16 +24,17 @@ module Portal
     end
 
     # These need to be the EXACT name of the association fetched from dot-com
-    belongs_to :property
-    belongs_to :coverage
-    belongs_to :product
-    belongs_to :address
+    has_one :property
+    has_one :coverage
+    has_one :product
+    has_one :address
 
     # These need to be the EXACT name of the association fetched from dot-com
     has_many :billing_transactions
     has_many :upcoming_transactions_for_term
     has_many :rejected_transactions_for_term
     has_many :documents
+    has_many :applicants
 
     # These need to be the EXACT name of the attribute fetched from dot-com
     attribute :id
@@ -42,8 +45,6 @@ module Portal
     attribute :effective_date
     attribute :active_application
     attribute :has_signed_application
-    attribute :primary_insured
-    attribute :co_applicant
     attribute :credit_card
     attribute :payment_type
     attribute :state
@@ -63,6 +64,14 @@ module Portal
     attribute :auth_net_client
 
     delegate :quote?, :bound?, :in_force?, :cancelled?, to: :policy_status
+
+    def primary_insured
+      applicants.find(&:primary)
+    end
+
+    def co_applicant
+      applicants.find(&:co_applicant)
+    end
 
     def policy_status
       ActiveSupport::StringInquirer.new(status)

@@ -8,13 +8,13 @@ module Portal
     end
 
     has_one :policy
+    has_one :saved_file
 
     attribute :id
     attribute :label
     attribute :term
     attribute :display_name
     attribute :status
-    attribute :saved_file
     attribute :updated_at
 
     def surplus_lines_acknowledgement_form?
