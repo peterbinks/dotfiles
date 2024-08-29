@@ -1,64 +1,16 @@
 module Portal
   class Base
-    def self.HAS_ONE_ASSOCIATIONS
-      @has_one_associations ||= []
+    extend Portal::Utils::HasOne
+    extend Portal::Utils::HasMany
+    extend Portal::Utils::Attributes
+
+    def initialize(data)
+      define_attributes(data)
+      define_associations(data)
     end
 
-    def self.HAS_MANY_ASSOCIATIONS
-      @has_many_associations ||= []
-    end
-
-    def self.has_one(association_name)
-      self.HAS_ONE_ASSOCIATIONS << association_name
-    end
-
-    def self.has_many(association_name)
-      self.HAS_MANY_ASSOCIATIONS << association_name
-    end
-
-    def configure_has_one(data)
-      self.class.HAS_ONE_ASSOCIATIONS.each do |association_name|
-        define_singleton_method(association_name) do
-          return nil if data[association_name].nil?
-
-          Portal.const_get(association_name.to_s.classify).new(data[association_name])
-        end
-      end
-    end
-
-    def configure_has_many(data)
-      self.class.HAS_MANY_ASSOCIATIONS.each do |association_name|
-        define_singleton_method(association_name) do
-          data[association_name].map { |record| Portal.const_get(association_name.to_s.classify).new(record) }
-        end
-      end
-    end
-
-    def self.ATTRIBUTES
-      @attributes ||= []
-    end
-
-    def self.attribute(attribute_name)
-      self.ATTRIBUTES << attribute_name
-    end
-
-    def configure_attributes(data)
-      self.class.ATTRIBUTES.each do |attribute|
-        # Set on initialization
-        instance_variable_set("@#{attribute}", data[attribute])
-
-        # Getter
-        define_singleton_method(attribute) do
-          instance_variable_get("@#{attribute}")
-        end
-
-        # Setter
-        define_singleton_method("#{attribute}=") do |value|
-          instance_variable_set("@#{attribute}", value)
-        end
-      end
-    end
-
+    # This method shows the has_one and has_many associations the instance has
+    # @return [Hash] a hash of the has_one and has_many associations
     def associations
       {
         has_one: self.class.HAS_ONE_ASSOCIATIONS,
@@ -66,18 +18,21 @@ module Portal
       }
     end
 
+    # This method shows the attributes the instance has
+    # @return [Array] an array of the attributes
     def attributes
       self.class.ATTRIBUTES
     end
 
+    # This method configures the associations for the instance
     def define_associations(data)
-      configure_has_one(data)
-      configure_has_many(data)
+      self.class.configure_has_one(self, data)
+      self.class.configure_has_many(self, data)
     end
 
-    def initialize(data)
-      configure_attributes(data)
-      define_associations(data)
+    # This method configures the attributes for the instance
+    def define_attributes(data)
+      self.class.configure_attributes(self, data)
     end
   end
 end
