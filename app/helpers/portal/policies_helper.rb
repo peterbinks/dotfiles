@@ -63,5 +63,13 @@ module Portal
 
       number_to_currency(premium_amount).split(".")
     end
+
+    def electronic_fund_transfer_link_url(policy)
+      if policy.recurring_payment_notice_doc_url.present?
+        url_for(policy.recurring_payment_notice_doc_url)
+      else
+        "#"
+      end
+    end
   end
 end

@@ -1,9 +1,5 @@
 module Portal
   class Applicant < Base
-    def self.get_applicants(policy_number:)
-      Portal::Api::ApplicantSerializer.get_applicants(policy_number:).map { |applicant| new(applicant.data) }
-    end
-
     attribute :primary
     attribute :co_applicant
     attribute :name

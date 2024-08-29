@@ -24,8 +24,8 @@ module Portal
     # @return [Array(String, String)] The text and pill variant style to be
     #   displayed for the policy's status.
     def portal_policy_status_text_and_style(policy)
-      return ["Signed", "primary"] if policy.active_application&.signed? && policy.quote?
-      return ["Pending cancellation", "warning"] if policy.pending_cancellation.present?
+      return ["Signed", "primary"] if policy.has_signed_active_application? && policy.quote?
+      return ["Pending cancellation", "warning"] if policy.pending_cancellation
 
       case policy.status
       when "bound"

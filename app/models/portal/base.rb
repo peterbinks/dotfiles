@@ -19,6 +19,8 @@ module Portal
     def configure_has_one(data)
       self.class.HAS_ONE_ASSOCIATIONS.each do |association_name|
         define_singleton_method(association_name) do
+          return nil if data[association_name].nil?
+
           Portal.const_get(association_name.to_s.classify).new(data[association_name])
         end
       end

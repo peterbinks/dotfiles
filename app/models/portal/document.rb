@@ -15,6 +15,8 @@ module Portal
     attribute :term
     attribute :display_name
     attribute :status
+    attribute :signed_at
+    attribute :expiring_url
     attribute :updated_at
 
     def surplus_lines_acknowledgement_form?
@@ -25,8 +27,16 @@ module Portal
       label == "notice_of_hurricane_deductible"
     end
 
+    def policy_application?
+      label == "policy_application"
+    end
+
     def complete?
       status == "complete"
+    end
+
+    def signed?
+      signed_at.present?
     end
   end
 end

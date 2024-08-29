@@ -31,7 +31,7 @@
                   </div>
                   <% if document.complete? %>
                     <div class="col-xs-2 col-sm-3 vr text--right">
-                      <%= link_to "View", rails_blob_url(document&.saved_file, only_path: true), target: "_blank", data: { rspec: "document-#{document.display_name.split(' -')[0]&.parameterize}" } %>
+                      <%= link_to "View", main_app_routes.rails_blob_url(document&.saved_file, only_path: true), target: "_blank", data: { rspec: "document-#{document.display_name.split(' -')[0]&.parameterize}" } %>
                     </div>
                   <% else %>
                     <div class="loading-spinner">
@@ -65,7 +65,7 @@
                   </div>
                   <% if document.complete? %>
                     <div class="col-xs-2 col-sm-3 vr">
-                      <%= link_to "View", rails_blob_url(document&.saved_file, only_path: true), target: "_blank", data: { rspec: "document-#{document.display_name.split(' -')[0]&.parameterize}" } %>
+                      <%= link_to "View", main_app_routes.rails_blob_url(document&.saved_file, only_path: true), target: "_blank", data: { rspec: "document-#{document.display_name.split(' -')[0]&.parameterize}" } %>
                     </div>
                   <% else %>
                     <div class="loading-spinner">

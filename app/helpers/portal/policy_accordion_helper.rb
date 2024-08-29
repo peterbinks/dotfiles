@@ -10,7 +10,7 @@ module Portal
     def render_policy_accordion_component?(policy)
       steps = policy&.policy_accordion_steps
 
-      return false if policy.was_in_force
+      return false if policy.expired? || policy.cancelled? || policy.non_renewed?
       return false if steps.blank?
       return false if past_goal_date?(policy) && all_remaining_steps_are_optional?(steps)
       return false if has_completed_all_steps?(steps) && all_relevant_documents_reviewed?(policy) && past_goal_date?(policy)

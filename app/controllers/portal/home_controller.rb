@@ -17,14 +17,15 @@ module Portal
     def load_index_data
       load_policies
       load_failed_card_transactions
+      load_policy_accordion
     end
 
     def load_policies
-      @policies ||= Portal::Policy.active_policies(person_id: current_person.id)
+      @policies ||= Portal::Api::Policy.active_policies(person_id: current_person.id)
     end
 
     def load_failed_card_transactions
-      @failed_card_transactions ||= Portal::BillingTransaction.failed_card_transactions_for_person(person_id: current_person.id)
+      @failed_card_transactions ||= Portal::Api::BillingTransaction.failed_card_transactions_for_person(person_id: current_person.id)
     end
 
     # Loads and sets the slide carousel if it should be shown.
@@ -43,11 +44,9 @@ module Portal
     #
     # @return [void]
     def load_policy_accordion
-      # TODO
+      return if @policies.blank?
 
-      return if true # policies.blank?
-
-      @steps = PolicyAccordion::StepSerializer.new(policies).to_a
+      @steps = PolicyAccordion::StepSerializer.new(@policies).to_a
     end
 
     # Checks if the slide carousel should be shown.
@@ -62,7 +61,7 @@ module Portal
     # @return [void]
     def load_resumable_policy
       @resumable_policy = current_person.bright_policies.find do |policy|
-        policy.quote? && policy.customer_input_response.present? && policy.created_at >= 2.weeks.ago && !policy&.active_application&.signed_at
+        policy.quote? && policy.customer_input_response.present? && policy.created_at >= 2.weeks.ago && !policy&.has_signed_active_application?
       end
     end
 

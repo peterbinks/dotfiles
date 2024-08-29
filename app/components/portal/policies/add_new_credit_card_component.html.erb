@@ -51,7 +51,7 @@
           </div>
         </div>
       </div>
-      <p>By clicking 'Add Credit Card', you agree to our <%= link_to 'Electronic Funds Transfer Authorization', url_for(@electronic_fund_transfer_link&.expiring_url), target: "_blank", class: 'text--secondary', 'data-rspec': 'electronics-transfer-link' %></p>
+      <p>By clicking 'Add Credit Card', you agree to our <%= link_to 'Electronic Funds Transfer Authorization', @electronic_fund_transfer_link, target: "_blank", class: 'text--secondary', 'data-rspec': 'electronics-transfer-link' %></p>
       <div class="row p-0 container around-xs">
         <div class="col-xs-6">
           <%= form.submit "Add Credit Card", data: { rspec: "add-new-credit-card-submit", action: "portal--add-credit-card#submit", target: "portal--add-credit-card.formSubmitButton" }, class: 'button button–-block button--md button--primary' %>

@@ -8,7 +8,7 @@ RSpec.describe Portal::Billing::NoCreditCardAlertComponent, domain: :policy_admi
           "BrightPolicy",
           payment_type: "card",
           credit_card: nil,
-          recurring_payment_notice_doc: "link_to_document"
+          recurring_payment_notice_doc_url: "link_to_document"
         )
 
         expect(described_class.new(policy: policy).render?).to be true
@@ -21,7 +21,7 @@ RSpec.describe Portal::Billing::NoCreditCardAlertComponent, domain: :policy_admi
           "BrightPolicy",
           payment_type: "escrow",
           credit_card: nil,
-          recurring_payment_notice_doc: "link_to_document"
+          recurring_payment_notice_doc_url: "link_to_document"
         )
 
         expect(described_class.new(policy: policy).render?).to be false
@@ -36,7 +36,7 @@ RSpec.describe Portal::Billing::NoCreditCardAlertComponent, domain: :policy_admi
           "BrightPolicy",
           payment_type: "card",
           credit_card: double("credit_card"),
-          recurring_payment_notice_doc: "link_to_document"
+          recurring_payment_notice_doc_url: "link_to_document"
         )
 
         expect(described_class.new(policy: policy).render?).to be false
@@ -49,7 +49,7 @@ RSpec.describe Portal::Billing::NoCreditCardAlertComponent, domain: :policy_admi
           "BrightPolicy",
           payment_type: "escrow",
           credit_card: double("credit_card"),
-          recurring_payment_notice_doc: "link_to_document"
+          recurring_payment_notice_doc_url: "link_to_document"
         )
 
         expect(described_class.new(policy: policy).render?).to be false

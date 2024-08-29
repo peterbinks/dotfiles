@@ -35,7 +35,7 @@ module Portal
       end
 
       def download_path(document_id)
-        api_v2_policy_document_download_path(policy_id: @policy.id, document_id: document_id)
+        portal_routes.download_policy_document_path(policy_id: @policy.policy_number, id: document_id)
       end
 
       def document_id(document)

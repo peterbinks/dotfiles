@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe Portal::Policies::AddNewCreditCardComponent, :js, type: :component do
   let(:merchant_account) { "merchant_account_value" }
   let(:product) { double("Product", merchant_account: merchant_account) }
-  let(:recurring_payment_notice_doc) { [double("Document", expiring_url: "http://example.com/eft_authorization")] }
-  let(:policy) { double("Policy", recurring_payment_notice_doc: recurring_payment_notice_doc, product: product, full_policy_number: "KIN-HO-FL-248835486") }
+  let(:recurring_payment_notice_doc_url) { [double("Document", expiring_url: "http://example.com/eft_authorization")] }
+  let(:policy) { double("Policy", recurring_payment_notice_doc_url: recurring_payment_notice_doc_url, product: product, full_policy_number: "KIN-HO-FL-248835486") }
   let(:auth_net_client) { instance_double(AuthNet::Client, login_id: "login_id_value", generate_public_client_key: "client_key") }
   let(:component) { described_class.new(policy: policy) }
 

@@ -19,7 +19,7 @@ module Portal
     end
 
     def load_policy
-      @policy ||= Portal::Policy.get_policy(policy_number: params[:id])
+      @policy ||= Portal::Api::Policy.get_policy(policy_number: params[:id])
     end
 
     def load_user
@@ -27,7 +27,11 @@ module Portal
     end
 
     def load_failed_card_transactions
-      @failed_card_transactions ||= Portal::BillingTransaction.failed_card_transactions_for_policy(policy_id: @policy.id)
+      # @failed_card_transactions ||= Portal::BillingTransaction.failed_card_transactions_for_policy(policy_id: @policy.id)
+      @failed_card_transactions ||= @policy.billing_transactions.select do |transaction|
+        transaction.status == "rejected" &&
+          transaction.updated_at > (@policy.credit_card&.updated_at || @policy.effective_date)
+      end
     end
 
     def authorize_user
@@ -39,7 +43,7 @@ module Portal
     # Fetching applicants directly rather than through the policy so we authorize the user
     # before we load their policy info
     def applicants_for_auth
-      @applicants_for_auth ||= Portal::Applicant.get_applicants(policy_number: params[:id])
+      @applicants_for_auth ||= Portal::Api::Applicant.get_applicants(policy_number: params[:id])
     end
   end
 end

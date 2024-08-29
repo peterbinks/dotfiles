@@ -1,19 +1,5 @@
 module Portal
   class BillingTransaction < Base
-    def self.failed_card_transactions_for_person(person_id:)
-      # TODO get the API class working
-
-      # ::Api::BillingTransaction.get_failed_card_transactions(person_id:)
-      Portal::Api::BillingTransactionSerializer.get_failed_card_transactions_for_person(person_id:).map { |transaction| new(transaction.data) }
-    end
-
-    def self.failed_card_transactions_for_policy(policy_id:)
-      # TODO get the API class working
-
-      # ::Api::BillingTransaction.get_failed_card_transactions(policy_id:)
-      Portal::Api::BillingTransactionSerializer.get_failed_card_transactions_for_policy(policy_id:).map { |transaction| new(transaction.data) }
-    end
-
     has_one :policy
 
     attribute :id
@@ -23,12 +9,14 @@ module Portal
     attribute :description
     attribute :installment_number
     attribute :payment_type
+    attribute :term
     attribute :term_installment_count
     attribute :term_reinstatement_count
     attribute :amount
     attribute :due_date
     attribute :status
     attribute :approved_at
+    attribute :payment_made
     attribute :document
 
     def status_approved?
@@ -45,6 +33,18 @@ module Portal
 
     def write_off?
       @write_off
+    end
+
+    def upcoming_for_term?
+      !payment_made &&
+        !%i[refund waved_refund write_off cancellation].include?(payment_type) &&
+        status == "upcoming" &&
+        term == policy.current_term
+    end
+
+    def rejected_for_term?
+      status == "rejected" &&
+        term == policy.current_term
     end
   end
 end

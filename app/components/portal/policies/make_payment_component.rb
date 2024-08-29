@@ -9,7 +9,7 @@ module Portal
         @policy = policy
         @billing_transaction = billing_transaction
         @client = policy.auth_net_client
-        @electronic_fund_transfer_link = policy.recurring_payment_notice_doc.last
+        @electronic_fund_transfer_link = electronic_fund_transfer_link_url(policy)
       end
 
       def card_present?

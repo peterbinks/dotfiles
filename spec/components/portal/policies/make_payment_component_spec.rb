@@ -7,9 +7,9 @@ RSpec.describe Portal::Policies::MakePaymentComponent, type: :component do
 
   context "when initialized" do
     it "renders the form with the correct elements" do
-      recurring_payment_notice_doc = [double("Document", expiring_url: "http://example.com/eft_authorization")]
+      recurring_payment_notice_doc_url = [double("Document", expiring_url: "http://example.com/eft_authorization")]
       policy = build_stubbed(:bright_policy, :bound, full_policy_number: "KIN-HO-FL-248835486")
-      allow(policy).to receive(:recurring_payment_notice_doc) { recurring_payment_notice_doc }
+      allow(policy).to receive(:recurring_payment_notice_doc_url) { recurring_payment_notice_doc_url }
       billing_transaction = build_stubbed(:billing_transaction)
       component = described_class.new(policy: policy, billing_transaction: billing_transaction)
 

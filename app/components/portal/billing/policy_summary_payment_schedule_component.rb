@@ -25,12 +25,12 @@ module Portal
       #
       # @return [ActiveRecord::Relation<Billing::ScheduledTransaction>]
       def billing_transactions
-        @policy.billing_transactions
+        @billing_transactions ||= policy.billing_transactions
       end
 
       # @return [Boolean]
       def billing_corrections_needed?
-        @policy.billing_corrections_needed?
+        policy.billing_corrections_needed
       end
 
       # Determines the text color for a transaction based on its approval status.
@@ -77,7 +77,7 @@ module Portal
       #
       # @return [Boolean] true if there is an endorsement request or a renewal endorsement request in progress, false otherwise.
       def endorsement_request_in_progress?
-        @endorsement_request_in_progress ||= (@policy.in_progress_endorsement_request? || @policy.in_progress_renewal_endorsement_request?)
+        @endorsement_request_in_progress ||= (policy.in_progress_endorsement_request? || policy.in_progress_renewal_endorsement_request?)
       end
 
       def is_next_upcoming_transaction_installment?(transaction)
@@ -98,8 +98,18 @@ module Portal
       # @return [Billing::ScheduledTransaction, nil] The next upcoming transaction, or nil if none exists.
       def upcoming_transaction
         @upcoming_transaction ||=
-          (@policy.upcoming_transactions_for_term | @policy.rejected_transactions_for_term)
+          (upcoming_transactions_for_term | rejected_transactions_for_term)
             .reject(&:endorsement_request_id).min_by(&:due_date)
+      end
+
+      def upcoming_transactions_for_term
+        billing_transactions
+          .select(&:upcoming_for_term?)
+      end
+
+      def rejected_transactions_for_term
+        billing_transactions
+          .select(&:rejected_for_term?)
       end
 
       # Returns all upcoming endorsement transactions for the policy.
@@ -107,7 +117,7 @@ module Portal
       # @return [Array<Billing::ScheduledTransaction>] The array of next upcoming endorsement transactions, or `nil` if none is found.
       def upcoming_endorsement_transactions
         @upcoming_endorsement_transactions ||=
-          @policy.upcoming_transactions_for_term.select(&:endorsement_request_id)
+          upcoming_transactions_for_term.select(&:endorsement_request_id)
       end
     end
   end
