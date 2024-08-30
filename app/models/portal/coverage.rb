@@ -1,7 +1,5 @@
 module Portal
   class Coverage < Base
-    has_one :policy
-
     attribute :id
     attribute :flood_and_water_backup
 

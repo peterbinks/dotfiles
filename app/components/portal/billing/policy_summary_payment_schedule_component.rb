@@ -38,7 +38,7 @@ module Portal
       # @param transaction [Billing::ScheduledTransaction] The transaction to check.
       # @return [String] The CSS class for the text color.
       def disable_text_color(transaction)
-        transaction.status_approved? ? "c-neutral-600" : ""
+        transaction.approved? ? "c-neutral-600" : ""
       end
 
       # Determines whether a policy has an endorsement is in progress.
@@ -77,7 +77,7 @@ module Portal
       #
       # @return [Boolean] true if there is an endorsement request or a renewal endorsement request in progress, false otherwise.
       def endorsement_request_in_progress?
-        @endorsement_request_in_progress ||= (policy.in_progress_endorsement_request? || policy.in_progress_renewal_endorsement_request?)
+        @endorsement_request_in_progress ||= policy.has_in_progress_endorsement
       end
 
       def is_next_upcoming_transaction_installment?(transaction)
@@ -97,19 +97,25 @@ module Portal
       #
       # @return [Billing::ScheduledTransaction, nil] The next upcoming transaction, or nil if none exists.
       def upcoming_transaction
-        @upcoming_transaction ||=
-          (upcoming_transactions_for_term | rejected_transactions_for_term)
-            .reject(&:endorsement_request_id).min_by(&:due_date)
+        @upcoming_transaction ||= (upcoming_transactions_for_term | rejected_transactions_for_term)
+          .reject(&:endorsement_request_id)
+          .min_by(&:due_date)
       end
 
       def upcoming_transactions_for_term
-        billing_transactions
-          .select(&:upcoming_for_term?)
+        billing_transactions.select do |transaction|
+          !transaction.payment_made &&
+            transaction.is_payment? &&
+            transaction.upcoming? &&
+            transaction.term == policy.current_term
+        end
       end
 
       def rejected_transactions_for_term
-        billing_transactions
-          .select(&:rejected_for_term?)
+        billing_transactions.select do |transaction|
+          transaction.rejected? &&
+            transaction.term == policy.current_term
+        end
       end
 
       # Returns all upcoming endorsement transactions for the policy.

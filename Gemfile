@@ -14,6 +14,7 @@ group :development, :test do
   gem "spring"
   gem "standard", "=1.24.3" # Changes to this may change our linting rules; locking it to ensure updates are intentional.
   gem "standardrb", require: false
+  gem "dotenv"
 end
 
 group :test do

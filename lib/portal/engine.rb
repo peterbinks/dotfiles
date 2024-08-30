@@ -3,6 +3,7 @@ module Portal
     isolate_namespace Portal
 
     config.autoload_paths << Portal::Engine.root.join("lib")
+    config.autoload_paths << Portal::Engine.root.join("services")
     # config.eager_load_paths << Portal::Engine.root.join("lib")
     # config.eager_load_paths << Portal::Engine.root.join("lib", "api")
 

@@ -7,7 +7,6 @@ module Portal
       Portal::Api::DocumentSerializer.labels
     end
 
-    has_one :policy
     has_one :saved_file
 
     attribute :id

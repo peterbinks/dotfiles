@@ -30,6 +30,7 @@ module Portal
     attribute :recurring_payment_notice_doc_url
     attribute :billing_corrections_needed
     attribute :has_signed_active_application
+    attribute :has_in_progress_endorsement
     attribute :auth_net_client
 
     delegate :quote?, :bound?, :in_force?, :cancelled?, :expired?, :non_renewed?, to: :policy_status
@@ -83,6 +84,10 @@ module Portal
 
     def term_end_date
       term_groups[current_term]&.end_date
+    end
+
+    def in_quote_post_effective_date?
+      effective_date < Date.current && quote?
     end
   end
 end

@@ -1,7 +1,7 @@
 # This is a custom module that is used to define has_one associations between classes.
 # This IS NOT the "has_one" association provided by ActiveRecord
 # This has_one association is connecting class instances to other class instances.
-# 
+#
 # In your model, do the following to set a has_one association
 #
 # class Policy
