@@ -1,0 +1,16 @@
+  <%= render 'message' do %>
+    <% if @policy.billing_transactions.any?(&:recently_approved?) || @policy.billing_transactions.any?(&:recently_rejected?) %>
+      <%= icon "check-yellow-circle", class: "icon__xxlarge animate-check" %>
+      <h3>We’ve processed your payment!</h3>
+      <p class="text--tone">
+        <span class="text--bold text--tone">Your new card ending in <%= @success_params[:card_last_4] %> has been added to your account and was successfully charged for your payment of <%= number_to_currency(@success_params[:payment_amount]) %>. If there’s an error, give us a call at (855) 216-7674.</span>
+      </p>
+    <% else %>
+      <%= icon "check-yellow-circle", class: "icon__xxlarge animate-check" %>
+      <h3>Your credit card information has been updated.</h3>
+      <p class="text--tone">
+        <span class="text--bold text--tone">Your payment will not automatically process with this update</span>.
+        If you have a past due <br>payment or your payment did not process, call customer service at <a href="tel:+1-855-216-7674" class="text--link secondary text--bold">(855) 216-7674</a>.
+      </p>
+  <% end %>
+<% end %>

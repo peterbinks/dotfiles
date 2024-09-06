@@ -25,7 +25,9 @@ module Portal
     end
 
     def load_failed_card_transactions
-      @failed_card_transactions ||= Portal::Api::BillingTransaction.failed_card_transactions_for_person(person_id: current_person.id)
+      @failed_card_transactions ||= policies.flat_map do |policy|
+        policy.billing_transactions.select(&:rejected?)
+      end
     end
 
     # Loads and sets the slide carousel if it should be shown.

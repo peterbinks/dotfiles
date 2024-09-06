@@ -2,12 +2,12 @@ module Portal
   module Billing
     module PaymentMethod
       class CardComponent < Portal::ViewComponent::Base
-        attr_reader :policy, :credit_card, :full_policy_number
+        attr_reader :policy, :credit_card, :policy_number
 
         def initialize(policy:)
           @policy = policy
           @credit_card = policy.credit_card
-          @full_policy_number = policy.policy_number
+          @policy_number = policy.policy_number
         end
 
         def render?

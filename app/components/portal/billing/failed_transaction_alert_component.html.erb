@@ -10,7 +10,7 @@
 			<% end %>
 		</div>
 		<% if show_update_link? %>
-			<%= link_to "Update Credit Card", portal_routes.edit_policy_credit_card_path(policy_number), id: "edit-card-link", class: "text--link" %>
+			<%= link_to "Update Credit Card", portal_routes.edit_policy_credit_card_path(@policy.policy_number), id: "edit-card-link", class: "text--link" %>
 		<% end %>
 	</div>
 </kin-alert>

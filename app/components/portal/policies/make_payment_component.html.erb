@@ -1,4 +1,17 @@
-<%= validated_form_with url: portal_routes.policy_credit_card_path(policy.policy_number), html: { data: { type: "html", target: "portal--make-payment.form", controller: "portal--make-payment", 'portal--make-payment-client-id': client.login_id, 'portal--make-payment-client-key': client.generate_public_client_key, 'portal--make-payment-transaction-id': billing_transaction.id, 'portal--make-payment-save-card-url-value': portal_routes.process_card_payment_policy_credit_card_path(policy.policy_number), 'portal--make-payment-card-present': card_present?, 'portal--make-payment-card-details': card_details } } do |form| %>
+<%= validated_form_with url: portal_routes.policy_credit_card_path(policy.policy_number),
+  html: {
+    data: {
+      type: "html",
+      target: "portal--make-payment.form",
+      controller: "portal--make-payment",
+      'portal--make-payment-client-id': policy.auth_net_client.login_id,
+      'portal--make-payment-client-key': policy.auth_net_client.generate_public_client_key, 
+      'portal--make-payment-transaction-id': billing_transaction.id,
+      'portal--make-payment-save-card-url-value': portal_routes.process_card_payment_policy_credit_card_path(policy.policy_number),
+      'portal--make-payment-card-present': card_present?,
+      'portal--make-payment-card-details': card_details
+    }
+  } do |form| %>
   <kin-dialog id="makePaymentModal" scrollBackdrop size="sm" style="--kin-dialog-header-text-align: left" data-target="portal--make-payment.dialog">
     <h2 slot="header" data-rspec= 'make-payment-header' data-target="portal--make-payment.header" class="m-0">Make Payment</h2>
 
@@ -85,14 +98,14 @@
       </div>
 
       <div class="container p-0 m-t-300">
-        <p class="d-none" data-target="portal--make-payment.footerText">By clicking 'Submit Payment', you agree to our <%= link_to 'Electronic Funds Transfer Authorization', url_for(electronic_fund_transfer_link&.expiring_url), target: "_blank", class: 'text--secondary', 'data-rspec': 'electronics-transfer-link' %>. Your card will be charged immediately upon submission.</p>
+        <p class="d-none" data-target="portal--make-payment.footerText">By clicking 'Submit Payment', you agree to our <%= link_to 'Electronic Funds Transfer Authorization', electronic_fund_transfer_link, target: "_blank", class: 'text--secondary', 'data-rspec': 'electronics-transfer-link' %>. Your card will be charged immediately upon submission.</p>
         <p class="d-none" data-target="portal--make-payment.savedCardFooterText">Your card will be charged immediately upon submission.</p>
         <div class="row p-0 container around-xs">
           <div class="col-xs-6">
             <%= form.submit "Submit Payment", data: { rspec: "make-payment-submit", action: "portal--make-payment#submit", target: "portal--make-payment.formSubmitButton" }, class: 'button button–-block button--md button--primary' %>
           </div>
           <div class="col-xs-6">
-            <kin-button variant="secondary" onclick="this.closest('kin-dialog').hide()">Cancel</kin-button>
+            <kin-button variant="secondary" onclick="this.closest('kin-dialog').hide()" data-target="portal--make-payment.formCancelButton">Cancel</kin-button>
           </div>
         </div>
       </div>

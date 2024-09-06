@@ -9,5 +9,9 @@ module Portal
 
       super(address)
     end
+
+    def to_s
+      full_street_address
+    end
   end
 end

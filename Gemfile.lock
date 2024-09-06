@@ -84,12 +84,8 @@ GEM
     crass (1.0.6)
     date (3.3.4)
     diff-lcs (1.5.1)
+    dotenv (3.1.2)
     erubi (1.13.0)
-    factory_bot (6.4.6)
-      activesupport (>= 5.0.0)
-    factory_bot_rails (6.4.3)
-      factory_bot (~> 6.4)
-      railties (>= 5.0.0)
     faker (3.4.2)
       i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
@@ -274,7 +270,7 @@ PLATFORMS
 
 DEPENDENCIES
   capybara
-  factory_bot_rails
+  dotenv
   faker
   pg
   portal!

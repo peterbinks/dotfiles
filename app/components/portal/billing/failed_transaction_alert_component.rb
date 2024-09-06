@@ -1,20 +1,14 @@
 module Portal
   module Billing
     class FailedTransactionAlertComponent < Portal::ViewComponent::Base
-      def initialize(transaction:)
+      def initialize(policy:, transaction:)
+        @policy = policy
         @transaction = transaction
-        @policy = transaction.bright_policy
         @credit_card = @policy&.credit_card
       end
 
       def render?
         @policy.credit_card.present?
-      end
-
-      def policy_number
-        # TODO: Check if policy_number == full_policy_number
-        @policy.policy_number
-        # @policy.policy_number
       end
 
       def amount

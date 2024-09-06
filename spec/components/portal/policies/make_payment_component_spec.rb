@@ -8,7 +8,7 @@ RSpec.describe Portal::Policies::MakePaymentComponent, type: :component do
   context "when initialized" do
     it "renders the form with the correct elements" do
       recurring_payment_notice_doc_url = [double("Document", expiring_url: "http://example.com/eft_authorization")]
-      policy = build_stubbed(:bright_policy, :bound, full_policy_number: "KIN-HO-FL-248835486")
+      policy = build_stubbed(:bright_policy, :bound, policy_number: "KIN-HO-FL-248835486")
       allow(policy).to receive(:recurring_payment_notice_doc_url) { recurring_payment_notice_doc_url }
       billing_transaction = build_stubbed(:billing_transaction)
       component = described_class.new(policy: policy, billing_transaction: billing_transaction)
@@ -28,7 +28,7 @@ RSpec.describe Portal::Policies::MakePaymentComponent, type: :component do
 
   context "#card_present?" do
     it "returns true if credit card is present" do
-      policy = build_stubbed(:bright_policy, :bound, full_policy_number: "KIN-HO-FL-248835486")
+      policy = build_stubbed(:bright_policy, :bound, policy_number: "KIN-HO-FL-248835486")
       billing_transaction = build_stubbed(:billing_transaction)
       component = described_class.new(policy: policy, billing_transaction: billing_transaction)
 
@@ -37,7 +37,7 @@ RSpec.describe Portal::Policies::MakePaymentComponent, type: :component do
     end
 
     it "returns false if credit card is blank" do
-      policy = build_stubbed(:bright_policy, :bound, full_policy_number: "KIN-HO-FL-248835486")
+      policy = build_stubbed(:bright_policy, :bound, policy_number: "KIN-HO-FL-248835486")
       billing_transaction = build_stubbed(:billing_transaction)
       component = described_class.new(policy: policy, billing_transaction: billing_transaction)
 
@@ -48,7 +48,7 @@ RSpec.describe Portal::Policies::MakePaymentComponent, type: :component do
 
   context "#card_details" do
     it "returns masked credit card number if card is present" do
-      policy = build_stubbed(:bright_policy, :bound, full_policy_number: "KIN-HO-FL-248835486")
+      policy = build_stubbed(:bright_policy, :bound, policy_number: "KIN-HO-FL-248835486")
       billing_transaction = build_stubbed(:billing_transaction)
       component = described_class.new(policy: policy, billing_transaction: billing_transaction)
 
@@ -59,7 +59,7 @@ RSpec.describe Portal::Policies::MakePaymentComponent, type: :component do
     end
 
     it "returns nil if card is not present" do
-      policy = build_stubbed(:bright_policy, :bound, full_policy_number: "KIN-HO-FL-248835486")
+      policy = build_stubbed(:bright_policy, :bound, policy_number: "KIN-HO-FL-248835486")
       billing_transaction = build_stubbed(:billing_transaction)
       component = described_class.new(policy: policy, billing_transaction: billing_transaction)
 

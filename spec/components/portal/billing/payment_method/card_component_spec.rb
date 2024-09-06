@@ -5,7 +5,7 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
     it "renders payment type block" do
       policy = double(
         "BrightPolicy",
-        full_policy_number: "fake_policy_number",
+        policy_number: "fake_policy_number",
         payment_type_card?: true,
         credit_card: build_stubbed(:credit_card, :with_auth_net_data)
       )
@@ -19,7 +19,7 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
       credit_card = build_stubbed(:credit_card, :with_auth_net_data)
       policy = double(
         "BrightPolicy",
-        full_policy_number: "fake_policy_number",
+        policy_number: "fake_policy_number",
         payment_type_card?: true,
         credit_card: credit_card
       )
@@ -34,7 +34,7 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
       credit_card = build_stubbed(:credit_card, :with_auth_net_data)
       policy = double(
         "BrightPolicy",
-        full_policy_number: "fake_policy_number",
+        policy_number: "fake_policy_number",
         payment_type_card?: true,
         credit_card: credit_card
       )
@@ -53,7 +53,7 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
     it "does not render payment type block" do
       policy = double(
         "BrightPolicy",
-        full_policy_number: "fake_policy_number",
+        policy_number: "fake_policy_number",
         payment_type_card?: false,
         credit_card: nil
       )

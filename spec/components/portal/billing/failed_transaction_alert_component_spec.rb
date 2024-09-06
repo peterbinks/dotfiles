@@ -7,7 +7,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
         it "renders the form with the correct elements" do
           credit_card = double("credit_card", last_4: 1111)
           address = double("address", full_street_address: "123 Main St")
-          policy = double("bright_policy", in_quote_post_effective_date?: false, credit_card: credit_card, address: address, full_policy_number: "123456")
+          policy = double("bright_policy", in_quote_post_effective_date?: false, credit_card: credit_card, address: address, policy_number: "123456")
           transaction = double("billing_transaction", bright_policy: policy, installment_number: 1, amount_cents: 100)
 
           component = described_class.new(transaction: transaction)
@@ -24,7 +24,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
         it "renders the form with the correct elements" do
           credit_card = double("credit_card", last_4: 1111)
           address = double("address", full_street_address: "123 Main St")
-          policy = double("bright_policy", in_quote_post_effective_date?: true, credit_card: credit_card, address: address, full_policy_number: "123456")
+          policy = double("bright_policy", in_quote_post_effective_date?: true, credit_card: credit_card, address: address, policy_number: "123456")
           transaction = double("billing_transaction", bright_policy: policy, installment_number: 1, amount_cents: 100)
 
           component = described_class.new(transaction: transaction)
@@ -55,7 +55,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
     describe "#policy_number" do
       it "returns the policy number" do
         credit_card = double("credit_card")
-        policy = double("policy", credit_card: credit_card, full_policy_number: "123456")
+        policy = double("policy", credit_card: credit_card, policy_number: "123456")
         transaction = double("transaction", bright_policy: policy)
 
         component = described_class.new(transaction: transaction)

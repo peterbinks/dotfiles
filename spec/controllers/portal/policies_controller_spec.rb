@@ -42,7 +42,7 @@ describe Portal::PoliciesController, domain: :policy_administration, type: :cont
       end
 
       it "does not show a policy to an unauthorized user" do
-        get :show, params: {id: policy_of_user_two.full_policy_number}
+        get :show, params: {id: policy_of_user_two.policy_number}
 
         expect(response.code).to eq("404")
       end

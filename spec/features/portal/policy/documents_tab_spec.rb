@@ -9,7 +9,7 @@ describe "Policy Documents tab", :js, domain: :policy_administration do
         sign_in person.user
         policy = create(:bright_policy, :bound, policy_contacts: [primary_insured])
 
-        visit portal_policy_path(id: policy.policy_number)
+        visit policy_path(id: policy.policy_number)
         find("kin-tab", text: "Documents").click
 
         expect(page).to_not have_css('[data-rspec="required-documents-block"]')
@@ -25,7 +25,7 @@ describe "Policy Documents tab", :js, domain: :policy_administration do
 
         create(:blocker, :required_document, bright_policy: policy)
 
-        visit portal_policy_path(id: policy.policy_number)
+        visit policy_path(id: policy.policy_number)
         find("kin-tab", text: "Documents").click
 
         expect(page).to have_css('[data-rspec="required-documents-block"]')
@@ -41,7 +41,7 @@ describe "Policy Documents tab", :js, domain: :policy_administration do
         sign_in person.user
         policy = create(:bright_policy, :bound, policy_contacts: [primary_insured])
 
-        visit portal_policy_path(id: policy.policy_number)
+        visit policy_path(id: policy.policy_number)
         find("kin-tab", text: "Documents").click
 
         expect(page).to have_css('[data-rspec="policy-documents-block"]')
@@ -57,7 +57,7 @@ describe "Policy Documents tab", :js, domain: :policy_administration do
         policy = create(:bright_policy, :bound, policy_contacts: [primary_insured])
         create(:document, label: "policy_packet", show_in_portal: true, documentable: policy, person: policy.primary_insured, term: 0)
 
-        visit portal_policy_path(id: policy.policy_number)
+        visit policy_path(id: policy.policy_number)
         find("kin-tab", text: "Documents").click
 
         expect(page).to have_css('[data-rspec="policy-documents-block"]')

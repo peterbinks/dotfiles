@@ -27,11 +27,7 @@ module Portal
     end
 
     def load_failed_card_transactions
-      # @failed_card_transactions ||= Portal::BillingTransaction.failed_card_transactions_for_policy(policy_id: @policy.id)
-      @failed_card_transactions ||= @policy.billing_transactions.select do |transaction|
-        transaction.status == "rejected" &&
-          transaction.updated_at > (@policy.credit_card&.updated_at || @policy.effective_date)
-      end
+      @failed_card_transactions ||= @policy.billing_transactions.select(&:rejected?)
     end
 
     def authorize_user

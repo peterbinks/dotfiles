@@ -2,6 +2,7 @@ module Portal
   module Policies
     class MakePaymentComponent < Portal::ViewComponent::Base
       include Portal::ApplicationHelper
+      include Portal::PoliciesHelper
 
       attr_reader :policy, :billing_transaction, :client, :electronic_fund_transfer_link
 

@@ -3,7 +3,7 @@
     <ul class="m-l-500" style="list-style: disc">
       <% policies_missing_credit_cards.each do |policy| %>
         <li>
-          <%= link_to full_address(policy), portal_routes.policy_path(policy.policy_number) %>
+          <%= link_to full_address(policy), policy_path(policy.policy_number) %>
         </li>
       <% end %>
     </ul>

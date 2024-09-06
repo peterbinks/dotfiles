@@ -1,7 +1,7 @@
 # This is a custom module that is used to define has_many associations between classes.
 # This IS NOT the "has_many" association provided by ActiveRecord
 # This has_many association is connecting class instances to other class instances.
-# 
+#
 # In your model, do the following to set a has_many association
 #
 # class Policy

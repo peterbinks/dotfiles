@@ -4,7 +4,7 @@
       <%= render(Portal::Policies::HeaderComponent.new(policy: @policy)) %>
 
       <% @failed_card_transactions&.each do |transaction| %>
-        <%= render(Portal::Billing::FailedTransactionAlertComponent.new(transaction:)) %>
+        <%= render(Portal::Billing::FailedTransactionAlertComponent.new(policy: @policy, transaction:)) %>
       <% end %>
       <%= render(Portal::Billing::NoCreditCardAlertComponent.new(policy: @policy)) %>
       <%= render(Portal::Policies::PolicySummaryDetailComponent.new(policy: @policy)) %>

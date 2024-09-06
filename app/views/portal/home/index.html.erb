@@ -13,8 +13,11 @@
       <p>You can <button class="text--link" data-kustomer-open="true">chat with us</button> for help, see your claims progress, view upcoming payments, review/download policy documents, and upload any required documentation.</p>
     </div>
   </div>
-  <% @failed_card_transactions.each do |transaction| %>
-    <%= render(Portal::Billing::FailedTransactionAlertComponent.new(transaction:)) %>
+  
+  <% @policies.each do |policy| %>
+    <% policy.billing_transactions.select(&:rejected?).each do |transaction| %>
+      <%= render(Portal::Billing::FailedTransactionAlertComponent.new(policy:, transaction:)) %>
+    <% end %>
   <% end %>
 
   <%= render(Portal::Billing::NoCreditCardListAlertComponent.new(policies: @policies)) %>
