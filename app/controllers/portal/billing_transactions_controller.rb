@@ -1,26 +1,25 @@
 module Portal
   class BillingTransactionsController < PortalController
-    before_action :load_policy
     before_action :authorize_user
 
     def download_receipt
-      file_path = billing_transaction&.receipt&.download
+      file_path = Portal::Api::Document.get_file_path(id: billing_transaction&.receipt&.id)
 
       if file_path
         send_data(file_path, filename: "receipt_#{billing_transaction.approved_at&.to_s(:kin_datetime)}.pdf", content_type: "application/pdf")
       else
-        redirect_to portal_routes.policy_path(@policy.policy_number), alert: "Receipt not found"
+        redirect_to portal_routes.policy_path(policy.policy_number), alert: "Receipt not found"
       end
     end
 
     private
 
-    def load_policy
+    def policy
       @policy ||= Portal::Api::Policy.get_policy(policy_number: params[:policy_id])
     end
 
     def billing_transaction
-      @billing_transaction ||= @policy.billing_transactions.find { |transaction| transaction.id == params[:id] }
+      @billing_transaction ||= Portal::Api::BillingTransaction.get_transaction(id: params[:id])
     end
 
     def authorize_user

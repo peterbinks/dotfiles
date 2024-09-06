@@ -18,11 +18,11 @@
   <%= content_tag :div, class: 'quote-container',
     data: {
       controller: 'nok--credit-cards',
-      :'nok--credit-cards-client-id' => policy.auth_net_client.login_id,
-      :'nok--credit-cards-client-key' => policy.auth_net_client.generate_public_client_key
+      :'nok--credit-cards-client-id' => @policy.auth_net_client.login_id,
+      :'nok--credit-cards-client-key' => @policy.auth_net_client.generate_public_client_key
   } do %>
   <% @failed_card_transactions.each do |transaction|%>
-    <%= render(Portal::Billing::FailedTransactionAlertComponent.new(policy:, transaction:)) %>
+    <%= render(Portal::Billing::FailedTransactionAlertComponent.new(policy: @policy, transaction:)) %>
   <% end %>
   <br />
     <%= validated_form_with url: policy_credit_card_path(@policy.policy_number), method: :patch, data: { target: 'nok--credit-cards.form' } do |f| %>
@@ -36,7 +36,7 @@
                   <div class="input errors" data-target="nok--credit-cards.errors"></div>
                 </div>
               </div>
-              <% if policy.in_quote_post_effective_date? %>
+              <% if @policy.in_quote_post_effective_date? %>
                 <fieldset disabled>
               <% else %>
                 <fieldset>
@@ -92,7 +92,7 @@
 
               <% unless @policy.in_quote_post_effective_date? %>
                 <div class="container-fluid vr--1hf text--bold col-xs-11 col-md-12">
-                  <p>By clicking the button below, you agree to our <%= link_to 'Electronic Funds Transfer Authorization', url_for(policy.recurring_payment_notice_doc_url), target: "_blank", class: 'text--secondary' %></p>
+                  <p>By clicking the button below, you agree to our <%= link_to 'Electronic Funds Transfer Authorization', url_for(@policy.recurring_payment_notice_doc_url), target: "_blank", class: 'text--secondary' %></p>
                 </div>
               <% end %>
             </div>
@@ -100,7 +100,7 @@
 
           <div class="row center-xs">
             <div class="col-xs-12 col-lg-3 vr--1hf">
-              <% if policy.billing_transactions.any?(&:recently_rejected?) %>
+              <% if @policy.billing_transactions.any?(&:recently_rejected?) %>
                 <% unless @policy.in_quote_post_effective_date? %>
                   <button type="button" class="button button--primary button--md button--block show" onclick="document.querySelector('kin-dialog').show()">Submit</button>
                 <% end %>

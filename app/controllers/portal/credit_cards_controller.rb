@@ -1,6 +1,7 @@
 module Portal
   class CreditCardsController < PortalController
     before_action :authorize_user
+    before_action :load_policy
     before_action :set_current_user_to_current_attributes
 
     DEFAULT_TAGS = {
@@ -9,25 +10,20 @@ module Portal
     }
 
     def edit
-      load_policy
       load_failed_card_transactions
     end
 
     def success
-      load_policy
-
       @success_params = success_params
     end
 
     def error
-      load_policy
-
       @credit_card_updated = params.dig("credit_card_updated").to_bool
     end
 
     def create
       Portal::Api::CreditCard.create!(
-        policy: policy,
+        policy: @policy,
         value: credit_card_params.dig(:value),
         descriptor: credit_card_params.dig(:descriptor),
         notify_customer: true
@@ -51,17 +47,17 @@ module Portal
 
     def update
       Portal::Api::CreditCard.create!(
-        policy_number: policy.policy_number,
+        policy_number: @policy.policy_number,
         value: credit_card_params.dig(:value),
         descriptor: credit_card_params.dig(:descriptor),
         notify_customer: true
       )
 
-      if policy.billing_transactions.any?(&:recently_rejected?)
-        Portal::Api::CreditCard.charge_rejected_payments!(policy_number: policy.policy_number)
+      if @policy.billing_transactions.any?(&:recently_rejected?)
+        Portal::Api::CreditCard.charge_rejected_payments!(policy_number: @policy.policy_number)
       end
 
-      if policy.billing_transactions.map(&:recently_rejected?).any?
+      if @policy.billing_transactions.map(&:recently_rejected?).any?
         redirect_to error_policy_credit_card_path(credit_card_updated: true)
       else
         redirect_to success_policy_credit_card_path
@@ -77,16 +73,15 @@ module Portal
     end
 
     def process_card_payment
-      value, descriptor, transaction_id, save_card, use_saved_card = credit_card_transaction_params.values_at(:value, :descriptor, :transactionId, :saveCard, :useSavedCard)
+      transaction_id = credit_card_transaction_params.dig(:transactionId)
 
-      raise StandardError.new("NO")
-      if use_saved_card == "true"
-        PaymentProcessor::ProcessPayment.call(transaction_id, policy, current_user)
-      elsif save_card == "true"
-        PaymentProcessor::SaveCardAndProcessPayment.call(value, descriptor, transaction_id, policy, current_user)
-      else
-        PaymentProcessor::ProcessOneTimePayment.call(transaction_id, value, descriptor, current_user)
-      end
+      Portal::Api::BillingTransaction.process_payment!(
+        type: process_payment_type,
+        transaction_id: transaction_id,
+        policy_number: @policy.policy_number,
+        user: current_user,
+        opaque_values: opaque_value_params
+      )
 
       render_success("Payment processed successfully.")
     rescue => error
@@ -94,6 +89,23 @@ module Portal
     end
 
     private
+
+    def process_payment_type
+      if credit_card_transaction_params.dig(:useSavedCard) == "true"
+        :process
+      elsif credit_card_transaction_params.dig(:saveCard) == "true"
+        :save_card_and_process
+      else
+        :process_one_time
+      end
+    end
+
+    def opaque_value_params
+      {
+        value: credit_card_transaction_params.dig(:value),
+        descriptor: credit_card_transaction_params.dig(:descriptor)
+      }.reject { |_, v| v.blank? }
+    end
 
     def authorize_user
       current_user.has_role?(:admin) ||
@@ -105,10 +117,6 @@ module Portal
     # before we load their policy info
     def applicants_for_auth
       @applicants_for_auth ||= Portal::Api::Applicant.get_applicants(policy_number: params[:policy_id])
-    end
-
-    def policy
-      @policy ||= Portal::Api::Policy.get_policy(policy_number: params[:policy_id])
     end
 
     def load_policy
@@ -128,18 +136,14 @@ module Portal
     end
 
     def success_params
-      relevant_transaction = policy.billing_transactions.find(&:recently_approved?) || policy.billing_transactions.find(&:recently_rejected?)
+      relevant_transaction = @policy.billing_transactions.find(&:recently_approved?) || @policy.billing_transactions.find(&:recently_rejected?)
 
       return {} if relevant_transaction.blank?
 
       {
-        card_last_4: policy.credit_card.last_4,
+        card_last_4: @policy.credit_card.last_4,
         payment_amount: relevant_transaction.amount_cents / 100.00
       }
-    end
-
-    def find_billing_transaction(transaction_id)
-      ::Billing::ScheduledTransaction.find(transaction_id)
     end
 
     def render_success(message)
@@ -151,10 +155,7 @@ module Portal
     end
 
     def handle_exception(error, transaction_id = nil)
-      billing_transaction = find_billing_transaction(transaction_id) if transaction_id
-
-      # TODO - make API call
-      billing_transaction.status_rejected! if billing_transaction&.upcoming?
+      Portal::Api::BillingTransaction.patch!(id: transaction_id, changes: {status: :rejected}) if transaction_id.present?
 
       Kin::ExceptionHandler.silence(
         error,
