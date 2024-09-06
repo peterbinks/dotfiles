@@ -1,0 +1,86 @@
+<%= validated_form_with url: portal_routes.policy_credit_card_path(@policy.policy_number),
+  html: {
+    data: {
+      type: "html",
+      target: "portal--add-credit-card.form",
+      controller: "portal--add-credit-card",
+      'portal--add-credit-card-client-id': @client.login_id,
+      'portal--add-credit-card-client-key': @client.generate_public_client_key,
+      'portal--add-credit-card-url-value': portal_routes.policy_credit_card_path(@policy.policy_number)
+    }
+  } do |form| %>
+  <kin-dialog id="newCreditCardModal" scrollBackdrop size="sm" style="--kin-dialog-header-text-align: left" data-target="portal--add-credit-card.dialog">
+    <h2 slot="header" data-rspec= 'add-credit-card-header' data-target="portal--add-credit-card.header" class="m-0">Add a Credit Card</h2>
+    <div data-target="portal--add-credit-card.formBody">
+      
+      <div class="container p-0">
+        <div class="row">
+          <div class="col-xs-12 m-b-300">
+            <%= form.label :first_name, class: 'input' do %>
+              <%= form.text_field :first_name, placeholder: "", required: true, class: "input__control", 'data-rspec': 'first_name', data: { target: 'portal--add-credit-card.firstName' } %>
+              <span class="input__label">Cardholder First Name</span>
+            <% end %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 m-b-300">
+            <%= form.label :last_name, class: 'input' do %>
+              <%= form.text_field :last_name, placeholder: "", required: true, class: "input__control", 'data-rspec': 'last_name', data: { target: 'portal--add-credit-card.lastName' } %>
+              <span class="input__label">Cardholder Last Name</span>
+            <% end %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 m-b-300">
+            <%= form.label :number, class: 'input' do %>
+              <%= form.text_field :number, placeholder: "", required: true, class: 'input__control', 'data-rspec': 'number', data: { target: 'portal--add-credit-card.creditCardNumber', mask: '0000 0000 0000 0000', validate_credit_card: true, aria_errormessage: 'card-number--error', aria_invalid: "false", validation_message: "Please enter a valid credit card number." } %>
+              <span class="input__label">Credit Card Number</span>
+            <% end %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6 m-b-300">
+            <%= form.label :expiration, class: 'input' do %>
+              <%= form.text_field :expiration, placeholder: 'MM/YYYY', required: true, class: 'input__control', 'data-rspec': 'expiration', data: { target: 'portal--add-credit-card.expiration', mask: '00/0000', validate_min_month_year: Date.today.strftime("%Y-%m-%d"), aria_errormessage: 'exp-date--error', aria_invalid: "false" } %>
+              <span class="input__label">Expiration Date</span>
+            <% end %>
+          </div>
+          <div class="col-xs-6 m-b-300">
+            <%= form.label :cvv, class: 'input' do %>
+              <%= form.text_field :cvv, class: 'input__control', required: true, minlength: 3, maxlength: 4, placeholder: "", inputmode: "numeric", pattern: "[0-9]*", autocomplete: 'cc-csc', 'data-rspec': 'cvv', data: { aria_errormessage: 'card-cvv--error', aria_invalid: "false", target: 'portal--add-credit-card.cvv' } %>
+              <span class="input__label">CVV</span>
+            <% end %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 m-b-300">
+            <%= form.label :zip, class: 'input' do %>
+              <%= form.text_field :zip, class: 'input__control', required: true, minlength: 5, maxlength: 10, autocomplete: 'postal-code', placeholder: "", inputmode: "numeric", pattern: "[0-9]*", 'data-rspec': 'zip', data: { target: 'portal--add-credit-card.zip', validation_message: "Please enter a valid zip code.", aria_errormessage: 'zip--error', aria_invalid: "false", mask: '00000-0000' } %>
+              <span class="input__label">ZIP Code</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <p>By clicking 'Add Credit Card', you agree to our <%= link_to 'Electronic Funds Transfer Authorization', @electronic_fund_transfer_link, target: "_blank", class: 'text--secondary', 'data-rspec': 'electronics-transfer-link' %></p>
+      <div class="row p-0 container around-xs">
+        <div class="col-xs-6">
+          <%= form.submit "Add Credit Card", data: { rspec: "add-new-credit-card-submit", action: "portal--add-credit-card#submit", target: "portal--add-credit-card.formSubmitButton" }, class: 'button button–-block button--md button--primary' %>
+        </div>
+        <div class="col-xs-6">
+          <kin-button variant="secondary" onclick="this.closest('kin-dialog').hide()">Cancel</kin-button>
+        </div>
+      </div>
+    </div>
+
+    <div data-target="portal--add-credit-card.successMessage" style="display: none;">
+      <p data-rspec= "success-msg">Now you'll be able to use this card for future payments.</p>
+      <button type="button" onclick="this.closest('kin-dialog').hide()" class="button button--md button--primary">Close</button>
+    </div>
+
+    <div data-target="portal--add-credit-card.errorMessage" style="display: none;">
+      <p>Please try again or contact us at <a href="tel:+1-855-216-7674" class="text--link secondary text--bold">(855) 216-7674</a>.</p>
+      <button type="button" onclick="this.closest('kin-dialog').hide()" class="button button--md button--primary">Close</button>
+    </div>
+    <% content_for :head do %> <%= javascript_include_tag ENV["ACCEPT_JS_URL"] %> <% end %>
+  </kin-dialog>
+<% end %>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%= render 'layouts/shared/head' %>
+  <body class="portal">
+    <div class="skiplink">
+      <%= link_to "Skip to Main Content", "#portal--main", class: 'skiplink--link' %>
+    </div>
+    <%= render 'layouts/shared/nav' %>
+    <main class="portal--main" id="portal--main">
+      <% unless Rails.env.production? %>
+        <kin-non-prod-banner style="margin: -4rem 0 3rem 0;"></kin-non-prod-banner>
+      <% end %>
+      <% if flash.to_h.present? %>
+        <div data-controller="kintranet--flash">
+          <% flash.each do |type, message| %>
+            <div class="flash-message <%= type %>" data-action="click->kintranet--flash#hide" data-target="kintranet--flash.flash">
+              <div class="flash-message-container">
+                <% if message.respond_to?(:each) %>
+                  <% message.each do |m| %>
+                    <p data-target="kintranet--flash.content">
+                      <%= m.html_safe %>
+                    </p>
+                <% end %>
+                <% elsif message.respond_to?(:html_safe) %>
+                  <p data-target="kintranet--flash.content">
+                    <%= message.html_safe %>
+                  </p>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <h1>ENGINE</h1>
+
+
+      <%= yield %>
+
+      <div class="container-fluid">
+        <div class="row text--right">
+          <div class="col-xs-12">
+            <%= render 'layouts/shared/csr' %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <%= render 'layouts/shared/foot' %>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

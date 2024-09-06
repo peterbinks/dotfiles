@@ -1,0 +1,99 @@
+<div class="row">
+  <div class="col-xs-12">
+    <section class="card card--medium rounded-400 m-b-200" data-rspec="required-documents-block">
+      <div class="container-fluid">
+        <div class="row middle-xs between-xs h-list--wrapped">
+          <div class="col-xs-12 col-sm-6">
+            <h2 class="hdg hdg-2--section">Required Documents</h2>
+          </div>
+          <div class="col-xs-12 col-sm-6 end-sm text--right">
+            <%= link_to "Upload Documents", document_upload_url, class: 'button button--md button--primary', target: "_blank" %>
+          </div>
+        </div>
+        <hr class="line--dash"/>
+        <ul class="dash--list-v">
+          <% if @policy.uploaded_required_documents.blank? %>
+            <% @policy.required_documents_labels.each do |label| %>
+              <li class="dash--list-v--item">
+                <div class="row row--collapse between-xs">
+                  <div class="col-xs-12 col-sm-10 vr">
+                    <ul class="h-list h-list--middle">
+                      <li>
+                        <div class="doc-type application" role="img" aria-label="declarations document icon"></div>
+                      </li>
+                      <li>
+                        <p class="text text--md">
+                          <%= label.titleize %>
+                        </p>
+                        <p>
+                          <span class="text text--bold text--sm text--warning">Required by <%= @policy.effective_date.to_date.to_s(:kin_date) %></span>
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            <% end %>
+          <% else %>
+            <% @policy.unique_required_documents.each do |document| %>
+              <% if document %>
+                <li class="dash--list-v--item">
+                  <div class="row between-xs">
+                    <div class="col-xs-12 col-sm-10 vr">
+                      <ul class="h-list h-list--middle">
+                        <li>
+                          <div class="doc-type application" role="img" aria-label="declarations document icon"></div>
+                        </li>
+                        <li>
+                          <p class="text text--md">
+                            <%= text("views.nok.funnel.upload_document.#{document.label}.name") %>
+                          </p>
+                          <p class="text <%= document.review_status == 'not_reviewed' ? 'text--primary-600' : 'text--warning' %>">
+                            <%= formatted_review_status(document.review_status, effective_date: @policy.effective_date.to_date.to_s(:kin_date)) %>
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+                    <% if document.complete? %>
+                      <div class="col-xs-12 col-sm-2 vr">
+                        <%= link_to "View", main_app_routes.rails_blob_url(document&.saved_file, only_path: true), target: "_blank", data: { rspec: "document-#{document.display_name.split(' -')[0].parameterize}" } %>
+                      </div>
+                    <% else %>
+                      <div class="loading-spinner">
+                        <%= image_pack_tag "images/loading.gif", class: "spinner icon__small" %>
+                        <p class="text text--small">Loading...</p>
+                      </div>
+                    <% end %>
+                  </div>
+                </li>
+              <% else %>
+                <li class="dash--list-v--item">
+                  <div class="row row--collapse between-xs">
+                    <div class="col-xs-12 col-sm-10 vr">
+                      <ul class="h-list h-list--middle">
+                        <li>
+                          <div class="doc-type application" role="img" aria-label="declarations document icon"></div>
+                        </li>
+                        <li>
+                          <p class="text text--md">
+                            <%= label.titleize %>
+                          </p>
+                          <p>
+                            <span class="text text--bold text--sm text--warning">Required by <%= @policy.effective_date.to_date.to_s(:kin_date) %></span>
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              <% end %>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+    </section>
+  </div>
+  <div class="col-xs-12 col-lg-6">
+    <!-- TODO: Placeholder div until payments section is built out in another ticket -->
+  </div>
+</div>

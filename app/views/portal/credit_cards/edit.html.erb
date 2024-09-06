@@ -1,0 +1,129 @@
+<div class="container-fluid">
+<div class="row vr--2x">
+  <div class="col-xs-12">
+    <ul class="breadcrumbs">
+      <li>
+        <%= link_to "My Policies", portal_root_path %>
+      </li>
+      <li>
+        <%= link_to @policy.address.to_s, policy_path(@policy.policy_number) %>
+      </li>
+      <li>
+        Update Credit Card
+      </li>
+    </ul>
+  </div>
+</div>
+<div data-controller="nok--screenshot">
+  <%= content_tag :div, class: 'quote-container',
+    data: {
+      controller: 'nok--credit-cards',
+      :'nok--credit-cards-client-id' => @policy.auth_net_client.login_id,
+      :'nok--credit-cards-client-key' => @policy.auth_net_client.generate_public_client_key
+  } do %>
+  <% @failed_card_transactions.each do |transaction|%>
+    <%= render(Portal::Billing::FailedTransactionAlertComponent.new(policy: @policy, transaction:)) %>
+  <% end %>
+  <br />
+    <%= validated_form_with url: policy_credit_card_path(@policy.policy_number), method: :patch, data: { target: 'nok--credit-cards.form' } do |f| %>
+      <section class="card card--medium rounded-400 text--left">
+        <div class="container-fluid">
+          <div class="row vr">
+            <div class="col-xs-12">
+              <div class="container-fluid vr--1hf">
+                <h4 class="hdg-4">Update Credit Card</h4>
+                <div class="errors-container">
+                  <div class="input errors" data-target="nok--credit-cards.errors"></div>
+                </div>
+              </div>
+              <% if @policy.in_quote_post_effective_date? %>
+                <fieldset disabled>
+              <% else %>
+                <fieldset>
+              <% end %>
+                <input type="hidden" name="credit_card[value]" data-target="nok--credit-cards.tokenValue">
+                <input type="hidden" name="credit_card[descriptor]" data-target="nok--credit-cards.tokenDescriptor">
+                <div class="payment-option-credit-card payment-options container-fluid" data-target="nok--credit-cards.cardFormContainer">
+                  <fieldset class="row">
+                      <div class="col-xs-12 col-lg-5 vr--1hf">
+                        <%= f.label :number, class: 'input-textbox' do %>
+                          <%= f.text_field :number, name: nil, required: true,  minlength: 16, class: 'input-textbox--input nomargin', autocomplete: 'cc-number', 'data-rspec': 'cc-number-input', data: { target: 'nok--credit-cards.number', mask: '0000 0000 0000 0000', validate_credit_card: true, aria_errormessage: 'card-number--error', aria_invalid: "false", validation_message: "Please enter a valid credit card number." } %>
+                          <span class="input-textbox--label"><span class="text--tone hide-xs">Credit</span> Card Number</span>
+                        <%- end %>
+                      </div>
+
+                      <div class="col-xs-6 col-lg-2 vr--1hf">
+                        <%= f.label :expiration, class: 'input-textbox' do %>
+                          <%= f.text_field :expiration, class: 'input-textbox--input nomargin', required: true, name: nil, minlength: 7, maxlength: 7, autocomplete: 'cc-csc', 'data-rspec': 'expiration-input', data: { validate_min_month_year: Date.today.strftime("%Y-%m-%d"), aria_errormessage: 'card-expiration--error', aria_invalid: "false", target: 'nok--credit-cards.expiration', mask: '00/0000', validation_message: "Please enter the date as mm/yyyy." } %>
+                          <span class="input-textbox--label">Exp<span class="text--tone hide-xs">iration</span> Date</span>
+                        <%- end %>
+                      </div>
+
+                      <div class="col-xs-6 col-lg-2 vr--1hf">
+                        <%= f.label :cvv, class: 'input-textbox' do %>
+                          <%= f.text_field :cvv, class: 'input-textbox--input nomargin', required: true, name: nil, minlength: 3, maxlength: 4, autocomplete: 'cc-csc', 'data-rspec': 'cvv-input', data: { aria_errormessage: 'card-cvv--error', mask: '0000', aria_invalid: "false", target: 'nok--credit-cards.cvv', validation_message: "Please enter a valid security code." } %>
+                          <span class="input-textbox--label">CVV</span>
+                        <%- end %>
+                      </div>
+
+                      <div class="col-xs-12 col-lg-3 vr--1hf">
+                        <%= f.label :zip, class: 'input-textbox' do %>
+                          <%= f.text_field :zip, class: 'input-textbox--input nomargin', required: true, name: nil, minlength: 5, maxlength: 5, autocomplete: 'postal-code', 'data-rspec': 'postal-code-input', data: { target: 'nok--credit-cards.zip', validation_message: "Please enter a valid 5-digit zip code.", aria_errormessage: 'zip--error', aria_invalid: "false", mask: '00000' } %>
+                          <span class="input-textbox--label">Zip Code</span>
+                        <%- end %>
+                      </div>
+                  </fieldset>
+                  <fieldset class="row">
+                      <div class="col-xs-12 col-lg-6 vr--1hf">
+                        <%= f.label :first_name, class: 'input-textbox' do %>
+                          <%= f.text_field :first_name, name: nil, required: true, autocomplete: 'cc-given-name', class: "input-textbox--input nomargin", 'data-rspec': 'first-name', data: { target: 'nok--credit-cards.firstName' } %>
+                          <span class="input-textbox--label">Cardholder First Name</span>
+                        <%- end %>
+                      </div>
+                      <div class="col-xs-12 col-lg-6 vr--1hf">
+                        <%= f.label :last_name, class: 'input-textbox' do %>
+                          <%= f.text_field :last_name, name: nil, required: true, autocomplete: 'cc-family-name', class: "input-textbox--input nomargin", 'data-rspec': 'last-name', data: { target: 'nok--credit-cards.lastName' }  %>
+                          <span class="input-textbox--label">Cardholder Last Name</span>
+                        <%- end %>
+                      </div>
+                  </fieldset>
+                </div>
+              </fieldset><!-- End of Form Fieldset -->
+
+              <% unless @policy.in_quote_post_effective_date? %>
+                <div class="container-fluid vr--1hf text--bold col-xs-11 col-md-12">
+                  <p>By clicking the button below, you agree to our <%= link_to 'Electronic Funds Transfer Authorization', url_for(@policy.recurring_payment_notice_doc_url), target: "_blank", class: 'text--secondary' %></p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="row center-xs">
+            <div class="col-xs-12 col-lg-3 vr--1hf">
+              <% if @policy.billing_transactions.any?(&:recently_rejected?) %>
+                <% unless @policy.in_quote_post_effective_date? %>
+                  <button type="button" class="button button--primary button--md button--block show" onclick="document.querySelector('kin-dialog').show()">Submit</button>
+                <% end %>
+                <kin-dialog>
+                  <h2 slot="header">Your card will be processed for <%= number_to_currency(@failed_card_transactions.first.amount_cents / 100.to_d) %> immediately</h2>
+                  <p>We need to charge your card to get your missed Policy Payment <%= @failed_card_transactions.first.installment_number %> of <%= @failed_card_transactions.first.term_installment_count %>. This card will be used for all future transactions.</p>
+                  <%= f.submit 'Charge new card', slot: 'footer', class: 'button button--primary button--md button--block', 'data-rspec': 'continue-button', data: { target: 'nok--credit-cards.submit', "disable-with": "Loading...", disable: "true"  } %>
+                </kin-dialog>
+              <% else %>
+                <% unless @policy.in_quote_post_effective_date? %> 
+                  <%= f.submit 'Save', class: 'button button--primary button--lg button--block', 'data-rspec': 'continue-button', data: { target: 'nok--credit-cards.submit', "disable-with": "Loading...", disable: "true" } %>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="col-xs-12 text--center">
+              <%= link_to 'Cancel', policy_path(@policy.policy_number), class: 'text text--link' %>
+            </div>
+          </div>
+        </div>
+      </section>
+    <%- end %>
+  <%- end %>
+  <%= javascript_include_tag ENV["ACCEPT_JS_URL"] %>
+</div>
+
+</div>

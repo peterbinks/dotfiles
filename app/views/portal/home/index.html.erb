@@ -1,0 +1,126 @@
+<%# # TODO %>
+<% if false#@slides.present? %>
+  <kin-slide-carousel
+    slides="<%= @slides %>"
+    requiredDocuments="<%= @required_documents_for_slide %>"
+    finalSlideCtaText="Let's Get Started">
+  </kin-slide-carousel>
+<% end %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <h1 class="hdg hdg-1--title vr--2x">Customer Portal</h1>
+      <p>You can <button class="text--link" data-kustomer-open="true">chat with us</button> for help, see your claims progress, view upcoming payments, review/download policy documents, and upload any required documentation.</p>
+    </div>
+  </div>
+  
+  <% @policies.each do |policy| %>
+    <% policy.billing_transactions.select(&:rejected?).each do |transaction| %>
+      <%= render(Portal::Billing::FailedTransactionAlertComponent.new(policy:, transaction:)) %>
+    <% end %>
+  <% end %>
+
+  <%= render(Portal::Billing::NoCreditCardListAlertComponent.new(policies: @policies)) %>
+
+  <% if @policies.length == 0  %>
+    <div class="row vr">
+      <div class="col-xs-12">
+        <div class="vr">
+          <p class="text text--center">You don't have any active policies with Kin.</p>
+          
+        </div>
+        <p class="text text--center">Call a representative at <%= link_to text("contact.phone_raw"), "tel:+1#{ text("contact.phone_raw").gsub(/[^0-9]/, "") }", class: "hover-dotted" %> for next steps.</p>
+      </div>
+    </div>
+  <% else %>
+    <% @policies.each do |policy| %>
+      <% if render_policy_accordion_component?(policy) %>
+        <% if has_completed_all_steps?(policy.policy_accordion_steps) %>
+          <div class="policy-preparation--desktop row vr--2x">
+            <div class="col-xs-3 bg-neutral-white" id="policy-preparation-side--desktop">
+              <h3 class="hdg hdg-1--title hdg-1--title--margin-normal" style="text-align: center">
+                <%= icon "tada", class: "link-with-icon"  %>
+                <br>
+                <span style="display: block;"> You're all done with your policy prep! </span>
+              </h3>
+              <br>
+              <%= form_with url: "/portal/close_policy_prep_component", method: :post do |form| %>
+                <%= form.hidden_field :bright_policy_id, value: policy.id %>
+                <%= form.submit 'Close', class: 'btn btn__stretch'%>
+              <% end %>
+            </div>
+            <div class="portal--gap"></div>
+            <div class="col-xs-8 bg-neutral-white" id="policy-preparation-main--desktop">
+              <%= render(Portal::Policies::PolicySummaryComponent.new(policy: policy)) %>
+            </div>
+          </div>
+        <% else %>
+          <div class="policy-preparation--desktop row vr--2x">
+            <div class="col-xs-3 bg-neutral-white">
+              <h3 class="hdg hdg-1--title hdg-1--title--margin-normal">Homeowners Policy Prep</h3>
+
+              <kin-policy-preparation-completion-summary
+                completedPercent="<%= get_complete_percent(policy.policy_accordion_steps) %>"
+                daysRemaining="<%= days_remaining(policy) %>"
+                stepData="<%= @steps[policy.id] %>">
+              </kin-policy-preparation-completion-summary>
+              
+              <kin-policy-preparation-accordion
+                newPurchase="<%= policy.new_purchase? %>"
+                effectiveDate="<%= policy.effective_date %>"
+                policyId="<%= policy.id %>"
+                stepData="<%= @steps[policy.id] %>">
+              </kin-policy-preparation-accordion>
+
+            </div>
+            <div class="portal--gap"></div>
+            <div class="col-xs-8 bg-neutral-white">
+              <%= render(Portal::Policies::PolicySummaryComponent.new(policy: policy)) %>
+            </div>
+          </div>
+        <% end %>
+
+        <% if has_completed_all_steps?(policy.policy_accordion_steps) %>
+          <div class="policy-preparation--mobile row vr--2x bg-neutral-white">
+            <div class="col-xs-12" id="policy-preparation-side--mobile">
+              <h3 class="hdg hdg-1--title hdg-1--title--margin-normal" style="text-align: center">
+                <%= icon "tada"%>
+               <br>
+                <span>You're all done with your policy prep!</span>
+              </h3>
+              <%= form_with url: "/portal/close_policy_prep_component", method: :post do |form| %>
+                <% form.hidden_field :bright_policy_id, value: policy.id %>
+                <%= form.submit 'Close', class: 'btn btn__stretch'%>
+              <% end %>
+            </div>
+            <div id="policy-preparation-main--desktop">
+              <br>
+              <%= render(Portal::Policies::PolicySummaryComponent.new(policy: policy)) %>
+            </div>
+          </div>
+         
+        <% else %>
+          <div class="policy-preparation--mobile row vr--2x bg-neutral-white">
+            <div class="col-xs-12">
+              <h3 class="hdg hdg-1--title hdg-1--title--margin-normal">Homeowners Policy Prep</h3>
+
+              <kin-policy-preparation-completion-summary
+                completedPercent="<%= get_complete_percent(policy.policy_accordion_steps) %>"
+                daysRemaining="<%= days_remaining(policy) %>"
+                stepData="<%= @steps[policy.id] %>">
+              </kin-policy-preparation-completion-summary>
+
+              <kin-policy-preparation-accordion
+                policyId="<%= policy.id %>"
+                stepData="<%= @steps[policy.id] %>">
+              </kin-policy-preparation-accordion>
+            </div>
+            <%= render(Portal::Policies::PolicySummaryComponent.new(policy: policy)) %>
+          </div>
+        <% end %>
+      <% else %>
+        <%= render(Portal::Policies::PolicySummaryComponent.new(policy: policy)) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

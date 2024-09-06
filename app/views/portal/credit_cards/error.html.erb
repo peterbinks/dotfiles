@@ -1,0 +1,19 @@
+<%= render 'message' do %>
+  <% if @credit_card_updated %>
+    <%= icon "error_rounded", class: "icon__xxlarge animate-wiggle" %>
+    <h3>Your credit card could not be charged.</h3>
+    <p class='text--lg'>
+      Please give us a call at
+      <a class="text-link c-secondary inherit-size" href="tel:+18557170022">(855) 717-0022</a>
+      for assistance with your request.
+    </p>
+  <% else %>
+    <%= icon "error_rounded", class: "icon__xxlarge animate-wiggle" %>
+    <h3>Your credit card information could not be updated.</h3>
+    <p class='text--lg'>
+      Please give us a call at
+      <a class="text-link c-secondary inherit-size" href="tel:+18557170022">(855) 717-0022</a>
+      for assistance with your request.
+    </p>
+  <% end %>
+<% end %>

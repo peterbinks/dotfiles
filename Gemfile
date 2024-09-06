@@ -1,12 +1,24 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# Specify your gem's dependencies in portal.gemspec.
 gemspec
 
-group :development do
-  gem 'sqlite3'
+gem "pretender", "~> 0.2.gem"
+gem "view_component"
+gem "text_helpers"
+
+group :development, :test do
+  gem "pg"
+  gem "puma"
+  gem "pry-rails"
+  gem "spring"
+  gem "standard", "=1.24.3" # Changes to this may change our linting rules; locking it to ensure updates are intentional.
+  gem "standardrb", require: false
+  gem "dotenv"
 end
 
-# To use a debugger
-# gem 'byebug', group: [:development, :test]
+group :test do
+  gem "capybara"
+  gem "spring-commands-rspec"
+  gem "faker"
+end

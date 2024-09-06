@@ -1,0 +1,40 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12 col-md-10">
+      <%= render(Portal::Policies::HeaderComponent.new(policy: @policy)) %>
+
+      <% @failed_card_transactions&.each do |transaction| %>
+        <%= render(Portal::Billing::FailedTransactionAlertComponent.new(policy: @policy, transaction:)) %>
+      <% end %>
+      <%= render(Portal::Billing::NoCreditCardAlertComponent.new(policy: @policy)) %>
+      <%= render(Portal::Policies::PolicySummaryDetailComponent.new(policy: @policy)) %>
+    </div>
+  </div>
+</div>
+
+<kin-tabs selectedtabindex="0">
+  <kin-tab slot="tablist" data-rspec="documents-tab">Documents</kin-tab>
+  <kin-tab slot="tablist" data-rspec="payments-tab">Payments</kin-tab>
+  <kin-tab-panel class="m-t-500">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12 col-md-10">
+          <%= render(Portal::Documents::RequiredDocumentsComponent.new(policy: @policy, user: @user)) %>
+          <%= render(Portal::Documents::PolicyDocumentsComponent.new(policy: @policy)) %>
+        </div>
+      </div>
+    </div>
+  </kin-tab-panel>
+  <kin-tab-panel class="m-t-500">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12 col-md-10">
+          <%= render(Portal::Billing::BillingCorrectionsAlertComponent.new(policy: @policy)) %>
+          <%= render(Portal::Billing::PaymentMethod::CardComponent.new(policy: @policy)) %>
+          <%= render(Portal::Billing::PaymentMethod::EscrowComponent.new(policy: @policy)) %>
+          <%= render(Portal::Billing::PolicySummaryPaymentScheduleComponent.new(policy: @policy)) %>
+        </div>
+      </div>
+    </div>
+  </kin-tab-panel>
+</kin-tabs>
