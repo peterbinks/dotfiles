@@ -5,14 +5,14 @@ RSpec.describe Portal::Policy, type: :model do
 
   describe "#primary_insured" do
     it "returns the primary applicant" do
-      primary_applicant = policy.applicants.find(&:primary)
+      primary_applicant = policy.applicants.find_by(primary: true)
       expect(policy.primary_insured).to eq primary_applicant
     end
   end
 
   describe "#co_applicant" do
     it "returns the co-applicant" do
-      co_applicant = policy.applicants.find(&:co_applicant)
+      co_applicant = policy.applicants.find_by(co_applicant: true)
       expect(policy.co_applicant).to eq co_applicant
     end
   end
@@ -45,28 +45,28 @@ RSpec.describe Portal::Policy, type: :model do
     end
   end
 
-  describe "#term_groups" do
-    it "returns a hash of terms grouped by their number" do
-      term_groups = policy.terms.map { |term| [term.number, term] }.to_h
-      expect(policy.term_groups).to eq term_groups
+  describe "#term" do
+    it "returns the term with the given number" do
+      term = policy.terms.find_by(number: 1)
+      expect(policy.term(number: 1)).to eq term
     end
   end
 
   describe "#effective_date" do
     it "returns the effective date of the first term" do
-      expect(policy.effective_date).to eq policy.term_groups[0]&.effective_date
+      expect(policy.effective_date).to eq policy.term(number: 0)&.effective_date
     end
   end
 
   describe "#term_effective_date" do
     it "returns the effective date of the current term" do
-      expect(policy.term_effective_date).to eq policy.term_groups[policy.current_term]&.effective_date
+      expect(policy.term_effective_date).to eq policy.term(number: policy.current_term)&.effective_date
     end
   end
 
   describe "#term_end_date" do
     it "returns the end date of the current term" do
-      expect(policy.term_end_date).to eq policy.term_groups[policy.current_term]&.end_date
+      expect(policy.term_end_date).to eq policy.term(number: policy.current_term)&.end_date
     end
   end
 

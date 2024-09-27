@@ -38,11 +38,11 @@ module Portal
     delegate :quote?, :bound?, :in_force?, :cancelled?, :expired?, :non_renewed?, to: :policy_status
 
     def primary_insured
-      @primary_insured ||= applicants.find(&:primary)
+      @primary_insured ||= applicants.find_by(primary: true)
     end
 
     def co_applicant
-      @co_applicant ||= applicants.find(&:co_applicant)
+      @co_applicant ||= applicants.find_by(co_applicant: true)
     end
 
     def policy_status
@@ -72,20 +72,20 @@ module Portal
       billing_corrections_needed
     end
 
-    def term_groups
-      @term_groups ||= terms.map { |term| [term.number, term] }.to_h
+    def term(number: current_term)
+      terms.find_by(number:)
     end
 
     def effective_date
-      @effective_date ||= term_groups[0]&.effective_date
+      term_effective_date(number: 0)
     end
 
-    def term_effective_date
-      term_groups[current_term]&.effective_date
+    def term_effective_date(number: current_term)
+      term(number:)&.effective_date
     end
 
-    def term_end_date
-      term_groups[current_term]&.end_date
+    def term_end_date(number: current_term)
+      term(number:)&.end_date
     end
 
     def in_quote_post_effective_date?
