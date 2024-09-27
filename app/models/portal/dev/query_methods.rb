@@ -4,8 +4,8 @@ module Portal
       # This is terribly, terribly expensive, but is helpful for debugging
 
       # How do I get this to only load in development?
-        # development.rb `query_methods: true``
-        # production.rb `query_methods: false`
+      # development.rb `query_methods: true``
+      # production.rb `query_methods: false`
       def source(name, serializer)
         @source = name
         @serializer = serializer
@@ -35,7 +35,7 @@ module Portal
 
       def build(source_record)
         serialzed_data = @serializer.constantize.new(source_record).to_h.with_associations.data
-        
+
         new(serialzed_data)
       end
     end

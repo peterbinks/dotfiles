@@ -31,7 +31,10 @@ module Portal
         self.HAS_MANY_ASSOCIATIONS.each do |association_name|
           klass_instance.define_singleton_method(association_name) do
             raise "Association #{association_name} not defined" unless data[association_name]
-            data[association_name].map { |record| Portal.const_get(association_name.to_s.classify).new(record) }
+
+            records = data[association_name].map { |record| Portal.const_get(association_name.to_s.classify).new(record) }
+
+            Portal::Utils::Collection.new(records)
           end
         end
       end

@@ -4,20 +4,9 @@ module FixtureBuilder
 
     klass = "Portal::#{record.to_s.camelize}".constantize
 
-  
-    # associations = klass.ASSOCIATIONS if associations.include?(:all)
+    associations = klass.associations.values.flatten if associations.include?(:all)
 
-    # associations.each do |association|
-    #   attributes[association] = load_fixture_file(association)
-    # end
-
-    if associations.include?(:all)
-      load_all_associations(klass, attributes)
-    else
-      associations.each do |association|
-        attributes[association] = load_fixture_file(association)
-      end
-    end
+    load_all_associations(klass, attributes, associations)
 
     klass.new(attributes)
   rescue => e
@@ -32,12 +21,13 @@ module FixtureBuilder
     raise e
   end
 
-  def load_all_associations(klass, attributes)
-    klass.HAS_ONE_ASSOCIATIONS.each do |association|
-      attributes[association] = load_fixture_file(association)
-    end
-    klass.HAS_MANY_ASSOCIATIONS.each do |association|
-      attributes[association] = [load_fixture_file(association)]
+  def load_all_associations(klass, attributes, associations)
+    associations.each do |association|
+      if klass.HAS_ONE_ASSOCIATIONS.include?(association)
+        attributes[association] = load_fixture_file(association)
+      elsif klass.HAS_MANY_ASSOCIATIONS.include?(association)
+        attributes[association] = [load_fixture_file(association)]
+      end
     end
   end
 end

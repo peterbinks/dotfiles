@@ -1,7 +1,7 @@
 module Portal
   class Policy < Base
     source "BrightPolicy", "Portal::Api::BrightPolicySerializer"
-    
+
     # These need to be the EXACT name of the association fetched from dot-com
     has_one :property
     has_one :coverage
