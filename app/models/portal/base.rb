@@ -19,9 +19,16 @@ module Portal
     end
 
     # This method shows the attributes the instance has
-    # @return [Array] an array of the attributes
+    # @return [Hash] a hash of the attribute and value pairs
+    # @example
+    #   policy = Policy.new({id: 1, policy_number: "1234", status: "bound", current_term: "1"})
+    #   policy.attributes # => {id: 1, policy_number: "1234", status: "bound", current_term: "1"}
     def attributes
-      self.class.ATTRIBUTES
+      {}.tap do |hash|
+        self.class.ATTRIBUTES.map do |attr|
+          hash[attr] = send(attr)
+        end
+      end.with_indifferent_access
     end
 
     # This method configures the associations for the instance

@@ -21,4 +21,5 @@ group :test do
   gem "capybara"
   gem "spring-commands-rspec"
   gem "faker"
+  gem "psych", "< 3.3.0" # higher versions of psych break yaml alias usage in i18n
 end
