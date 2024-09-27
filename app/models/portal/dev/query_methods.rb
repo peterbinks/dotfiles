@@ -33,10 +33,25 @@ module Portal
         nil
       end
 
+      def where(**attrs)
+        source_record_collection = @source.constantize.where(**attrs)
+        build_collection(source_record_collection)
+      rescue => e
+        nil
+      end
+
       def build(source_record)
         serialzed_data = @serializer.constantize.new(source_record).to_h.with_associations.data
 
         new(serialzed_data)
+      end
+
+      def build_collection(source_record_collection)
+        collection = source_record_collection.map do |source_record|
+          build(source_record)
+        end
+
+        Portal::Utils::Collection.new(collection)
       end
     end
   end
