@@ -1,5 +1,7 @@
 module Portal
   class Base
+    extend Portal::Dev::QueryMethods
+    
     extend Portal::Utils::HasOne
     extend Portal::Utils::HasMany
     extend Portal::Utils::Attributes

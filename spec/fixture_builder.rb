@@ -4,16 +4,18 @@ module FixtureBuilder
 
     klass = "Portal::#{record.to_s.camelize}".constantize
 
+  
+    # associations = klass.ASSOCIATIONS if associations.include?(:all)
+
+    # associations.each do |association|
+    #   attributes[association] = load_fixture_file(association)
+    # end
+
     if associations.include?(:all)
-      klass.HAS_ONE_ASSOCIATIONS.each do |association|
-        attributes[association] = build(association).attributes
-      end
-      klass.HAS_MANY_ASSOCIATIONS.each do |association|
-        attributes[association] = [build(association).attributes]
-      end
+      load_all_associations(klass, attributes)
     else
       associations.each do |association|
-        attributes[association] = build(association).attributes
+        attributes[association] = load_fixture_file(association)
       end
     end
 
@@ -28,5 +30,14 @@ module FixtureBuilder
   rescue => e
     # Handle error if file does not exist
     raise e
+  end
+
+  def load_all_associations(klass, attributes)
+    klass.HAS_ONE_ASSOCIATIONS.each do |association|
+      attributes[association] = load_fixture_file(association)
+    end
+    klass.HAS_MANY_ASSOCIATIONS.each do |association|
+      attributes[association] = [load_fixture_file(association)]
+    end
   end
 end
