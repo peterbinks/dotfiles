@@ -1,2 +1,3 @@
-id: 1
-flood_and_water_backup: false
+default: &default
+  id: 1
+  flood_and_water_backup: false
