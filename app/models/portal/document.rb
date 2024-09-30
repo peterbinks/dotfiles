@@ -11,6 +11,8 @@ module Portal
     attribute :term
     attribute :display_name
     attribute :status
+    attribute :review_status
+    attribute :needs_verification
     attribute :signed_at
     attribute :expiring_url
     attribute :updated_at

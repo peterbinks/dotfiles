@@ -5,6 +5,10 @@ module Portal
     class Collection < Array
       attr_reader :records
 
+      def none
+        Array.new()
+      end
+
       def find(id)
         Array.new(self).find { |record| record.id == id }
       end

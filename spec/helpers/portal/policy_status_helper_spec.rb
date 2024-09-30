@@ -21,10 +21,10 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
     context "for a quote with a signed application" do
       it 'returns "Signed" text and "primary" style' do
         policy_application = double(:policy_application, signed?: true)
-        policy = double(
-          :bright_policy,
-          quote?: true,
-          active_application: policy_application,
+        policy = build(
+          :policy,
+          fix_type: :quote,
+          has_signed_active_application: true,
           pending_cancellation: false
         )
 
@@ -34,11 +34,13 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
 
     context "for a policy that is pending cancellation" do
       it 'returns "Pending cancellation" text and "warning" style' do
-        policy = double(
-          :bright_policy,
-          active_application: nil,
-          pending_cancellation: true,
-          status: "bound"
+        term = build(:term, number: 0, effective_date: Date.tomorrow)
+        policy = build(
+          :policy,
+          fix_type: :bound,
+          terms: [term],
+          has_signed_active_application: false,
+          pending_cancellation: true
         )
 
         expect(portal_policy_status_text_and_style(policy)).to eq ["Pending cancellation", "warning"]
@@ -49,12 +51,13 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
       it 'returns "Active on <effective_date>" text and "primary" style' do
         effective_date = 1.month.from_now
 
-        policy = double(
-          :bright_policy,
-          active_application: nil,
-          pending_cancellation: false,
-          status: "bound",
-          effective_date:
+        term = build(:term, number: 0, effective_date: effective_date)
+        policy = build(
+          :policy,
+          fix_type: :bound,
+          terms: [term],
+          has_signed_active_application: false,
+          pending_cancellation: false
         )
 
         expect(portal_policy_status_text_and_style(policy)).to eq ["Active on #{effective_date.to_s(:kin_date)}", "primary"]
@@ -63,11 +66,11 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
 
     context "for an in-force policy" do
       it 'returns "Active" text and "secondary" style' do
-        policy = double(
-          :bright_policy,
-          active_application: nil,
-          pending_cancellation: false,
-          status: "in_force"
+        policy = build(
+          :policy,
+          fix_type: :in_force,
+          has_signed_active_application: false,
+          pending_cancellation: false
         )
 
         expect(portal_policy_status_text_and_style(policy)).to eq ["Active", "secondary"]
@@ -83,11 +86,10 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
         ]
 
         statuses.each do |status|
-          policy = double(
-            :bright_policy,
-            active_application: nil,
-            pending_cancellation: false,
-            status:
+          policy = build(
+            :policy,
+            fix_type: status.to_sym,
+            has_signed_active_application: true
           )
 
           expect(portal_policy_status_text_and_style(policy)).to eq ["Inactive", "info"]

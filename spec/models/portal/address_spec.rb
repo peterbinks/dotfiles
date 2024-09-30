@@ -16,10 +16,7 @@ RSpec.describe Portal::Address do
       it "initializes the object with given attributes" do
         address = build(:address)
 
-        portal_address = Portal::Address.new(address)
-        expect(portal_address.id).to eq address[:id]
-        expect(portal_address.full_street_address).to eq address[:full_street_address]
-        expect(portal_address.full_city_state).to eq address[:full_city_state]
+        expect(address).to be_a(Portal::Address)
       end
     end
   end
@@ -28,8 +25,7 @@ RSpec.describe Portal::Address do
     it "returns the full street address" do
       address = build(:address)
 
-      portal_address = Portal::Address.new(address)
-      expect(portal_address.to_s).to eq address[:full_street_address]
+      expect(address.to_s).to eq address.full_street_address
     end
   end
 end

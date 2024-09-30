@@ -27,3 +27,15 @@ bound: &bound
 in_force: &in_force
   <<: *default
   status: 'in_force'
+
+cancelled: &cancelled
+  <<: *default
+  status: 'cancelled'
+
+non_renewed: &non_renewed
+  <<: *default
+  status: 'non_renewed'
+
+expired: &expired
+  <<: *default
+  status: 'expired'

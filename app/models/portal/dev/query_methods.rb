@@ -14,6 +14,10 @@ module Portal
         @serializer = serializer
       end
 
+      def none
+        Portal::Utils::Collection.new([])
+      end
+
       def first
         source_record = @source.constantize.first
         build(source_record)

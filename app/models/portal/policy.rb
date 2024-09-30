@@ -56,7 +56,7 @@ module Portal
     def uploaded_but_not_accepted_required_documents
       documents.select do |doc|
         doc.review_status != "accepted" &&
-          (required_documents_labels | "other").include?(doc.label)
+          (required_documents_labels | ["other"]).include?(doc.label)
       end
     end
 
