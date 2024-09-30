@@ -5,12 +5,13 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
     context "when initialized" do
       context "when the policy is bound" do
         it "renders the form with the correct elements" do
-          credit_card = double("credit_card", last_4: 1111)
-          address = double("address", full_street_address: "123 Main St")
-          policy = double("bright_policy", in_quote_post_effective_date?: false, credit_card: credit_card, address: address, policy_number: "123456")
-          transaction = double("billing_transaction", bright_policy: policy, installment_number: 1, amount_cents: 100)
+          credit_card = build(:credit_card, last_4: 1111)
+          address = build(:address, full_street_address: "123 Main St")
+          term = build(:term, number: 0, effective_date: (Date.current - 6.months), end_date: (Date.current + 6.months))
+          transaction = build(:billing_transaction, installment_number: 1, amount_cents: 100)
+          policy = build(:policy, fix_type: :bound, terms: [term], credit_card: credit_card, address: address)
 
-          component = described_class.new(transaction: transaction)
+          component = described_class.new(policy:, transaction:)
 
           render_inline(component)
           expect(rendered_content).to have_css("[data-rspec= 'failed-transaction-alert']")
@@ -22,12 +23,13 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
 
       context "when the policy is not bound" do
         it "renders the form with the correct elements" do
-          credit_card = double("credit_card", last_4: 1111)
-          address = double("address", full_street_address: "123 Main St")
-          policy = double("bright_policy", in_quote_post_effective_date?: true, credit_card: credit_card, address: address, policy_number: "123456")
-          transaction = double("billing_transaction", bright_policy: policy, installment_number: 1, amount_cents: 100)
+          credit_card = build(:credit_card, last_4: 1111)
+          address = build(:address, full_street_address: "123 Main St")
+          term = build(:term, number: 0, effective_date: (Date.current - 6.months), end_date: (Date.current + 6.months))
+          transaction = build(:billing_transaction, installment_number: 1, amount_cents: 100)
+          policy = build(:policy, fix_type: :quote, terms: [term], credit_card: credit_card, address: address)
 
-          component = described_class.new(transaction: transaction)
+          component = described_class.new(policy:, transaction:)
 
           render_inline(component)
           expect(rendered_content).to have_css("[data-rspec= 'failed-transaction-alert']")
@@ -46,21 +48,9 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
         policy = double("policy", credit_card: credit_card)
         transaction = double("transaction", bright_policy: policy)
 
-        component = described_class.new(transaction: transaction)
+        component = described_class.new(policy:, transaction:)
 
         expect(component.render?).to be true
-      end
-    end
-
-    describe "#policy_number" do
-      it "returns the policy number" do
-        credit_card = double("credit_card")
-        policy = double("policy", credit_card: credit_card, policy_number: "123456")
-        transaction = double("transaction", bright_policy: policy)
-
-        component = described_class.new(transaction: transaction)
-
-        expect(component.policy_number).to eq("123456")
       end
     end
 
@@ -70,7 +60,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
         policy = double("policy", credit_card: credit_card)
         transaction = double("transaction", bright_policy: policy, amount_cents: 100)
 
-        component = described_class.new(transaction: transaction)
+        component = described_class.new(policy:, transaction:)
 
         expect(component.amount).to eq("$1.00")
       end
@@ -83,7 +73,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
           policy = double("policy", credit_card: credit_card)
           transaction = double("transaction", bright_policy: policy, installment_number: 1, endorsement_request_id: nil)
 
-          component = described_class.new(transaction: transaction)
+          component = described_class.new(policy:, transaction:)
 
           expect(component.payment_type).to eq("1st")
         end
@@ -95,7 +85,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
           policy = double("policy", credit_card: credit_card)
           transaction = double("transaction", bright_policy: policy, installment_number: nil, endorsement_request_id: 1)
 
-          component = described_class.new(transaction: transaction)
+          component = described_class.new(policy:, transaction:)
 
           expect(component.payment_type).to eq("Endorsement")
         end
@@ -109,7 +99,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
         policy = double("policy", credit_card: credit_card, address: address)
         transaction = double("transaction", bright_policy: policy)
 
-        component = described_class.new(transaction: transaction)
+        component = described_class.new(policy:, transaction:)
 
         expect(component.address).to eq("123 Main St")
       end
@@ -121,7 +111,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
         policy = double("policy", credit_card: credit_card)
         transaction = double("transaction", bright_policy: policy)
 
-        component = described_class.new(transaction: transaction)
+        component = described_class.new(policy:, transaction:)
 
         expect(component.last_4).to eq("1234")
       end
@@ -134,7 +124,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
           policy = double("policy", credit_card: credit_card)
           transaction = double("transaction", bright_policy: policy)
 
-          component = described_class.new(transaction: transaction)
+          component = described_class.new(policy:, transaction:)
 
           allow(component).to receive(:request).and_return(double("request", path: "/some/path"))
 
@@ -148,7 +138,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
           policy = double("policy", credit_card: credit_card)
           transaction = double("transaction", bright_policy: policy)
 
-          component = described_class.new(transaction: transaction)
+          component = described_class.new(policy:, transaction:)
 
           allow(component).to receive(:request).and_return(double("request", path: "/some/path/edit"))
 
