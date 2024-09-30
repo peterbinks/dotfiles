@@ -32,7 +32,7 @@ module Portal
           klass_instance.define_singleton_method(association_name) do
             return nil if data[association_name].nil?
 
-            self.class.build_portal_record(data, association_name)
+            self.class.build_portal_record(data[association_name], association_name)
           end
         end
       end

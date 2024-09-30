@@ -91,5 +91,10 @@ module Portal
     def in_quote_post_effective_date?
       effective_date < Date.current && quote?
     end
+
+    def renewal_snapshot
+      # TODO: This needs to be an association
+      nil
+    end
   end
 end

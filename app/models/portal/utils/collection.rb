@@ -2,23 +2,15 @@
 # It does NOT fetch from the database
 module Portal
   module Utils
-    class Collection
+    class Collection < Array
       attr_reader :records
 
       def initialize(records)
-        @records = records
-      end
-
-      def first
-        records.first
-      end
-
-      def last
-        records.last
+        super(records)
       end
 
       def find(id)
-        records.find { |record| record.id == id }
+        Array.new(self).find { |record| record.id == id }
       end
 
       def find_by(**attrs)
@@ -26,7 +18,7 @@ module Portal
       end
 
       def where(**attrs)
-        records.select do |record|
+        Array.new(self).select do |record|
           attrs.all? do |key, value|
             record.send(key) == value
           end
