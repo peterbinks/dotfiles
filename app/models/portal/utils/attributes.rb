@@ -28,7 +28,7 @@ module Portal
       def configure_attributes(klass_instance, data)
         self.ATTRIBUTES.each do |attribute|
           # Set on initialization
-          klass_instance.instance_variable_set("@#{attribute}", data[attribute])
+          klass_instance.instance_variable_set("@#{attribute}", data_attribute(data, attribute))
 
           # Getter
           klass_instance.define_singleton_method(attribute) do
@@ -40,6 +40,10 @@ module Portal
             klass_instance.instance_variable_set("@#{attribute}", value)
           end
         end
+      end
+
+      def data_attribute(data, attribute)
+        data.is_a?(Portal::Base) ? data.send(attribute) : data[attribute]
       end
     end
   end

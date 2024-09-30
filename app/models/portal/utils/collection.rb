@@ -1,3 +1,5 @@
+# Portal::Utils::Collection builds an in-memory collection of objects with special methods
+# It does NOT fetch from the database
 module Portal
   module Utils
     class Collection

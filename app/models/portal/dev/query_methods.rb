@@ -1,3 +1,6 @@
+# QueryMethods fetches data from the database and builds the object with the data
+# e.g. `policy = Portal::Policy.find(1)`
+
 module Portal
   module Dev
     module QueryMethods

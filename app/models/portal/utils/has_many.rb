@@ -32,11 +32,19 @@ module Portal
           klass_instance.define_singleton_method(association_name) do
             raise "Association #{association_name} not defined" unless data[association_name]
 
-            records = data[association_name].map { |record| Portal.const_get(association_name.to_s.classify).new(record) }
+            records = data[association_name].map { |record| self.class.build_portal_record(record, association_name) }
 
             Portal::Utils::Collection.new(records)
           end
         end
+      end
+
+      def build_portal_record(record, association_name)
+        # If the record is already a Portal::Base instance, return it
+        return record if record.is_a?(Portal::Base)
+
+        # Otherwise, create a new instance of the associated class
+        Portal.const_get(association_name.to_s.classify).new(record)
       end
     end
   end
