@@ -33,6 +33,8 @@ module Portal
     attribute :billing_corrections_needed
     attribute :has_signed_active_application
     attribute :has_in_progress_endorsement
+    attribute :new_purchase
+    attribute :active_application
     attribute :auth_net_client
 
     delegate :quote?, :bound?, :in_force?, :cancelled?, :expired?, :non_renewed?, to: :policy_status

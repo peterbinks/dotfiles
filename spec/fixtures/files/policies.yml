@@ -15,6 +15,7 @@ default: &default
   billing_corrections_needed: false
   has_signed_active_application: true
   has_in_progress_endorsement: false
+  new_purchase: true
 
 quote: &quote
   <<: *default

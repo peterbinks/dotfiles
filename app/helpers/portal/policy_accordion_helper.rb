@@ -24,7 +24,7 @@ module Portal
     def has_completed_all_steps?(steps)
       return true if steps.blank?
 
-      steps.all?(&:step_complete?)
+      steps.all?(&:step_complete)
     end
 
     # @param step [PolicyAccordion::Step]
@@ -42,7 +42,7 @@ module Portal
     def all_relevant_documents_reviewed?(policy)
       policy
         .documents
-        .select { |doc| doc.term == policy.current_term && doc.label == POLICY_ACCORDION_STEP_DOCUMENTS }
+        .select { |doc| doc.term == policy.current_term && POLICY_ACCORDION_STEP_DOCUMENTS.include?(doc.label) }
         .reject { |doc| doc.review_status == "accepted" }
         .empty?
     end
@@ -81,7 +81,10 @@ module Portal
     end
 
     def has_closed_policy_prep?(policy)
-      policy.policy_activities.find_by(name: "policy_prep_component_closed")&.persisted?
+      #TODO: Uncomment this line when policy_prep_component_closed is implemented
+
+      # policy.policy_activities.find_by(name: "policy_prep_component_closed")&.persisted?
+      return false
     end
   end
 end

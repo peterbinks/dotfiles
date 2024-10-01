@@ -3,11 +3,12 @@ require "rails_helper"
 RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_administration, type: :component, feature: :portal do
   context "payment type is card" do
     it "renders payment type block" do
-      policy = double(
-        "BrightPolicy",
+      credit_card = build(:credit_card)
+      policy = build(
+        :policy,
         policy_number: "fake_policy_number",
-        payment_type_card?: true,
-        credit_card: build_stubbed(:credit_card, :with_auth_net_data)
+        payment_type: "card",
+        credit_card: credit_card
       )
 
       render_inline(described_class.new(policy:))
@@ -16,11 +17,11 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
     end
 
     it "shows the last four digits of credit card" do
-      credit_card = build_stubbed(:credit_card, :with_auth_net_data)
-      policy = double(
-        "BrightPolicy",
+      credit_card = build(:credit_card)
+      policy = build(
+        :policy,
         policy_number: "fake_policy_number",
-        payment_type_card?: true,
+        payment_type: "card",
         credit_card: credit_card
       )
 
@@ -31,11 +32,11 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
     end
 
     it "shows the expiration of credit card" do
-      credit_card = build_stubbed(:credit_card, :with_auth_net_data)
-      policy = double(
-        "BrightPolicy",
+      credit_card = build(:credit_card)
+      policy = build(
+        :policy,
         policy_number: "fake_policy_number",
-        payment_type_card?: true,
+        payment_type: "card",
         credit_card: credit_card
       )
 
@@ -51,10 +52,10 @@ RSpec.describe Portal::Billing::PaymentMethod::CardComponent, domain: :policy_ad
 
   context "payment type is not card" do
     it "does not render payment type block" do
-      policy = double(
-        "BrightPolicy",
+      policy = build(
+        :policy,
         policy_number: "fake_policy_number",
-        payment_type_card?: false,
+        payment_type: "card",
         credit_card: nil
       )
 
