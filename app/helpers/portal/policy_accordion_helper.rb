@@ -81,10 +81,10 @@ module Portal
     end
 
     def has_closed_policy_prep?(policy)
-      #TODO: Uncomment this line when policy_prep_component_closed is implemented
+      # TODO: Uncomment this line when policy_prep_component_closed is implemented
 
       # policy.policy_activities.find_by(name: "policy_prep_component_closed")&.persisted?
-      return false
+      false
     end
   end
 end

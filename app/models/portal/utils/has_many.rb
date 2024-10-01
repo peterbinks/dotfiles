@@ -19,6 +19,8 @@
 module Portal
   module Utils
     module HasMany
+      NestedArrayError = Class.new(StandardError)
+
       def HAS_MANY_ASSOCIATIONS
         @has_many_associations ||= []
       end
@@ -30,7 +32,7 @@ module Portal
       def configure_has_many(klass_instance, data)
         self.HAS_MANY_ASSOCIATIONS.each do |association_name|
           klass_instance.define_singleton_method(association_name) do
-            raise "Association #{association_name} not defined" unless data[association_name]
+            self.class.handle_errors(data, association_name)
 
             records = data[association_name].map { |record| self.class.build_portal_record(record, association_name) }
 
@@ -45,6 +47,12 @@ module Portal
 
         # Otherwise, create a new instance of the associated class
         Portal.const_get(association_name.to_s.classify).new(record)
+      end
+
+      def handle_errors(data, association_name)
+        raise "Association #{association_name} not defined" unless data[association_name]
+
+        raise NestedArrayError.new("`has_many` association for #{association_name} is too deeply nested. Check that you're not putting an array inside of another array, like `[documents]`") if data[association_name].is_a?(Array) && data[association_name].first.is_a?(Array)
       end
     end
   end

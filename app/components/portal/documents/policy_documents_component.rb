@@ -150,17 +150,21 @@ module Portal
       #
       # @return [Array<Document>]
       def outdated_documents
-        @outdated_documents ||= (policy.documents - current_documents)
+        @outdated_documents ||= (portal_documents - current_documents)
           .reject(&:notice_of_hurricane_deductible?)
       end
 
       private
 
+      def portal_documents
+        @portal_documents ||= policy.documents.select { |doc| doc.show_in_portal == true }
+      end
+
       # Groups all documents by their label.
       #
       # @return [Hash{String => Array<Document>}]
       def all_documents_grouped
-        @all_documents_grouped ||= policy.documents.group_by(&:label)
+        @all_documents_grouped ||= portal_documents.group_by(&:label)
       end
 
       # Retrieves the primary documents based on the latest version labels.

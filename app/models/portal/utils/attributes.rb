@@ -44,6 +44,9 @@ module Portal
 
       def data_attribute(data, attribute)
         data.is_a?(Portal::Base) ? data.send(attribute) : data[attribute]
+      rescue => e
+        raise e
+        # binding.pry
       end
     end
   end

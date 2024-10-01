@@ -6,7 +6,7 @@ module Portal
       attr_reader :records
 
       def none
-        Array.new()
+        []
       end
 
       def find(id)

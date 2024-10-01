@@ -13,7 +13,7 @@ describe Portal::PoliciesHelper, domain: :policy_administration do
       review_status = "not_reviewed"
       document = build(:document, label: "proof_of_prior_insurance", review_status: review_status)
       policy = build(:policy, trait: :bound, documents: [document])
-      
+
       expect(I18n).to receive(:translate)
 
       formatted_review_status(review_status)
@@ -25,8 +25,7 @@ describe Portal::PoliciesHelper, domain: :policy_administration do
       document = build(:document,
         label: "proof_of_prior_insurance",
         review_status: "not_reviewed",
-        needs_verification: true,
-      )
+        needs_verification: true)
       policy = build(:policy, trait: :bound, documents: [document])
 
       allow(policy).to receive(:uploaded_required_documents) { [document] }
@@ -43,8 +42,7 @@ describe Portal::PoliciesHelper, domain: :policy_administration do
       document = build(:document,
         label: "proof_of_prior_insurance",
         review_status: "accepted",
-        needs_verification: false,
-      )
+        needs_verification: false)
       policy = build(:policy, trait: :bound, documents: [document])
 
       expect(documents_all_pending_review?(policy.uploaded_required_documents)).to be false
@@ -57,8 +55,7 @@ describe Portal::PoliciesHelper, domain: :policy_administration do
         trait: :bound,
         documents: [],
         uploaded_required_documents: Portal::Document.none,
-        required_documents_labels: ["proof_of_prior_insurance"],
-      )
+        required_documents_labels: ["proof_of_prior_insurance"])
 
       expect(missing_required_documents?(policy)).to be true
     end
@@ -69,8 +66,7 @@ describe Portal::PoliciesHelper, domain: :policy_administration do
         trait: :bound,
         documents: [document],
         uploaded_required_documents: [document],
-        required_documents_labels: ["proof_of_prior_insurance"],
-      )
+        required_documents_labels: ["proof_of_prior_insurance"])
 
       expect(missing_required_documents?(policy)).to be true
     end
@@ -81,8 +77,7 @@ describe Portal::PoliciesHelper, domain: :policy_administration do
         trait: :bound,
         documents: [document],
         uploaded_required_documents: [document],
-        required_documents_labels: ["proof_of_prior_insurance"],
-      )
+        required_documents_labels: ["proof_of_prior_insurance"])
 
       expect(missing_required_documents?(policy)).to be false
     end

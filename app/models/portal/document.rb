@@ -5,6 +5,7 @@ module Portal
     end
 
     has_one :saved_file
+    has_one :person
 
     attribute :id
     attribute :label
@@ -16,6 +17,7 @@ module Portal
     attribute :signed_at
     attribute :expiring_url
     attribute :updated_at
+    attribute :show_in_portal
 
     def surplus_lines_acknowledgement_form?
       label == "surplus_lines_acknowledgement_form"
