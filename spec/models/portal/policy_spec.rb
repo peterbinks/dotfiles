@@ -25,7 +25,7 @@ RSpec.describe Portal::Policy, type: :model do
 
   describe "#policy_status" do
     it "returns the policy status as a StringInquirer" do
-      policy = build(:policy, fix_type: :bound)
+      policy = build(:policy, trait: :bound)
 
       expect(policy.policy_status).to be_a(ActiveSupport::StringInquirer)
       expect(policy.policy_status.to_s).to eq policy.status
@@ -34,24 +34,24 @@ RSpec.describe Portal::Policy, type: :model do
 
   describe "#active?" do
     it "returns true if the policy is a quote and has a signed active application" do
-      policy = build(:policy, fix_type: :quote, has_signed_active_application: true)
+      policy = build(:policy, trait: :quote, has_signed_active_application: true)
       expect(policy.active?).to be true
     end
 
     it "returns true if the policy is bound" do
-      policy = build(:policy, fix_type: :bound)
+      policy = build(:policy, trait: :bound)
       expect(policy.active?).to be true
     end
 
     it "returns true if the policy is in_force" do
-      policy = build(:policy, fix_type: :in_force)
+      policy = build(:policy, trait: :in_force)
       expect(policy.active?).to be true
     end
   end
 
   describe "#quote_and_signed?" do
     it "returns true if the policy is a quote and has a signed active application" do
-      policy = build(:policy, fix_type: :quote, has_signed_active_application: true)
+      policy = build(:policy, trait: :quote, has_signed_active_application: true)
       expect(policy.quote_and_signed?).to be true
     end
   end

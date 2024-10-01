@@ -23,7 +23,7 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
         policy_application = double(:policy_application, signed?: true)
         policy = build(
           :policy,
-          fix_type: :quote,
+          trait: :quote,
           has_signed_active_application: true,
           pending_cancellation: false
         )
@@ -37,7 +37,7 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
         term = build(:term, number: 0, effective_date: Date.tomorrow)
         policy = build(
           :policy,
-          fix_type: :bound,
+          trait: :bound,
           terms: [term],
           has_signed_active_application: false,
           pending_cancellation: true
@@ -54,7 +54,7 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
         term = build(:term, number: 0, effective_date: effective_date)
         policy = build(
           :policy,
-          fix_type: :bound,
+          trait: :bound,
           terms: [term],
           has_signed_active_application: false,
           pending_cancellation: false
@@ -68,7 +68,7 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
       it 'returns "Active" text and "secondary" style' do
         policy = build(
           :policy,
-          fix_type: :in_force,
+          trait: :in_force,
           has_signed_active_application: false,
           pending_cancellation: false
         )
@@ -88,7 +88,7 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
         statuses.each do |status|
           policy = build(
             :policy,
-            fix_type: status.to_sym,
+            trait: status.to_sym,
             has_signed_active_application: true
           )
 

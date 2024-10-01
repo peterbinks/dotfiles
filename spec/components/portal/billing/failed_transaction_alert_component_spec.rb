@@ -9,7 +9,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
           address = build(:address, full_street_address: "123 Main St")
           term = build(:term, number: 0, effective_date: (Date.current - 6.months), end_date: (Date.current + 6.months))
           transaction = build(:billing_transaction, installment_number: 1, amount_cents: 100)
-          policy = build(:policy, fix_type: :bound, terms: [term], credit_card: credit_card, address: address)
+          policy = build(:policy, trait: :bound, terms: [term], credit_card: credit_card, address: address)
 
           component = described_class.new(policy:, transaction:)
 
@@ -27,7 +27,7 @@ RSpec.describe Portal::Billing::FailedTransactionAlertComponent, domain: :policy
           address = build(:address, full_street_address: "123 Main St")
           term = build(:term, number: 0, effective_date: (Date.current - 6.months), end_date: (Date.current + 6.months))
           transaction = build(:billing_transaction, installment_number: 1, amount_cents: 100)
-          policy = build(:policy, fix_type: :quote, terms: [term], credit_card: credit_card, address: address)
+          policy = build(:policy, trait: :quote, terms: [term], credit_card: credit_card, address: address)
 
           component = described_class.new(policy:, transaction:)
 
