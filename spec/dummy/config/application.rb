@@ -15,6 +15,8 @@ module Dummy
   class Application < Rails::Application
     config.load_defaults Rails::VERSION::STRING.to_f
 
+    config.i18n.load_path += Dir["#{Portal::Engine.root.to_s}/config/locales/**/*.{rb,yml}"]
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

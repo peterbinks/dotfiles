@@ -96,13 +96,5 @@ module Portal
     def in_quote_post_effective_date?
       effective_date < Date.current && quote?
     end
-
-    # def renewal_snapshot
-    #   # TODO: This needs to be an association
-    #   # TODO: THIS IS A HACK TO GET TESTS TO PASS!!!!! SNAPSHOTS ARE CONFUSING
-    #   OpenStruct.new(
-    #     policy: self
-    #   )
-    # end
   end
 end
