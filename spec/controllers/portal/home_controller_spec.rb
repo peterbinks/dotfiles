@@ -1,6 +1,6 @@
 require "rails_helper"
 
-# TODO: Controller tests don't work with the current setup. 
+# TODO: Controller tests don't work with the current setup.
 # Authentication needs to be moved completely to dot-com
 xdescribe Portal::HomeController, type: :controller do
   routes { Portal::Engine.routes }

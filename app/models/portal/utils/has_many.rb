@@ -50,7 +50,7 @@ module Portal
       end
 
       def handle_errors(data, association_name)
-        raise "Association #{association_name} not defined" unless data[association_name]
+        raise "The associated data for `#{association_name}` is not provided. Please include `#{association_name}` data when creating the object." unless data[association_name]
 
         raise NestedArrayError.new("`has_many` association for #{association_name} is too deeply nested. Check that you're not putting an array inside of another array, like `[documents]`") if data[association_name].is_a?(Array) && data[association_name].first.is_a?(Array)
       end

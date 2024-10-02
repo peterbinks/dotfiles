@@ -41,20 +41,20 @@
       <div class="summary--item summary--item__full">
         <dt class="summary--label">Current Annual Premium</dt>
         <dd class="summary--value summary--value__highlight" data-rspec="premium_quote">
-          <%= render(Shared::DisplayPremiumComponent.new(amount: @policy.premium)) %>
+          <%= render(Portal::Policies::DisplayPremiumComponent.new(amount: @policy.premium)) %>
         </dd>
         <div class="summary--value" data-rspec="effective_date"><%= @policy.term_effective_date.to_s(:kin_date) %> - <%= @policy.term_end_date.to_s(:kin_date) %> </div>
       </div>
-      <% if renewal_declaration_page.present? && @policy.renewal_snapshot.present? %>
+      <% if renewal_declaration_page.present? && @policy.renewal_policy.present? && @policy.active? %>
         <div class="summary--item summary--item__full">
           <dt class="summary--label" data-rspec='upcoming_annual_premium_block'>Upcoming Annual Premium</dt>
           <dd class="summary--value summary--value__highlight row middle-xs" data-rspec="premium_quote">
           <span class="paddingright" data-rspec="upcoming_amount" >
-            <%= render(Shared::DisplayPremiumComponent.new(amount: @policy.renewal_snapshot.policy.premium)) %>
+            <%= render(Portal::Policies::DisplayPremiumComponent.new(amount: @policy.renewal_policy.premium)) %>
           </span>
             <span class="pill pill--active pill--small" data-rspec="upcoming-pill">Upcoming </span>
           </dd>
-          <div class="summary--value" data-rspec="effective_date"><%= @policy.term_end_date.to_s(:kin_date) %> - <%= @policy.next_term_end_date.to_s(:kin_date) %> </div>
+          <div class="summary--value" data-rspec="effective_date"><%= @policy.term_end_date.to_s(:kin_date) %> - <%= @policy.term_end_date(number: @policy.upcoming_term).to_s(:kin_date) %> </div>
         </div>
       <% end %>
     </dl>
@@ -69,7 +69,7 @@
   <div class="container">
     <div class="row end-xs m-t-300">
       <%= link_to 'Submit a Claim', claims_url(@policy.policy_number), target: '_blank', rel: 'noopener noreferrer', id: 'report-your-claim-button', class: 'button button--secondary button--md m-b-300' %>
-      <%= link_to 'View Details and Payments', policy_path(@policy.policy_number), data: {rspec: 'view-details-and-payments-button'}, class: 'button button--primary button--md m-l-300 m-b-300' %>
+      <%= link_to 'View Details and Payments', portal_routes.policy_path(@policy.policy_number), data: {rspec: 'view-details-and-payments-button'}, class: 'button button--primary button--md m-l-300 m-b-300' %>
     </div>
   </div>
 </div>

@@ -6,8 +6,7 @@ RSpec.describe Portal::Policies::AddNewCreditCardComponent, :js, type: :componen
       client = double("client", login_id: "login_id", generate_public_client_key: "generate_public_client_key")
       policy = build(:policy,
         recurring_payment_notice_doc_url: "http://example.com",
-        auth_net_client: client
-      )
+        auth_net_client: client)
 
       component = described_class.new(policy:)
 

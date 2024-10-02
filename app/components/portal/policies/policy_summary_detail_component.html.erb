@@ -14,23 +14,23 @@
       <dt class="summary--label summary--label__premium">
         Current Annual Premium
         <% if @policy.coverage.flood_and_water_backup? %>
-          <%= render(Shared::FloodCoverageBreakdownComponent.new(amount: @policy.premium, flood_coverage_amount: @policy.flood_premium)) %>
+          <%= render(Portal::Policies::FloodCoverageBreakdownComponent.new(amount: @policy.premium, flood_coverage_amount: @policy.flood_premium)) %>
         <% end %>
       </dt>
       <dd class="summary--value summary--value__highlight" data-rspec="premium_quote">
-        <%= render(Shared::DisplayPremiumComponent.new(amount: @policy.premium)) %>
+        <%= render(Portal::Policies::DisplayPremiumComponent.new(amount: @policy.premium)) %>
       </dd>
     </div>
-    <% if renewal_declaration_page.present? && @policy.renewal_snapshot.present? %>
+    <% if renewal_declaration_page.present? && @policy.renewal_policy.present? %>
     <div class="col-xs-12 col-md-6 col-lg-4">
       <dt class="summary--label summary--label__premium" data-rspec="upcoming_annual_premium_block">
         Upcoming Annual Premium
-        <% if @policy.renewal_snapshot.policy.coverage.flood_and_water_backup? %>
-          <%= render(Shared::FloodCoverageBreakdownComponent.new(amount: @policy.renewal_snapshot.policy.premium, flood_coverage_amount: @policy.renewal_snapshot.policy.flood_premium)) %>
+        <% if @policy.renewal_policy.coverage.flood_and_water_backup? %>
+          <%= render(Portal::Policies::FloodCoverageBreakdownComponent.new(amount: @policy.renewal_policy.premium, flood_coverage_amount: @policy.renewal_policy.flood_premium)) %>
         <% end %>
       </dt>
       <dd class="summary--value summary--value__highlight" data-rspec="upcoming_amount">
-        <%= render(Shared::DisplayPremiumComponent.new(amount: @policy.renewal_snapshot.policy.premium)) %>
+        <%= render(Portal::Policies::DisplayPremiumComponent.new(amount: @policy.renewal_policy.premium)) %>
       </dd>
     </div>
     <% end %>

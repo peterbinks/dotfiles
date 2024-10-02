@@ -8,6 +8,7 @@ module Portal
     has_one :product
     has_one :address
     has_one :credit_card
+    has_one :renewal_policy
 
     # These need to be the EXACT name of the association fetched from dot-com
     has_many :billing_transactions
@@ -20,6 +21,7 @@ module Portal
     attribute :id
     attribute :policy_number
     attribute :status
+    attribute :renewal_status
     attribute :current_term
     attribute :upcoming_term
     attribute :payment_type
@@ -94,9 +96,12 @@ module Portal
       effective_date < Date.current && quote?
     end
 
-    def renewal_snapshot
-      # TODO: This needs to be an association
-      nil
-    end
+    # def renewal_snapshot
+    #   # TODO: This needs to be an association
+    #   # TODO: THIS IS A HACK TO GET TESTS TO PASS!!!!! SNAPSHOTS ARE CONFUSING
+    #   OpenStruct.new(
+    #     policy: self
+    #   )
+    # end
   end
 end

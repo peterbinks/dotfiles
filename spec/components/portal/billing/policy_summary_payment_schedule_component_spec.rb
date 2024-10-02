@@ -16,8 +16,12 @@ RSpec.describe Portal::Billing::PolicySummaryPaymentScheduleComponent, domain: :
 
   context "billing corrections are not needed" do
     it "renders the block" do
+      client = double("client", login_id: "login_id", generate_public_client_key: "generate_public_client_key")
       transaction = build(:billing_transaction, payment_type: "scheduled", status: "upcoming")
-      policy = build(:policy, billing_transactions: [transaction], billing_corrections_needed: false)
+      policy = build(:policy,
+        billing_transactions: [transaction],
+        billing_corrections_needed: false,
+        auth_net_client: client)
 
       subject = described_class.new(policy:)
 
