@@ -1,3 +1,4 @@
 default: &default
   id: 1
   term: 0
+  expiring_url: ""

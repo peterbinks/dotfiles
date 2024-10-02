@@ -163,8 +163,6 @@ RSpec.describe Portal::Policies::PolicySummaryComponent, domain: :policy_adminis
     end
 
     context "and the renewal status is do_not_renew" do
-      let(:do_not_renew_policy) { build(:policy, :with_primary_insured, :do_not_renew) }
-
       it "does not render new renewal premium text" do
         applicant = build(:applicant, primary: true)
         address = build(:address)

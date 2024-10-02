@@ -48,7 +48,7 @@
       <% if renewal_declaration_page.present? && @policy.renewal_policy.present? && @policy.active? %>
         <div class="summary--item summary--item__full">
           <dt class="summary--label" data-rspec='upcoming_annual_premium_block'>Upcoming Annual Premium</dt>
-          <dd class="summary--value summary--value__highlight row middle-xs" data-rspec="premium_quote">
+          <dd class="summary--value summary--value__highlight row middle-xs">
           <span class="paddingright" data-rspec="upcoming_amount" >
             <%= render(Portal::Policies::DisplayPremiumComponent.new(amount: @policy.renewal_policy.premium)) %>
           </span>

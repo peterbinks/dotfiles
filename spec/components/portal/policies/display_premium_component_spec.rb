@@ -16,6 +16,6 @@ RSpec.describe Portal::Policies::DisplayPremiumComponent, type: :component do
   it "raises error when premium amount is not a number" do
     expect {
       render_inline(described_class.new(amount: "hello world"))
-    }.to raise_error(ArgumentError)
+    }.to raise_error(TypeError)
   end
 end

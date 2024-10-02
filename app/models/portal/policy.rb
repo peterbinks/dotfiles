@@ -28,6 +28,7 @@ module Portal
     attribute :state
     attribute :pending_cancellation
     attribute :premium
+    attribute :flood_premium
     attribute :uploaded_required_documents
     attribute :required_documents_labels
     attribute :unique_required_documents
