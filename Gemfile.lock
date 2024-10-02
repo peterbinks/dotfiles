@@ -95,6 +95,7 @@ GEM
     erubi (1.13.0)
     faker (3.4.2)
       i18n (>= 1.8.11, < 2)
+    feature (1.4.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.5)
@@ -291,6 +292,7 @@ DEPENDENCIES
   devise
   dotenv
   faker
+  feature (~> 1.4.0)
   pg
   portal!
   pretender (~> 0.2.gem)

@@ -1,0 +1,37 @@
+en:
+  views:
+    billing:
+      cancellation:
+        description: 'Policy Payment %{installment_number} of %{total}'
+      cancellation_write_off:
+        description: 'Cancellation Write-off'
+      duplicate:
+        description: 'Duplicate Payment'
+      endorsement_overpayment:
+        description: 'Overpayment'
+      endorsement_refund:
+        description: 'Endorsement Refund'
+      endorsement_scheduled:
+        description: 'Endorsement Payment'
+      endorsement_waived_refund:
+        description: 'Endorsement Refund - Waived'
+      endorsement_write_off:
+        description: 'Endorsement Write-off'
+      overpayment:
+        description: 'Overpayment'
+      refund:
+        description: 'Refund'
+      reinstatement:
+        description: 'Reinstatement Payment %{reinstatement_number}'
+      scheduled:
+        description: 'Policy Payment %{installment_number} of %{total}'
+      scheduled_non_installment:
+        description: 'Policy Payment'
+      shortpayment:
+        description: 'Shortpayment'
+      shortpayment_write_off:
+        description: 'Shortpayment Write Off'
+      waived_refund:
+        description: 'Waived Refund'
+      write_off:
+        description: 'Manual Write-off'
