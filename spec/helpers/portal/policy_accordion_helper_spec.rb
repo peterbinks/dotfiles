@@ -33,7 +33,8 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
       context "and some steps are incomplete" do
         it "renders" do
           step = build(:policy_accordion_step, step_complete: false)
-          policy = build(:policy, policy_accordion_steps: [step])
+          term = build(:term, number: 0, effective_date: DateTime.current - 1.month)
+          policy = build(:policy, policy_accordion_steps: [step], terms: [term])
 
           expect(helper.render_policy_accordion_component?(policy)).to eq(true)
         end
@@ -41,12 +42,13 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
 
       context "all steps are complete and all relevant documents are reviewed and it is not passed goal date" do
         it "does render" do
-          term = 0
-          document = build(:document, label: "windstorm_mitigation_form", term: term, review_status: "accepted")
+          term = build(:term, number: 0, effective_date: DateTime.current)
+          document = build(:document, label: "windstorm_mitigation_form", term: term.number, review_status: "accepted")
           step = build(:policy_accordion_step, step_complete: true)
           policy = build(
             :policy,
-            current_term: term,
+            current_term: term.number,
+            terms: [term],
             documents: [document],
             policy_accordion_steps: [step]
           )
@@ -57,12 +59,13 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
 
       context "and all steps are complete but some relevant documents are not reviewed" do
         it "renders" do
-          term = 0
-          document = build(:document, label: "windstorm_mitigation_form", term: term, review_status: "not_reviewed")
+          term = build(:term, number: 0, effective_date: DateTime.current)
+          document = build(:document, label: "windstorm_mitigation_form", term: term.number, review_status: "not_reviewed")
           step = build(:policy_accordion_step, step_complete: true)
           policy = build(
             :policy,
-            current_term: term,
+            current_term: term.number,
+            terms: [term],
             documents: [document],
             policy_accordion_steps: [step]
           )
