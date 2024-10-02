@@ -7,6 +7,10 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 require "portal"
 
+if Rails.env.development? || Rails.env.test?
+  Dotenv::Railtie.load
+end
+
 module Dummy
   class Application < Rails::Application
     config.load_defaults Rails::VERSION::STRING.to_f
