@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] ||= "test"
 require "dummy/config/environment"
 require "spec_helper"
+require "devise"
 require "view_component/test_helpers"
 require "view_component/system_test_helpers"
 require "capybara/rspec"
@@ -39,6 +40,12 @@ RSpec.configure do |config|
   config.include ViewComponent::TestHelpers, type: :component
   config.include ViewComponent::SystemTestHelpers, type: :component
   config.include Capybara::RSpecMatchers, type: :component
+
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Devise::Test::IntegrationHelpers, type: :feature
+  config.include Devise::Test::IntegrationHelpers, type: :request
+
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
