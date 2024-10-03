@@ -18,14 +18,18 @@ module Portal
       reinstatement_number = billing_transaction.term_reinstatement_count
       num_installments_for_term = billing_transaction.term_installment_count
 
-      I18n.t("views.kintranet.billing.#{payment_type}.description",
+      I18n.t("views.billing.#{payment_type}.description",
         installment_number: billing_transaction.installment_number,
         total: num_installments_for_term,
         reinstatement_number: reinstatement_number)
     end
 
     def payment_due_date_extended?(billing_transaction, policy)
-      ProtectionPeriod.rescheduled_transactions_for_policy(policy.id).include?(billing_transaction.id)
+      # TODO: Implement this method
+
+      # ProtectionPeriod.rescheduled_transactions_for_policy(policy.id).include?(billing_transaction.id)
+
+      false
     end
   end
 end

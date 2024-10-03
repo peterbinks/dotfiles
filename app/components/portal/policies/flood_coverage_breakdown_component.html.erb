@@ -1,0 +1,19 @@
+<% if @flood_coverage_amount %>
+  <kin-tooltip placement="bottom-start" hoist size="md">
+    Price Breakdown
+    <hr>
+    <div class="row">
+      <div class="col-sm-5">
+        <span>Homeowners Policy</span><hr>
+        <span><%= number_to_currency(amount - flood_coverage_amount) %></span>
+      </div>
+      <div class="col-sm-2">
+        <h3 class="text-center">+</h3>
+      </div>
+      <div class="col-sm-5">
+        <span>Flood Coverage</span><hr>
+        <span><%= number_to_currency(flood_coverage_amount) %></span>
+      </div>
+    </div>
+  </kin-tooltip>
+<% end %>

@@ -1,0 +1,20 @@
+default: &default
+  manual_payments_enabled: <%= ENV['MANUAL_PAYMENTS_ENABLED'] == 'true' %>
+
+test:
+  features:
+    <<: *default
+
+development:
+  features:
+    <<: *default
+
+production: &production
+  features:
+    <<: *default
+
+staging:
+  <<: *production
+
+review_app:
+  <<: *production

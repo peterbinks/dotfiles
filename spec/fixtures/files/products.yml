@@ -1,0 +1,5 @@
+default: &default
+  id: 1
+  line: 'ho3'
+  state: 'fl'
+  product_type: 'home'

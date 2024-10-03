@@ -4,7 +4,7 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
   describe "#render_policy_accordion_component?" do
     context "when a policy has no policy_accordion_steps" do
       it "does not render" do
-        policy = create(:bright_policy, :with_primary_insured)
+        policy = build(:policy, policy_accordion_steps: [])
 
         expect(helper.render_policy_accordion_component?(policy)).to eq(false)
       end
@@ -12,11 +12,18 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
 
     context "when a policy is passed the goal date and there are only optional steps left" do
       it "does not render" do
-        policy = create(:bright_policy, :with_primary_insured)
+        document_1 = build(:document, label: "policy_application", signed_at: DateTime.current - 1.month)
+        document_2 = build(:document, label: "declaration_page_step")
+        step = build(:policy_accordion_step, step_complete: false, optional: true)
 
-        create(:policy_application, signed_at: DateTime.current - 1.month, bright_policy: policy)
-
-        create(:declaration_page_step, bright_policy: policy, user: policy.primary_insured.user)
+        term = build(:term, number: 0, effective_date: DateTime.current - 1.month)
+        policy = build(
+          :policy,
+          terms: [term],
+          documents: [document_1, document_2],
+          policy_accordion_steps: [step],
+          new_purchase: true
+        )
 
         expect(helper.render_policy_accordion_component?(policy)).to eq(false)
       end
@@ -25,9 +32,9 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
     context "when a policy has policy_accordion_steps" do
       context "and some steps are incomplete" do
         it "renders" do
-          policy = create(:bright_policy, :with_primary_insured)
-
-          create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: false)
+          step = build(:policy_accordion_step, step_complete: false)
+          term = build(:term, number: 0, effective_date: DateTime.current - 1.month)
+          policy = build(:policy, policy_accordion_steps: [step], terms: [term])
 
           expect(helper.render_policy_accordion_component?(policy)).to eq(true)
         end
@@ -35,10 +42,16 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
 
       context "all steps are complete and all relevant documents are reviewed and it is not passed goal date" do
         it "does render" do
-          policy = create(:bright_policy, :with_primary_insured)
-
-          create(:document, label: "windstorm_mitigation_form", term: policy.current_term, documentable: policy, review_status: "accepted")
-          create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: true)
+          term = build(:term, number: 0, effective_date: DateTime.current)
+          document = build(:document, label: "windstorm_mitigation_form", term: term.number, review_status: "accepted")
+          step = build(:policy_accordion_step, step_complete: true)
+          policy = build(
+            :policy,
+            current_term: term.number,
+            terms: [term],
+            documents: [document],
+            policy_accordion_steps: [step]
+          )
 
           expect(helper.render_policy_accordion_component?(policy)).to eq(true)
         end
@@ -46,10 +59,16 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
 
       context "and all steps are complete but some relevant documents are not reviewed" do
         it "renders" do
-          policy = create(:bright_policy, :with_primary_insured)
-
-          create(:document, label: "windstorm_mitigation_form", term: policy.current_term, documentable: policy, review_status: "not_reviewed")
-          create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: true)
+          term = build(:term, number: 0, effective_date: DateTime.current)
+          document = build(:document, label: "windstorm_mitigation_form", term: term.number, review_status: "not_reviewed")
+          step = build(:policy_accordion_step, step_complete: true)
+          policy = build(
+            :policy,
+            current_term: term.number,
+            terms: [term],
+            documents: [document],
+            policy_accordion_steps: [step]
+          )
 
           expect(helper.render_policy_accordion_component?(policy)).to eq(true)
         end
@@ -59,16 +78,16 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
 
   describe "#has_completed_all_steps?" do
     it "returns true when all steps are complete" do
-      policy = create(:bright_policy, :with_primary_insured)
-      create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: true)
+      step = build(:policy_accordion_step, step_complete: true)
+      policy = build(:policy, policy_accordion_steps: [step])
 
       expect(helper.has_completed_all_steps?(policy.policy_accordion_steps)).to eq(true)
     end
 
     it "returns false when some steps are incomplete" do
-      policy = create(:bright_policy, :with_primary_insured)
-      create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: true)
-      create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: false)
+      step_1 = build(:policy_accordion_step, step_complete: true)
+      step_2 = build(:policy_accordion_step, step_complete: false)
+      policy = build(:policy, policy_accordion_steps: [step_1, step_2])
 
       expect(helper.has_completed_all_steps?(policy.policy_accordion_steps)).to eq(false)
     end
@@ -77,8 +96,8 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
   describe "#all_relevant_documents_reviewed?" do
     context "all relevant documents are reviewed" do
       it "does not render" do
-        policy = create(:bright_policy, :with_primary_insured)
-        create(:document, label: "windstorm_mitigation_form", term: policy.current_term, documentable: policy, review_status: "accepted")
+        document = build(:document, term: 0, label: "windstorm_mitigation_form", review_status: "accepted")
+        policy = build(:policy, current_term: 0, documents: [document])
 
         expect(helper.all_relevant_documents_reviewed?(policy)).to eq(true)
       end
@@ -86,8 +105,8 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
 
     context "some relevant documents are not reviewed" do
       it "renders" do
-        policy = create(:bright_policy, :with_primary_insured)
-        create(:document, label: "windstorm_mitigation_form", term: policy.current_term, documentable: policy, review_status: "not_reviewed")
+        document = build(:document, term: 0, label: "windstorm_mitigation_form", review_status: "not_reviewed")
+        policy = build(:policy, current_term: 0, documents: [document])
 
         expect(helper.all_relevant_documents_reviewed?(policy)).to eq(false)
       end
@@ -97,9 +116,9 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
   describe "#get_complete_percent" do
     context "when none of the steps are complete" do
       it "shows 0 (percent)" do
-        policy = create(:bright_policy, :with_primary_insured)
-        create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: false)
-        create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: false)
+        step_1 = build(:policy_accordion_step, step_complete: false)
+        step_2 = build(:policy_accordion_step, step_complete: false)
+        policy = build(:policy, policy_accordion_steps: [step_1, step_2])
 
         expect(helper.get_complete_percent(policy.policy_accordion_steps)).to eq(0)
       end
@@ -107,9 +126,9 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
 
     context "when half of the steps are complete" do
       it "shows 50 (percent)" do
-        policy = create(:bright_policy, :with_primary_insured)
-        create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: true)
-        create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: false)
+        step_1 = build(:policy_accordion_step, step_complete: true)
+        step_2 = build(:policy_accordion_step, step_complete: false)
+        policy = build(:policy, policy_accordion_steps: [step_1, step_2])
 
         expect(helper.get_complete_percent(policy.policy_accordion_steps)).to eq(50)
       end
@@ -117,9 +136,9 @@ describe Portal::PolicyAccordionHelper, domain: :policy_administration, feature:
 
     context "when all of the steps are complete" do
       it "shows 100 (percent)" do
-        policy = create(:bright_policy, :with_primary_insured)
-        create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: true)
-        create(:policy_accordion_step, bright_policy: policy, user: policy.primary_insured.user, step_complete: true)
+        step_1 = build(:policy_accordion_step, step_complete: true)
+        step_2 = build(:policy_accordion_step, step_complete: true)
+        policy = build(:policy, policy_accordion_steps: [step_1, step_2])
 
         expect(helper.get_complete_percent(policy.policy_accordion_steps)).to eq(100)
       end

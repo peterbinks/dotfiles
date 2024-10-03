@@ -1,22 +1,23 @@
 module Portal
   class Document < Base
     def self.labels
-      # TODO get the API class working
-
-      # ::Api::Document.get_failed_card_transactions(policy_id:)
-      Portal::Api::DocumentSerializer.labels
+      Portal::Api::Document.labels
     end
 
     has_one :saved_file
+    has_one :person
 
     attribute :id
     attribute :label
     attribute :term
     attribute :display_name
     attribute :status
+    attribute :review_status
+    attribute :needs_verification
     attribute :signed_at
     attribute :expiring_url
     attribute :updated_at
+    attribute :show_in_portal
 
     def surplus_lines_acknowledgement_form?
       label == "surplus_lines_acknowledgement_form"

@@ -6,6 +6,8 @@ gemspec
 gem "pretender", "~> 0.2.gem"
 gem "view_component"
 gem "text_helpers"
+gem "devise"
+gem "feature", "~> 1.4.0"
 
 group :development, :test do
   gem "pg"
@@ -19,6 +21,9 @@ end
 
 group :test do
   gem "capybara"
+  gem "rspec-rails", ">= 4.0"
   gem "spring-commands-rspec"
+  gem "rails-controller-testing"
   gem "faker"
+  gem "psych", "< 3.3.0" # higher versions of psych break yaml alias usage in i18n
 end

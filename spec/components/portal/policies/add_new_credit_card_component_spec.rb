@@ -1,20 +1,17 @@
 require "rails_helper"
 
 RSpec.describe Portal::Policies::AddNewCreditCardComponent, :js, type: :component do
-  let(:merchant_account) { "merchant_account_value" }
-  let(:product) { double("Product", merchant_account: merchant_account) }
-  let(:recurring_payment_notice_doc_url) { [double("Document", expiring_url: "http://example.com/eft_authorization")] }
-  let(:policy) { double("Policy", recurring_payment_notice_doc_url: recurring_payment_notice_doc_url, product: product, policy_number: "KIN-HO-FL-248835486") }
-  let(:auth_net_client) { instance_double(AuthNet::Client, login_id: "login_id_value", generate_public_client_key: "client_key") }
-  let(:component) { described_class.new(policy: policy) }
-
-  before do
-    allow(AuthNet::Client).to receive(:new).with(account: merchant_account).and_return(auth_net_client)
-    render_inline(component)
-  end
-
   context "when initialized" do
     it "renders the form with the correct elements" do
+      client = double("client", login_id: "login_id", generate_public_client_key: "generate_public_client_key")
+      policy = build(:policy,
+        recurring_payment_notice_doc_url: "http://example.com",
+        auth_net_client: client)
+
+      component = described_class.new(policy:)
+
+      render_inline(component)
+
       expect(page).to have_selector("kin-dialog#newCreditCardModal")
       expect(rendered_content).to have_css("[data-rspec= 'add-credit-card-header']")
       expect(rendered_content).to have_css("[data-rspec='first_name']")

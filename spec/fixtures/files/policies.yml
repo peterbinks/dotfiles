@@ -1,0 +1,42 @@
+default: &default
+  id: 1
+  policy_number: 'KIN-HO-FL-123456789'
+  status: 'bound'
+  current_term: 0
+  upcoming_term: 1
+  payment_type: 'card'
+  state: 'FL'
+  pending_cancellation: false
+  premium: 1000
+  uploaded_required_documents: []
+  required_documents_labels: []
+  unique_required_documents: []
+  recurring_payment_notice_doc_url: 'https://www.example.com'
+  billing_corrections_needed: false
+  has_signed_active_application: true
+  has_in_progress_endorsement: false
+  new_purchase: true
+
+quote: &quote
+  <<: *default
+  status: 'quote'
+
+bound: &bound
+  <<: *default
+  status: 'bound'
+
+in_force: &in_force
+  <<: *default
+  status: 'in_force'
+
+cancelled: &cancelled
+  <<: *default
+  status: 'cancelled'
+
+non_renewed: &non_renewed
+  <<: *default
+  status: 'non_renewed'
+
+expired: &expired
+  <<: *default
+  status: 'expired'

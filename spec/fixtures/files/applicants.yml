@@ -1,0 +1,6 @@
+default: &default
+  id: 1
+  user_id: 1
+  primary: true
+  co_applicant: false
+  name: "John Doe"

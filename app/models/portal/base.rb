@@ -1,5 +1,7 @@
 module Portal
   class Base
+    extend Portal::Dev::QueryMethods
+
     extend Portal::Utils::HasOne
     extend Portal::Utils::HasMany
     extend Portal::Utils::Attributes
@@ -11,17 +13,30 @@ module Portal
 
     # This method shows the has_one and has_many associations the instance has
     # @return [Hash] a hash of the has_one and has_many associations
-    def associations
+    def self.associations
       {
-        has_one: self.class.HAS_ONE_ASSOCIATIONS,
-        has_many: self.class.HAS_MANY_ASSOCIATIONS
+        has_one: self.HAS_ONE_ASSOCIATIONS,
+        has_many: self.HAS_MANY_ASSOCIATIONS
       }
     end
 
+    # This method shows the has_one and has_many associations the instance has
+    # @return [Hash] a hash of the has_one and has_many associations
+    def associations
+      self.class.associations
+    end
+
     # This method shows the attributes the instance has
-    # @return [Array] an array of the attributes
+    # @return [Hash] a hash of the attribute and value pairs
+    # @example
+    #   policy = Policy.new({id: 1, policy_number: "1234", status: "bound", current_term: "1"})
+    #   policy.attributes # => {id: 1, policy_number: "1234", status: "bound", current_term: "1"}
     def attributes
-      self.class.ATTRIBUTES
+      {}.tap do |hash|
+        self.class.ATTRIBUTES.map do |attr|
+          hash[attr] = send(attr)
+        end
+      end.with_indifferent_access
     end
 
     # This method configures the associations for the instance

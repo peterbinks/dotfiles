@@ -17,7 +17,7 @@ module Portal
       end
 
       def claims_app_ui_host
-        EnvWrapper.fetch("CLAIMS_APP_UI_HOST", "https://claims.kin.com")
+        ENV.fetch("CLAIMS_APP_UI_HOST", "https://claims.kin.com")
       end
 
       def declaration_page_document

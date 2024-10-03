@@ -1,0 +1,14 @@
+default: &default
+  id: 1
+  description: "some transaction"
+  installment_number: 1
+  payment_type: "scheduled"
+  term: 0
+  term_installment_count: 1
+  term_reinstatement_count: 0
+  amount: 100
+  amount_cents: 10000
+  due_date: <%= Date.current + 1.month %>
+  status: "upcoming"
+  approved_at: <%= nil %>
+  payment_made: false

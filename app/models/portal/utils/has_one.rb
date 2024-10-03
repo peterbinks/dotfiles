@@ -32,9 +32,17 @@ module Portal
           klass_instance.define_singleton_method(association_name) do
             return nil if data[association_name].nil?
 
-            Portal.const_get(association_name.to_s.classify).new(data[association_name])
+            self.class.build_portal_record(data[association_name], association_name)
           end
         end
+      end
+
+      def build_portal_record(data, association_name)
+        # If the record is already a Portal::Base instance, return it
+        return data if data.is_a?(Portal::Base)
+
+        # Otherwise, create a new instance of the associated class
+        Portal.const_get(association_name.to_s.classify).new(data)
       end
     end
   end

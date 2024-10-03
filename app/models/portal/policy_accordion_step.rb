@@ -6,6 +6,7 @@ module Portal
     attribute :step_description
     attribute :step_priority
     attribute :step_hash
+    attribute :optional
 
     def initialize(step)
       return if step.nil?

@@ -16,7 +16,7 @@ module Portal
     # @return [Boolean] `true` if all documents are pending review, `false` otherwise.
     def documents_all_pending_review?(documents)
       documents.present? &&
-        documents.filter(&:needs_verification?).map(&:review_status).include?("not_reviewed")
+        documents.filter(&:needs_verification).map(&:review_status).include?("not_reviewed")
     end
 
     # Checks if any required documents are missing for the given policy.

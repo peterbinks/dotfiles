@@ -1,11 +1,14 @@
 module Portal
   class Policy < Base
+    source "BrightPolicy", "Portal::Api::BrightPolicySerializer"
+
     # These need to be the EXACT name of the association fetched from dot-com
     has_one :property
     has_one :coverage
     has_one :product
     has_one :address
     has_one :credit_card
+    has_one :renewal_policy
 
     # These need to be the EXACT name of the association fetched from dot-com
     has_many :billing_transactions
@@ -18,12 +21,14 @@ module Portal
     attribute :id
     attribute :policy_number
     attribute :status
+    attribute :renewal_status
     attribute :current_term
     attribute :upcoming_term
     attribute :payment_type
     attribute :state
     attribute :pending_cancellation
     attribute :premium
+    attribute :flood_premium
     attribute :uploaded_required_documents
     attribute :required_documents_labels
     attribute :unique_required_documents
@@ -31,16 +36,18 @@ module Portal
     attribute :billing_corrections_needed
     attribute :has_signed_active_application
     attribute :has_in_progress_endorsement
+    attribute :new_purchase
+    attribute :active_application
     attribute :auth_net_client
 
     delegate :quote?, :bound?, :in_force?, :cancelled?, :expired?, :non_renewed?, to: :policy_status
 
     def primary_insured
-      @primary_insured ||= applicants.find(&:primary)
+      @primary_insured ||= applicants.find_by(primary: true)
     end
 
     def co_applicant
-      @co_applicant ||= applicants.find(&:co_applicant)
+      @co_applicant ||= applicants.find_by(co_applicant: true)
     end
 
     def policy_status
@@ -54,7 +61,7 @@ module Portal
     def uploaded_but_not_accepted_required_documents
       documents.select do |doc|
         doc.review_status != "accepted" &&
-          (required_documents_labels | "other").include?(doc.label)
+          (required_documents_labels | ["other"]).include?(doc.label)
       end
     end
 
@@ -70,20 +77,20 @@ module Portal
       billing_corrections_needed
     end
 
-    def term_groups
-      @term_groups ||= terms.map { |term| [term.number, term] }.to_h
+    def term(number: current_term)
+      terms.find_by(number:)
     end
 
     def effective_date
-      @effective_date ||= term_groups[0]&.effective_date
+      term_effective_date(number: 0)
     end
 
-    def term_effective_date
-      term_groups[current_term]&.effective_date
+    def term_effective_date(number: current_term)
+      term(number:)&.effective_date
     end
 
-    def term_end_date
-      term_groups[current_term]&.end_date
+    def term_end_date(number: current_term)
+      term(number:)&.end_date
     end
 
     def in_quote_post_effective_date?
