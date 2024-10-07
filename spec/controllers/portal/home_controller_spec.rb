@@ -7,7 +7,6 @@ xdescribe Portal::HomeController, type: :controller do
 
   before do
     controller.class.skip_before_action(:authenticate_user!)
-    person = build(:person)
   end
 
   describe "#index" do

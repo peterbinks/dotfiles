@@ -12,8 +12,6 @@ module Fixtures
 
         # Initializes class with attributes and associations
         klass.new(default_fixture_attributes.merge(attributes))
-      rescue => e
-        raise e
       end
     end
   end

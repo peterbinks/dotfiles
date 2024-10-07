@@ -6,9 +6,6 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        ruby-version: ['3.2']
 
     steps:
       - name: Checkout code
@@ -16,6 +13,8 @@ jobs:
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
 
       - name: Lint Ruby
         run: |
@@ -26,9 +25,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        ruby-version: ['3.2']
 
     steps:
       - name: Checkout code
