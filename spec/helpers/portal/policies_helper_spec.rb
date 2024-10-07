@@ -11,8 +11,6 @@ describe Portal::PoliciesHelper, domain: :policy_administration do
   describe "#formatted_review_status" do
     it "returns a translation for a status" do
       review_status = "not_reviewed"
-      document = build(:document, label: "proof_of_prior_insurance", review_status: review_status)
-      policy = build(:policy, trait: :bound, documents: [document])
 
       expect(I18n).to receive(:translate)
 

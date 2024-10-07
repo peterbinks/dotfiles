@@ -34,7 +34,10 @@ module Portal
     #
     # @return [void]
     def load_slide_carousel
+      # TODO: Remove this
+      # rubocop:disable Lint/LiteralAsCondition
       return if true # !should_show_slides?
+      # rubocop:enable Lint/LiteralAsCondition
 
       create_user_interaction
 

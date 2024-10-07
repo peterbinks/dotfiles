@@ -36,25 +36,25 @@ module Fixtures
       def locate_fixture_file(record)
         builder.file_fixture("#{record.to_s.pluralize}.yml")
       rescue => e
-        raise MissingFixtureError, "No fixture file found for `#{record}`"
+        raise MissingFixtureError.new("No fixture file found for `#{record}`\n #{e.message}")
       end
 
       def parse_erb(file_name)
         ERB.new(File.read(file_name)).result
       rescue => e
-        raise ParseERBError, "Error parsing ERB in `#{file_name}`"
+        raise ParseERBError, "Error parsing ERB in `#{file_name}`\n #{e.message}"
       end
 
       def load_fixture(parsed_erb)
         YAML.load(parsed_erb)
       rescue => e
-        raise UnableToLoadFixtureError, "Unable to load fixture for `#{record}`"
+        raise UnableToLoadFixtureError, "Unable to load fixture for `#{record}`\n #{e.message}"
       end
 
       def locate_trait(loaded_fixture)
         loaded_fixture.with_indifferent_access.fetch(trait.to_s)
       rescue => e
-        raise MissingTraitError, "No trait found for `#{trait}` in `#{record.to_s.pluralize}.yml`"
+        raise MissingTraitError, "No trait found for `#{trait}` in `#{record.to_s.pluralize}.yml`\n #{e.message}"
       end
     end
   end

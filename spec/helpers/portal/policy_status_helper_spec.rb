@@ -20,7 +20,6 @@ describe Portal::PolicyStatusHelper, domain: :policy_administration do
   describe "#portal_policy_status_text_and_style" do
     context "for a quote with a signed application" do
       it 'returns "Signed" text and "primary" style' do
-        policy_application = double(:policy_application, signed?: true)
         policy = build(
           :policy,
           trait: :quote,

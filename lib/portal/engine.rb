@@ -2,7 +2,7 @@ module Portal
   class Engine < ::Rails::Engine
     isolate_namespace Portal
 
-    config.i18n.load_path += Dir["#{Portal::Engine.root.to_s}/config/locales/**/*.{rb,yml}"]
+    config.i18n.load_path += Dir["#{Portal::Engine.root}/config/locales/**/*.{rb,yml}"]
     config.autoload_paths << Portal::Engine.root.join("lib")
     config.autoload_paths << Portal::Engine.root.join("services")
     # config.eager_load_paths << Portal::Engine.root.join("lib")

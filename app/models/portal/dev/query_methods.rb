@@ -36,15 +36,15 @@ module Portal
       def find_by(**attrs)
         source_record = @source.constantize.find_by(**attrs)
         build(source_record)
-      rescue => e
+      rescue
         nil
       end
 
       def where(**attrs)
         source_record_collection = @source.constantize.where(**attrs)
         build_collection(source_record_collection)
-      rescue => e
-        nil
+      rescue
+        @source.constantize.none
       end
 
       def build(source_record)
