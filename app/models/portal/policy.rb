@@ -77,6 +77,10 @@ module Portal
       billing_corrections_needed
     end
 
+    def new_purchase?
+      new_purchase
+    end
+
     def term(number: current_term)
       terms.find_by(number:)
     end
