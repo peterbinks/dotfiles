@@ -1,15 +1,17 @@
 module Portal
   module Api
-    class Policy
+    class Policy < Base
+      dotcom_api Portal::Api::Actions::Policies
+
       def self.get_policies(person_id:)
-        Portal::Api::BrightPolicySerializer
-          .get_policies(person_id:)
+        DotcomAPI::GetAll
+          .request(person_id:)
           .map { |policy| Portal::Policy.new(policy.data) }
       end
 
       def self.get_policy(policy_number:)
-        policy = Portal::Api::BrightPolicySerializer
-          .get_policy(policy_number:)
+        policy = DotcomAPI::Get
+          .request(policy_number:)
 
         Portal::Policy.new(policy.data)
       end

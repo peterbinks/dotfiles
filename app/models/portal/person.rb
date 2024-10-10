@@ -1,6 +1,6 @@
 module Portal
   class Person < Base
-    source "Person", "Portal::Api::PersonSerializer"
+    source "Person", "Portal::Api::Serializers::PersonSerializer"
 
     attribute :id
     attribute :first_name

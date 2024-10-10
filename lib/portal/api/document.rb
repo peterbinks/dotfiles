@@ -1,18 +1,20 @@
 module Portal
   module Api
-    class Document
+    class Document < Base
+      dotcom_api Portal::Api::Actions::Documents
+
       def self.labels
-        Portal::Api::DocumentSerializer.labels
+        DotcomAPI::Documents::GetLabels.request
       end
 
       def self.get_document(id:)
-        document = Portal::Api::DocumentSerializer.get_document(id:)
+        document = DotcomAPI::Documents::Get.request(id:)
 
         Portal::Document.new(document.data)
       end
 
       def self.get_file_path(id:)
-        Portal::Api::DocumentSerializer.get_file_path(id:)
+        DotcomAPI::Documents::GetSavedFile.request(id:)
       end
     end
   end
