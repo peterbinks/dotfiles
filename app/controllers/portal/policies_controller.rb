@@ -31,9 +31,13 @@ module Portal
     end
 
     def authorize_user
-      current_user.has_role?(:admin) ||
+      if (current_user.has_role?(:admin) ||
         current_user.has_role?(:impersonation) ||
-        applicants_for_auth.map(&:user_id).include?(current_user&.id)
+        applicants_for_auth.map(&:user_id).include?(current_user&.id)) &&
+        current_user&.person&.policies&.pluck(:policy_number).include?(params[:id])
+      else
+        redirect_to portal_routes.portal_root_path, flash: { error: "You are not authorized to view this policy." }
+      end
     end
 
     # Fetching applicants directly rather than through the policy so we authorize the user
