@@ -4,6 +4,11 @@ on:
     tags:
       - '*.*.*'
   workflow_dispatch:
+    inputs:
+      reference:
+        description: 'Reference to the commit or tag to build'
+        required: true
+        default: 'refs/heads/main'
 
 jobs:
   call-workflow:
