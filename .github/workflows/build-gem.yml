@@ -1,0 +1,10 @@
+name: Build and Publish
+on:
+  push:
+    tags:
+      - '*.*.*'
+  workflow_dispatch:
+
+jobs:
+  call-workflow:
+    uses: kin/actions/.github/workflows/build-gem.yml@main
