@@ -21,6 +21,13 @@ Or install it yourself as:
 $ gem install portal
 ```
 
+## Development
+
+### Frontend dev server
+
+```
+bin/vite dev
+```
 ## Contributing
 Contribution directions go here.
 

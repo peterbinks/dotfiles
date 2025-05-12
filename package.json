@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "vite": "^5.4.19",
+    "vite-plugin-ruby": "^5.1.1"
+  },
+  "dependencies": {
+    "@kin/css": "^3.11.0",
+    "@kin/web-components": "^5.12.1"
+  }
+}

@@ -1,4 +1,0 @@
-- if impersonating?(current_user, true_user)
-  .impersonation-banner
-    p You are currently impersonating:
-      #{impersonating_name(current_user)}&lt;#{current_user.email}&gt;. #{button_to text("unimpersonate"), main_app.unimpersonate_sessions_path, method: :delete, class: "button button--sm button--secondary" }

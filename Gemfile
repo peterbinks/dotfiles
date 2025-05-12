@@ -5,6 +5,7 @@ gemspec
 
 gem "pretender", "~> 0.2.gem"
 gem "view_component"
+gem "vite_rails"
 gem "text_helpers"
 gem "devise"
 gem "feature", "~> 1.4.0"

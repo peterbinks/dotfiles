@@ -34,9 +34,9 @@ module Portal
       if (current_user.has_role?(:admin) ||
         current_user.has_role?(:impersonation) ||
         applicants_for_auth.map(&:user_id).include?(current_user&.id)) &&
-        current_user&.person&.policies&.pluck(:policy_number).include?(params[:id])
+          current_user&.person&.policies&.pluck(:policy_number)&.include?(params[:id])
       else
-        redirect_to portal_routes.portal_root_path, flash: { error: "You are not authorized to view this policy." }
+        redirect_to portal_routes.portal_root_path, flash: {error: "You are not authorized to view this policy."}
       end
     end
 

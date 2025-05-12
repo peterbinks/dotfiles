@@ -1,0 +1,11 @@
+<footer>
+  <%= yield :foot %>
+</footer>
+
+/-----------------------------------------------------------------------------
+/- Trackers and Analytics
+/-----------------------------------------------------------------------------
+<% if %w{staging production}.include?(Rails.env) %>
+  <%= render "layouts/scripts/analytics_scripts" %>
+  <%= render "layouts/scripts/user_tracking" %>
+<% end %>
