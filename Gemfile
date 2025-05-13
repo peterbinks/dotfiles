@@ -15,7 +15,7 @@ group :development, :test do
   gem "puma"
   gem "pry-rails"
   gem "spring"
-  gem "standard", "=1.24.3" # Changes to this may change our linting rules; locking it to ensure updates are intentional.
+  gem "standard"
   gem "standardrb", require: false
   gem "dotenv"
 end

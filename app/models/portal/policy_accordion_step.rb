@@ -11,7 +11,7 @@ module Portal
     def initialize(step)
       return if step.nil?
 
-      super(step)
+      super
     end
   end
 end

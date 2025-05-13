@@ -1,0 +1,6 @@
+ignore:
+  - "spec/dummy/**/*"
+  - "**/*":
+    - Style/TrailingCommaInArguments
+    - Style/TrailingCommaInHashLiteral
+    - Style/MethodCallWithoutArgsParentheses

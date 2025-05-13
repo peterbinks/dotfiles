@@ -7,7 +7,7 @@ module Portal
     def initialize(term)
       return if term.nil?
 
-      super(term)
+      super
     end
   end
 end

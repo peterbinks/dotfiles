@@ -8,7 +8,7 @@ module Portal
     def initialize(credit_card)
       return if credit_card.nil?
 
-      super(credit_card)
+      super
     end
   end
 end

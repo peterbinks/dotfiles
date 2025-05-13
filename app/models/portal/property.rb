@@ -5,7 +5,7 @@ module Portal
     def initialize(property)
       return if property.nil?
 
-      super(property)
+      super
     end
   end
 end

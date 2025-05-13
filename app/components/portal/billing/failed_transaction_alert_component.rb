@@ -12,7 +12,7 @@ module Portal
       end
 
       def amount
-        number_to_currency(@transaction.amount_cents / BigDecimal("100"))
+        number_to_currency(@transaction.amount_cents / BigDecimal(100))
       end
 
       def payment_type

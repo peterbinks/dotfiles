@@ -7,7 +7,7 @@ module Portal
     def initialize(address)
       return if address.nil?
 
-      super(address)
+      super
     end
 
     def to_s

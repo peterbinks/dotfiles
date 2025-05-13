@@ -6,7 +6,7 @@ module Portal
     def initialize(coverage)
       return if coverage.nil?
 
-      super(coverage)
+      super
     end
 
     def flood_and_water_backup?

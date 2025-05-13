@@ -10,7 +10,7 @@ module Portal
     def initialize(person)
       return if person.nil?
 
-      super(person)
+      super
     end
   end
 end

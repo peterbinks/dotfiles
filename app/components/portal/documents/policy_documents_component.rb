@@ -172,7 +172,7 @@ module Portal
       # @return [Array<Document>]
       def primary_documents
         @primary_documents ||= all_documents_grouped
-          .select { |k, v| LATEST_VERSION_LABELS_PRIMARY.include?(k) }
+          .slice(*LATEST_VERSION_LABELS_PRIMARY)
           .values
           .flatten
           .reject { |doc| doc.label == "policy_packet" && policy.current_term > 0 }
@@ -184,7 +184,7 @@ module Portal
       # @return [Array<Document>]
       def secondary_documents
         @secondary_documents ||= all_documents_grouped
-          .select { |k, v| LATEST_VERSION_LABELS_SECONDARY.include?(k) }
+          .slice(*LATEST_VERSION_LABELS_SECONDARY)
           .values
           .flatten
           .uniq(&:label)

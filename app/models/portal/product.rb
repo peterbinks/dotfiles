@@ -10,7 +10,7 @@ module Portal
     def initialize(product)
       return if product.nil?
 
-      super(product)
+      super
     end
 
     def product_line

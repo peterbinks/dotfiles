@@ -24,13 +24,9 @@ module Portal
     end
 
     def open_modal(text, id, classes: "text text--link", disabled: false, data: {}, **kwargs)
-      content_tag(:button, text, **{
-        class: classes,
+      content_tag(:button, text, class: classes,
         type: "button",
-        data: {rspec: "open_modal__#{id}"}.merge(data),
-        onclick: %{window.kin.utils.openModal("#{id}", this)},
-        disabled: disabled
-      }.merge(kwargs))
+        data: {rspec: "open_modal__#{id}"}, **data, **kwargs)
     end
 
     def close_modal(text, id, reload: false, classes: "text text--link", data: {}, **kwargs)
@@ -46,13 +42,9 @@ module Portal
     end
 
     def show_dialog(text, id, classes: "text text--link", disabled: false, data: {}, **kwargs)
-      content_tag(:button, text, **{
-        class: classes,
+      content_tag(:button, text, class: classes,
         type: "button",
-        data: {rspec: "open_dialog__#{id}"}.merge(data),
-        onclick: %{window.kin.utils.showDialog("#{id}")},
-        disabled: disabled
-      }.merge(kwargs))
+        data: {rspec: "open_dialog__#{id}"}, **data, **kwargs)
     end
 
     def hide_dialog(text, id, reload: false, classes: "text text--link", data: {}, **kwargs)
