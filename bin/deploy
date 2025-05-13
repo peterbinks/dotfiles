@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+require_relative "../lib/portal/version"
+
+args = ARGV.empty? ? ["-h"] : ARGV
+
+def invalid_command?(args)
+  !args.include?("major") && !args.include?("minor") && !args.include?("patch")
+end
+
+def help_command?(args)
+  args.include?("-h") || args.include?("--help")
+end
+
+def dryrun?(args)
+  args.include?("-d") || args.include?("--dryrun")
+end
+
+def help_and_exit
+  puts "Usage: deploy [major|minor|patch] [-d --dryrun] [-h --help]"
+  exit 1
+end
+
+if invalid_command?(args) || help_command?(args)
+  help_and_exit
+end
+
+current_version = Portal::VERSION
+
+current_version = current_version.split(".").map(&:to_i)
+
+case args[0]
+when "patch"
+  current_version[2] += 1
+when "minor"
+  current_version[1] += 1
+  current_version[2] = 0
+when "major"
+  current_version[0] += 1
+  current_version[1] = 0
+  current_version[2] = 0
+else
+  help_and_exit
+end
+
+tag_version = current_version.join(".")
+git_commit_message = "Bump version to #{tag_version}"
+file_name = File.expand_path(File.join(File.dirname(__FILE__), "../lib/portal/version.rb"))
+
+commands = [
+  "bundle install",
+  "git add lib/portal/version.rb Gemfile.lock",
+  "git commit -m '[AUTO] #{git_commit_message}'",
+  "git tag #{tag_version}",
+  "git push origin #{tag_version}",
+  "git push"
+]
+
+file_contents = <<~EOF
+  module Portal
+    VERSION = "#{tag_version}"
+  end
+EOF
+
+def run_or_fail(command)
+  puts "running #{command}"
+  puts `#{command}`
+  exit(1) unless $?.success?
+end
+
+if dryrun?(args)
+  puts "Will update version from: #{Portal::VERSION} to #{tag_version} in file: #{file_name}"
+  puts "These commands will run:"
+  commands.each { |c| puts c }
+else
+  puts "Updating version from: #{Portal::VERSION} to #{tag_version} in file: #{file_name}"
+  file = File.open(file_name, "w")
+  file.write(file_contents)
+  file.close
+  puts "Running commands..."
+  commands.each { |c| run_or_fail c }
+  puts "Version updated to #{tag_version}"
+end

@@ -1,0 +1,30 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        type: choice
+        description: Semver Level
+        options:
+        - patch
+        - minor
+        - major
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_RUBYGEMS__PKG__GITHUB__COM: ${{ secrets.KINROBOT_PACKAGES_READ_PAT }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+      - uses: ruby/setup-ruby@v1
+      - name: Deploy
+        run: |
+          USER_INPUT=${{ github.event.inputs.level }}
+          LEVEL=${USER_INPUT:-"patch"}
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          ./bin/deploy $LEVEL
