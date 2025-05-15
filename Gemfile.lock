@@ -91,7 +91,7 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.5.1)
-    dotenv (3.1.2)
+    dotenv (3.1.8)
     dry-cli (1.2.0)
     erubi (1.13.0)
     faker (3.4.2)
