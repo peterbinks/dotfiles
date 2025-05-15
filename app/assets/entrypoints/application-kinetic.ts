@@ -1,1 +1,1 @@
-import "@kin/web-components/dist/external"
+import '@kin/web-components/dist/external';

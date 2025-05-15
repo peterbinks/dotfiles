@@ -11,6 +11,7 @@ gem "devise"
 gem "feature", "~> 1.4.0"
 
 group :development, :test do
+  gem "js_from_routes"
   gem "pg"
   gem "puma"
   gem "pry-rails"

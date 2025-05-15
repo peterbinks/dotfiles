@@ -1,0 +1,13 @@
+node_modules
+coverage
+*.css.ts
+*.json
+storybook-*
+spec
+.d.ts
+
+# acknowledge dotfiles which are ignored by default
+!.commitlintrc.cjs
+!.eslintrc.cjs
+!.prettierrc.cjs
+!.stylelintrc.cjs
