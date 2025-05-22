@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    portalv2 (0.1.1)
+    portal (0.1.1)
       rails (~> 6.1.7, >= 6.1.7.8)
       vite_rails
 
@@ -335,7 +335,7 @@ DEPENDENCIES
   feature (~> 1.4.0)
   js_from_routes
   pg
-  portalv2!
+  portal!
   pretender (~> 0.2.gem)
   pry-rails
   psych (< 3.3.0)

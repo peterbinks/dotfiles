@@ -1,7 +1,7 @@
-require_relative "lib/portalv2/version"
+require_relative "lib/portal/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "portalv2"
+  spec.name = "portal"
   spec.version = Portal::VERSION
   spec.authors = ["Matt Rice"]
   spec.email = ["matt.rice@kin.com"]
