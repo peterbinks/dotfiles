@@ -1,6 +1,6 @@
 module Portal
   class PortalController < ApplicationController
-    layout "application_portal"
+    layout "portal/application"
 
     delegate :person, to: :current_user, prefix: :current, allow_nil: true
 

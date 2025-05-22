@@ -30,5 +30,7 @@
   },
   "include": [
     "app/assets/**/*.ts",
+    "app/assets/entrypoints/application.js",
+    "app/assets/entrypoints/application-kinetic.js",
   ]
 }

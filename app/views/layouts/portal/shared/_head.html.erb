@@ -1,0 +1,51 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <% if @page_title.present? %>
+    <title><%=@page_title %></title>
+  <% end %>
+  <meta name="description" content="">
+
+  <%= csrf_meta_tags %>
+  <%= vite_client_tag %>
+
+  <link rel="canonical" href="">
+  
+  <%= vite_stylesheet_tag "application-kinetic.scss", "application.scss", media: "screen" %>
+  <%= vite_javascript_tag "application-kinetic", "application" %>
+
+  <% if Rails.env.local? || Rails.env.development? %>
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/secondary-square/favicon.ico" rel="icon" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/secondary-square/apple-touch-icon.png" rel="apple-touch-icon" sizes="152x152" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/secondary-square/favicon.ico" rel="icon" sizes="16x16" type="image/x-icon" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/secondary-square/favicon-32x32.png" rel="icon" sizes="32x32" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/secondary-square/favicon-192x192.png" rel="icon" sizes="192x192" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/secondary-square/favicon-512x512.png" rel="icon" sizes="512x512" >
+  <% elsif Rails.env.production? %>
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary/favicon.ico" rel="icon:" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary/apple-touch-icon.png" rel="apple-touch-icon" sizes="152x152" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary/favicon.ico" rel="icon" sizes="16x16" type="image/x-icon" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary/favicon-32x32.png" rel="icon" sizes="32x32" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary/favicon-192x192.png" rel="icon" sizes="192x192" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary/favicon-512x512.png" rel="icon" sizes="512x512" >
+  <% else %>
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary-square/favicon.ico" rel="icon"  >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary-square/apple-touch-icon.png" rel="apple-touch-icon" sizes="152x152" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary-square/favicon.ico" rel="icon" sizes="16x16" type="image/x-icon" >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary-square/favicon-32x32.png" rel="icon" sizes="32x32"  >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary-square/favicon-192x192.png" rel="icon" sizes="192x192"  >
+    <link href="<%= ENV['ASSET_URL'] %>/favicons/primary-square/favicon-512x512.png" rel="icon" sizes="512x512"  >
+  <% end %>
+
+  <% if Rails.env.production? %>
+    <%= render "layouts/scripts/google_optimize" %>
+    <%= render "layouts/scripts/google_tag_manager_head" %>
+    <script type="text/javascript" async="async" src="https://consent.trustarc.com/v2/notice/vqrmbe"></script>
+    <script type="text/javascript" src="https://consent.trustarc.com/v2/autoblockasset/core.min.js?cmId=vqrmbe"></script>
+    <script type="text/javascript" src="https://consent.trustarc.com/v2/autoblock?cmId=vqrmbe"></script>
+  <% end %>
+
+  <%= yield :head %>
+</head>

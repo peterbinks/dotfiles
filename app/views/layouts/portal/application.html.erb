@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%= render 'layouts/portal/shared/head' %>
+  <body>
+    <div class="skiplink">
+      <%= link_to "Skip to Main Content", "#portal--main", class: 'skiplink--link' %>
+    </div>
+    <% unless Rails.env.production? %>
+      <kin-non-prod-banner></kin-non-prod-banner>
+    <% end %>
+    <main>
+      <%= yield %>
+    </main>
+   <%= render 'layouts/portal/shared/foot' %>
+  </body>
+</html>

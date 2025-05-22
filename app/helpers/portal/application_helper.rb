@@ -1,10 +1,12 @@
+require 'vite_rails/version'
+require 'vite_rails/tag_helpers'
+
 module Portal
   module ApplicationHelper
-    def validated_form_with(args)
-      form_with(**args) do |form|
-        concat(content_tag("kin-form-validation", ""))
-        yield(form)
-      end
+    include ::ViteRails::TagHelpers
+
+    def vite_manifest
+      Portal::Engine.vite_ruby.manifest
     end
   end
 end

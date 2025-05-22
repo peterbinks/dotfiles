@@ -1,5 +1,5 @@
 module Portal
   class ApplicationController < ::ApplicationController
-    include MetaData
+    # include MetaData
   end
 end
