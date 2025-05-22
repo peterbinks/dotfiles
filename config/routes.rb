@@ -1,3 +1,5 @@
 Portal::Engine.routes.draw do
-  root "policies#index", as: "portal_root"
+  namespace :v2 do
+    root "policies#index"
+  end
 end
