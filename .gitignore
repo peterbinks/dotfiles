@@ -2,3 +2,6 @@
 
 !.gitignore
 !*.zshrc
+!.claude/commands/*
+!.claude/docs/*
+!.claude/claude.md
