@@ -2,6 +2,13 @@
 
 !.gitignore
 !*.zshrc
-!.claude/commands/*
-!.claude/docs/*
+!.claude/
 !.claude/claude.md
+!.claude/commands/
+!.claude/commands/brainstorm.md
+!.claude/commands/plan.md
+!.claude/commands/session-summary.md
+!.claude/commands/brainstorm.md
+!.claude/commands/setup.md
+!.claude/docs/
+!.claude/docs/source-control.md
