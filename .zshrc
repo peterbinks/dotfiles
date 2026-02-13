@@ -102,7 +102,7 @@ PATH=$HOME/.node/bin:$PATH
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-eval "$(rbenv init -)"
+eval "$(rbenv init - --no-rehash)"
 
 export PGHOST=localhost
 
@@ -110,10 +110,20 @@ export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 
 export PATH="/opt/homebrew/opt/node@14/bin:$PATH"
 
+# Lazy-load NVM for faster shell startup
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+nvm() {
+  unset -f nvm node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  nvm "$@"
+}
+node() { nvm; node "$@"; }
+npm() { nvm; npm "$@"; }
+npx() { nvm; npx "$@"; }
 
 export HOMEBREW_GITHUB_API_TOKEN=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
 
 source "/opt/homebrew/opt/spaceship/spaceship.zsh"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="/opt/homebrew/opt/openssl@3.5/bin:$PATH"
